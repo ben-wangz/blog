@@ -1,0 +1,20 @@
+def docsPath = project.file(".")
+def containerName = "blog"
+task startDocsNginxDocker(type: Exec) {
+    def port = 8083
+    executable("docker")
+    args(
+            "run", "--rm",
+            "--name", containerName,
+            "-p", "${port}:80",
+            "-v", "${docsPath}:/usr/share/nginx/html:ro",
+            "-v", "${docsPath}/default.conf:/etc/nginx/conf.d/default.conf:ro",
+            "-d", "nginx:1.19.9-alpine",
+    )
+}
+task stopDocsNginxDocker(type: Exec) {
+    executable("docker")
+    args(
+            "kill", containerName,
+    )
+}
