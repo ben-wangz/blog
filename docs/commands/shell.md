@@ -50,3 +50,9 @@ escape ^Jj #Instead of control-a
 shell -$SHELL
 EOF
 ```
+
+### count code lines
+
+```shell
+find ../git_projects/aiworks -name "*.java" | xargs cat | grep -v ^$ | wc -l
+```
