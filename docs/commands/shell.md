@@ -56,3 +56,17 @@ EOF
 ```shell
 find ../git_projects/aiworks -name "*.java" | xargs cat | grep -v ^$ | wc -l
 ```
+
+### check sha256
+
+```shell
+echo "1984c349d5d6b74279402325b6985587d1d32c01695f2946819ce25b638baa0e *ubuntu-20.04.3-preinstalled-server-armhf+raspi.img.xz" | shasum -a 256 --check
+```
+
+### check command existence
+
+```shell
+if type firewall-cmd > /dev/null 2>&1; then 
+    firewall-cmd --permanent --add-port=%s/tcp; 
+fi
+```
