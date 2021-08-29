@@ -54,7 +54,9 @@ EOF
 ### count code lines
 
 ```shell
-find ../git_projects/aiworks -name "*.java" | xargs cat | grep -v ^$ | wc -l
+find . -name "*.java" | xargs cat | grep -v ^$ | wc -l
+git ls-files | while read f; do git blame --line-porcelain $f | grep '^author '; done | sort -f | uniq -ic | sort -n
+git log --author="ben.wangz" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s removed lines: %s total lines: %s\n", add, subs, loc }' -
 ```
 
 ### check sha256

@@ -46,7 +46,7 @@ dnf install qemu-kvm
 * centos.8.qcow2 can be ported to any other system and start with qemu
     + ```shell
       qemu-system-x86_64 -cpu kvm64 -smp cpus=2 \
-          -m 2G \
+          -m 1G \
           -drive file=$(pwd)/centos.8.qcow2,if=virtio,index=0,media=disk,format=qcow2 \
           -rtc base=localtime \
           -pidfile $(pwd)/centos.8.qcow2.pid
@@ -59,7 +59,6 @@ dnf install qemu-kvm
         * usually combined with `-display none`
         * use `-nic user,hostfwd=tcp::1022-:22` to bind host port(1022) with the port in virtual machine(22)
 * use sshd to connect
-    + use the command below to start the virtual machine
     + ```shell
       qemu-system-x86_64 -cpu kvm64 -smp cpus=2 \
           -m 2G \
@@ -73,6 +72,23 @@ dnf install qemu-kvm
     + ```shell
       ssh -o "UserKnownHostsFile /dev/null" -p 1022 root@localhost
       ```
+* use vnc to connect
+    + ```shell
+      qemu-system-x86_64 -cpu kvm64 -smp cpus=2 \
+          -m 2G \
+          -drive file=$(pwd)/centos.8.qcow2,if=virtio,index=0,media=disk,format=qcow2 \
+          -rtc base=localtime \
+          -pidfile $(pwd)/centos.8.qcow2.pid \
+          -nic user,hostfwd=tcp::1022-:22 \
+          -display none \
+          -vnc 0.0.0.0:1
+      ```
+    + use vnc client to connect to it
+        * such as novnc in docker
+        * ```shell
+          docker run --rm -p 6081:6081 wangz2019/novnc:1.0.0
+          ```
+    + it's okay to combine vnc with ssh
 
 ### build linux arm64 (CentOS-8.3.2011-aarch64 for example)
 
