@@ -101,6 +101,15 @@ dnf install qemu-kvm
           -display none \
           -vnc 0.0.0.0:1
       ```
+    + use novnc to connect
+    + ```shell
+      docker run --rm \
+          --add-host host.docker.internal:host-gateway \
+          -p 6080:6080 \
+          -e VNC_SERVER=host.docker.internal:5901 \
+          --name docker-novnc \
+          -d wangz2019/docker-novnc:1.2.0
+      ```
 
 ### build linux arm64 (CentOS-8.3.2011-aarch64 for example)
 
