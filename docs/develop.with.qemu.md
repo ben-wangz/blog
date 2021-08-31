@@ -79,16 +79,28 @@ dnf install qemu-kvm
           -drive file=$(pwd)/centos.8.qcow2,if=virtio,index=0,media=disk,format=qcow2 \
           -rtc base=localtime \
           -pidfile $(pwd)/centos.8.qcow2.pid \
-          -nic user,hostfwd=tcp::1022-:22 \
           -display none \
           -vnc 0.0.0.0:1
       ```
     + use vnc client to connect to it
         * such as novnc in docker
         * ```shell
-          docker run --rm -p 6081:6081 wangz2019/novnc:1.0.0
+          docker run --rm -p 6081:6081 \
+              -e VNC_SERVER=host.docker.internal \
+              --add-host host.docker.internal:host-gateway \
+              wangz2019/novnc:1.0.0
           ```
     + it's okay to combine vnc with ssh
+    + ```shell
+      qemu-system-x86_64 -cpu kvm64 -smp cpus=2 \
+          -m 2G \
+          -drive file=$(pwd)/centos.8.qcow2,if=virtio,index=0,media=disk,format=qcow2 \
+          -rtc base=localtime \
+          -pidfile $(pwd)/centos.8.qcow2.pid \
+          -nic user,hostfwd=tcp::1022-:22 \
+          -display none \
+          -vnc 0.0.0.0:1
+      ```
 
 ### build linux arm64 (CentOS-8.3.2011-aarch64 for example)
 
