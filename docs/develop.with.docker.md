@@ -112,7 +112,9 @@
     * set a proper prefix, for example `docker.io/` of the image name instead of `localhost:5000` according to your
       docker registry
 7. verify the image pushed
-    * install jq if not installed for example: `brew install jq`
+    * install jq if not installed
+        + mac: `brew install jq`
+        + centos 8: `dnf -y install jq`
     * ```shell
       IMAGE=localhost:5000/buildx-test:latest
       for ARCH in "linux/arm64" "linux/amd64" "linux/arm/v7";
