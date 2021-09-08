@@ -4,6 +4,60 @@
 
 * install with docker desktop: [reference to docker engine](https://www.docker.com/products/docker-desktop)
 * it's okay with apple m1 chip!
+* take centos 8 as example
+    + ```shell
+      cat > /etc/yum.repos.d/docker-ce.repo <<EOF
+      [docker-ce-stable]
+      name=Docker CE Stable - $basearch
+      baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/\$releasever/\$basearch/stable
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
+      EOF
+      dnf install -y yum-utils device-mapper-persistent-data lvm2 docker-ce \
+          && systemctl enable docker \
+          && systemctl start docker
+      ```
+
+### how to run images with other architecture
+1. reference: [qemu-user-static](https://github.com/multiarch/qemu-user-static)
+2. requirements: only support x86_64 architectures
+    * you can use qemu to emulate a machine with x86_64
+3. we cannot run other platform images
+    * NOTE: it's not true for docker desktop
+    * for example
+        + ```shell
+          # which may return "x86_64"
+          uname -m
+          # we cannot run image arm64v8/ubuntu which require arm64v8 cpu
+          # which will return "standard_init_linux.go:228: exec user process caused: exec format error"
+          docker run --rm -t arm64v8/ubuntu uname -m
+          ```
+4. activate `multiarch/qemu-user-static`
+    * ```shell
+      docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      ```
+5. we can run other platform images now
+    * ```shell
+      docker run --rm -t arm64v8/ubuntu uname -m
+      docker run --rm -t arm32v6/alpine uname -m
+      docker run --rm -t ppc64le/debian uname -m
+      docker run --rm -t s390x/ubuntu uname -m
+      docker run --rm -t arm64v8/fedora uname -m
+      docker run --rm -t arm32v7/centos uname -m
+      docker run --rm -t ppc64le/busybox uname -m
+      docker run --rm -t i386/ubuntu uname -m
+      ```
+    * with `--platform` option
+    * ```shell
+      docker run --rm --platform linux/386 alpine:3.13.6 uname -m
+      docker run --rm --platform linux/amd64 alpine:3.13.6 uname -m
+      docker run --rm --platform linux/arm/v6 alpine:3.13.6 uname -m
+      docker run --rm --platform linux/arm/v7 alpine:3.13.6 uname -m
+      docker run --rm --platform linux/arm64/v8 alpine:3.13.6 uname -m
+      docker run --rm --platform linux/ppc64le alpine:3.13.6 uname -m
+      docker run --rm --platform linux/s390x alpine:3.13.6 uname -m
+      ```
 
 ### how to build images with other architecture
 

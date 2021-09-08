@@ -35,7 +35,7 @@ docker rmi `docker images | grep  '<none>' | awk '{print $3}'`
       ```
 * haproxy
     + ```shell
-      cat > <<EOF
+      cat > haproxy.cfg <<EOF
       global
           log /dev/log local0
           log /dev/log local1 notice
@@ -46,27 +46,25 @@ docker rmi `docker images | grep  '<none>' | awk '{print $3}'`
           timeout client  50000
           timeout server  50000
       frontend http
-          bind *:80
-          bind *:443 ssl crt /usr/local/etc/haproxy/certs/
-          mode http
-          redirect scheme https code 301 if !{ ssl_fc }
-          acl ACL_nginx ssl_fc_sni -i nginx.geekcity.tech
-          use_backend nginx if ACL_nginx
-          default_backend nodes
-      backend nginx
-          mode http
-          server ant_doc aliyun.geekcity.tech:8082
+      bind *:80
+      bind *:443 ssl crt /usr/local/etc/haproxy/certs/
+      mode http
+      redirect scheme https code 301 if !{ ssl_fc }
+      acl ACL_nginx ssl_fc_sni -i proxy.geekcity.tech
+      use_backend proxy if ACL_nginx
+      default_backend nodes
+      backend proxy
+      mode http
+      server proxy localhost:8081
       backend nodes
-          mode http
-          balance roundrobin
-          server k8s_node1 node1.aliyun.geekcity.tech:8080
-          server k8s_node2 node2.aliyun.geekcity.tech:8080
-          server k8s_node3 node3.aliyun.geekcity.tech:8080
+      mode http
+      balance roundrobin
+      server k8s_node1 localhost:8080
       EOF
       
       docker run --rm -p 443:443 -p 80:80 \
-          -v $(pwd)/haproxy/pem/:/usr/local/etc/haproxy/certs/:ro \
-          -v $(pwd)/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro \
+          -v $(pwd)/pem/:/usr/local/etc/haproxy/certs/:ro \
+          -v $(pwd)/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro \
           -d haproxy:2.2.14
       ```
 * mysqldump
