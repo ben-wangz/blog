@@ -3,7 +3,7 @@
 ### installation
 
 * install with docker desktop: [reference to docker engine](https://www.docker.com/products/docker-desktop)
-* it's okay with apple m1 chip!
+* it's okay with apple m1 chip! (for build but not run)
 * take centos 8 as example
     + ```shell
       cat > /etc/yum.repos.d/docker-ce.repo <<EOF
@@ -20,6 +20,7 @@
       ```
 
 ### how to run images with other architecture
+
 1. reference: [qemu-user-static](https://github.com/multiarch/qemu-user-static)
 2. requirements: only support x86_64 architectures
     * you can use qemu to emulate a machine with x86_64

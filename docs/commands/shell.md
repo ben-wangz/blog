@@ -72,3 +72,15 @@ if type firewall-cmd > /dev/null 2>&1; then
     firewall-cmd --permanent --add-port=%s/tcp; 
 fi
 ```
+
+### set hostname
+
+```shell
+hostnamectl set-hostname develop
+```
+
+### add remote key 
+
+```shell
+ssh -o "UserKnownHostsFile /dev/null" root@aliyun.geekcity.tech "mkdir -p /root/.ssh && chmod 700 /root/.ssh && echo '$SOME_PUBLIC_KEY' >> /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys"
+```
