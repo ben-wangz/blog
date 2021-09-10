@@ -24,8 +24,9 @@ docker rmi `docker images | grep  '<none>' | awk '{print $3}'`
 
 ```shell
 docker run \
-...
---add-host host.docker.internal:host-gateway
+    ...
+    --add-host host.docker.internal:host-gateway
+    ...
 ```
 
 ### software with docker
