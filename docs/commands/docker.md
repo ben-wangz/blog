@@ -20,6 +20,14 @@ yum install -y yum-utils device-mapper-persistent-data lvm2 docker-ce \
 docker rmi `docker images | grep  '<none>' | awk '{print $3}'`
 ```
 
+### docker with host.docker.internal
+
+```shell
+docker run \
+...
+--add-host host.docker.internal:host-gateway
+```
+
 ### software with docker
 
 * phpmyadmin
