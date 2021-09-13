@@ -1,6 +1,6 @@
 # blog of ben.wangz
 
-* [kubernetes](docs/kubernetes)
+* [kubernetes](docs/kubernetes/kubernetes.md)
 * [develop with qemu](docs/develop.with.qemu.md)
 * [develop with docker](docs/develop.with.docker.md)
 * useful commands
