@@ -1,5 +1,6 @@
 # blog of ben.wangz
 
+* [kubernetes](docs/kubernetes)
 * [develop with qemu](docs/develop.with.qemu.md)
 * [develop with docker](docs/develop.with.docker.md)
 * useful commands
