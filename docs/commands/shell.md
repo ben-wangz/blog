@@ -33,10 +33,12 @@ rsync -av --delete \
 ### sync clock
 
 ```shell
-yum -y install ntp ntpdate \
-        && ntpdate ntp.aliyun.com \
-        && hwclock --systohc \
-        && hwclock -w
+yum install -y chrony \
+    && systemctl enable chronyd \
+    && systemctl is-active chronyd \
+    && chronyc sources \
+    && chronyc tracking \
+    && timedatectl set-timezone 'Asia/Shanghai'
 ```
 
 ### settings for screen

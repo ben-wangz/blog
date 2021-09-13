@@ -14,7 +14,9 @@
 2. configure time and yum repos for all nodes
     * configure ntp
         + ```shell
-          yum -y install ntp ntpdate && ntpdate ntp.aliyun.com && hwclock --systohc && hwclock -w
+          yum install -y chrony && systemctl enable chronyd && systemctl is-active chronyd \
+              && chronyc sources && chronyc tracking \
+              && timedatectl set-timezone 'Asia/Shanghai'
           ```
     * clean up all repos
         + ```shell
