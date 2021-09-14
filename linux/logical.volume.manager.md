@@ -31,7 +31,7 @@
 
 ## practise
 
-### pre-requirements in this practise
+### pre-requirements
 
 * you need to know basic [conceptions](#conceptions)
 * but only PV, PE, VG and LV appear in commands
