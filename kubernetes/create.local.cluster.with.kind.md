@@ -32,3 +32,7 @@
       kubectl get node -o wide
       kubectl get pod --all-namespaces
       ```
+5. delete cluster
+    * ```shell
+      kind delete cluster
+      ```
