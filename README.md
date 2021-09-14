@@ -4,7 +4,9 @@
 * [linux](linux/README.md)
 * [develop with docker](develop.with.docker.md)
 * [kubernetes](kubernetes/README.md)
-* [develop with qemu](develop.with.qemu.md)
+* [qemu](qemu/README.md)
+* others
+    + [mirror sites from website](mirror.sites.from.website.md)
 * github projects
     1. [docker in docker with sshd](https://github.com/ben-wangz/docker-dind-sshd)
     2. [docker image of centos with systemd and sshd](https://github.com/ben-wangz/docker-systemd)
