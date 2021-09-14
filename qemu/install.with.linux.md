@@ -2,7 +2,7 @@
 
 ## purpose
 
-* QEMU virtual machine with KVM(Kernel-based Virtual Machine) accelerator
+* start QEMU virtual machine with KVM(Kernel-based Virtual Machine) accelerator
 
 ## pre-requirements
 
@@ -28,6 +28,10 @@
     + ```shell
       cat /proc/cpuinfo | egrep "vmx|svm" | uniq
       ```
+* 'kvm' is expected
+    + ```shell
+      qemu-system-x86_64 -accel help
+      ```
 
 ### start qemu
 
@@ -41,7 +45,9 @@
       ```
 3. start qemu machine with boot image and the virtual disk created
     * ```shell
-      qemu-system-x86_64 -cpu kvm64 -smp cpus=1 \
+      qemu-system-x86_64 \
+          -accel kvm \
+          -cpu kvm64 -smp cpus=1 \
           -m 1G \
           -drive file=$(pwd)/CentOS-8.4.2105-x86_64-boot.iso,index=1,media=cdrom \
           -drive file=$(pwd)/centos.8.qcow2,if=virtio,index=0,media=disk,format=qcow2 \
@@ -51,6 +57,7 @@
           -vnc 0.0.0.0:1 \
           -daemonize
       ```
+    * `-accel kvm` will use kvm as accelerator
     * `-cpu kvm64` specifies the cpu, use `qemu-system-x86_64 -cpu help` to see more options
     * `-drive ...` defines drives
         + adding `CentOS-8.4.2105-x86_64-boot.iso` as a cdrom
@@ -65,8 +72,39 @@
       docker run --name novnc --rm -p 6080:6080 \
               -e VNC_SERVER=host.docker.internal:5901 \
               --add-host host.docker.internal:host-gateway \
-              wangz2019/docker-novnc:1.2.0
+              -d wangz2019/docker-novnc:1.2.0
       ```
-    * open http://localhost:6081/vnc.html with chrome, you will see the vnc client interface
-
-### use novnc to connect
+    * open http://localhost:6080/vnc.html with chrome, you will see the vnc client interface
+5. [install centos 8 system](../linux/install.centos.8.by.boot.image.md)
+   * after installation, login the machine with root and shutdown it
+      + ```shell
+          shutdown -h now
+          ```
+6. start qemu machine with the virtual disk
+   * ```shell
+      qemu-system-x86_64 \
+          -accel kvm \
+          -cpu kvm64 -smp cpus=1 \
+          -m 1G \
+          -drive file=$(pwd)/centos.8.qcow2,if=virtio,index=0,media=disk,format=qcow2 \
+          -rtc base=localtime \
+          -pidfile $(pwd)/centos.8.qcow2.pid \
+          -display none \
+          -nic user,hostfwd=tcp::1022-:22 \
+          -daemonize
+      ```
+   * `-nic user,hostfwd=tcp::1022-:22` will bind port `1022` in host with port `22` in guest
+7. login and play with ssh
+   * ```shell
+      ssh -o "UserKnownHostsFile /dev/null" -p 1022 root@localhost
+      ```
+8. clean
+   * stop novnc docker
+      + ```shell
+          docker kill novnc
+          ```
+   * stop virtual machine
+      + ```shell
+          
+          ```
+   * you can also kill the process to force stop it
