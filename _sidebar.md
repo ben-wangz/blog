@@ -1,2 +1,6 @@
-* [站点地图](/README.md)
-* [关于本站](/about_site.md)
+* [站点地图](README.md)
+* [关于本站](about_site.md)
+* [commands](commands/README.md)
+* [docker](develop.with.docker.md)
+* [qemu](develop.with.qemu.md)
+* [kubernetes](kubernetes/installation.with.network.md)
