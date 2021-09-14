@@ -1,0 +1,1 @@
+[kind.cluster.yaml.md](kind.cluster.yaml ':include')
