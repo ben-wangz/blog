@@ -1,1 +1,1 @@
-[setup.base.sh.md](setup.base.sh ':include')
+[setup.base.sh](setup.base.sh ':include')
