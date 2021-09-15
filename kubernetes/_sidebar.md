@@ -1,2 +1,2 @@
 * [HOME](/README.md)
-* [installation with network](installation.with.network.md)
+* [kubernetes](README.md)
