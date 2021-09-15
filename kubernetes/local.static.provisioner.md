@@ -3,6 +3,11 @@
 ## main usage
 
 * dynamically create and bind pv with pvc
+* limitations
+    + not fully automatically
+    + bind with `local` storage
+* better in production for general software: [rook cephfs](rook.cephfs.md)
+* but it's recommend for software, which implement data replication and recovery, like [TiDB]() // TODO
 
 ## conceptions
 
