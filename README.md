@@ -2,7 +2,7 @@
 
 * [useful commands](commands/README.md)
 * [linux](linux/README.md)
-* [develop with docker](develop.with.docker.md)
+* [develop with docker](docker/multi-architecture.md)
 * [kubernetes](kubernetes/README.md)
 * [qemu](qemu/README.md)
 * others

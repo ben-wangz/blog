@@ -1,34 +1,3 @@
-### installation
-
-```shell
-cat > /etc/yum.repos.d/docker-ce.repo <<EOF
-[docker-ce-stable]
-name=Docker CE Stable - $basearch
-baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/\$releasever/\$basearch/stable
-enabled=1
-gpgcheck=1
-gpgkey=https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
-EOF
-yum install -y yum-utils device-mapper-persistent-data lvm2 docker-ce \
-    && systemctl enable docker \
-    && systemctl start docker
-```
-
-### remove all <none> images
-
-```shell
-docker rmi `docker images | grep  '<none>' | awk '{print $3}'`
-```
-
-### docker with host.docker.internal
-
-```shell
-docker run \
-    ... \
-    --add-host host.docker.internal:host-gateway \
-    ...
-```
-
 ### software with docker
 
 * phpmyadmin

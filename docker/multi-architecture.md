@@ -1,23 +1,4 @@
-## develop with docker
-
-### installation
-
-* install with docker desktop: [reference to docker engine](https://www.docker.com/products/docker-desktop)
-* it's okay with apple m1 chip! (for build but not run)
-* take centos 8 as example
-    + ```shell
-      cat > /etc/yum.repos.d/docker-ce.repo <<EOF
-      [docker-ce-stable]
-      name=Docker CE Stable - $basearch
-      baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/\$releasever/\$basearch/stable
-      enabled=1
-      gpgcheck=1
-      gpgkey=https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
-      EOF
-      dnf install -y yum-utils device-mapper-persistent-data lvm2 docker-ce \
-          && systemctl enable docker \
-          && systemctl start docker
-      ```
+## docker with multi-architecture
 
 ### how to run images with other architecture
 
