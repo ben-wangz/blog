@@ -58,8 +58,8 @@
       in kubernetes-sigs/sig-storage-local-static-provisioner
 3. install `local-static-provisioner` with helm
     * ```shell
-      docker pull k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.2.0
-      ./kind load docker-image k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.2.0
+      docker pull k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0
+      ./kind load docker-image k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0
       ```
     * ```shell
       ./helm install \

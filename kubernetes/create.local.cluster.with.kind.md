@@ -22,7 +22,7 @@
           curl -LO ${BASE_URL}/v1.21.2/bin/windows/amd64/kubectl.exe
           ```
 2. configuration
-    * [kind.cluster.yaml](resources/kind.cluster.yaml.md)
+    * [kind.cluster.yaml](resources/kind/kind.cluster.yaml.md)
 3. create cluster
     * ```shell
       kind create cluster --config $(pwd)/kind.cluster.yaml
@@ -35,4 +35,11 @@
 5. delete cluster
     * ```shell
       kind delete cluster
+      ```
+
+### useful commands
+
+1. check images loaded by node
+    + ```shell
+      docker exec -it kind-control-plane crictl images
       ```

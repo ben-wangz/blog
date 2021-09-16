@@ -1,0 +1,12 @@
+common:
+  setPVOwnerRef: true
+classes:
+  - name: local-disks
+    hostDir: /data/local-static-provisioner/rook-cephfs
+    volumeMode: Filesystem
+    fsType: ext4
+    namePattern: "*"
+    blockCleanerCommand:
+      - "/scripts/shred.sh"
+      - "2"
+    storageClass: true
