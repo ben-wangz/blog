@@ -1,0 +1,10 @@
+common:
+  setPVOwnerRef: true
+classes:
+  - name: rook-data
+    hostDir: /data/local-static-provisioner/rook-ceph/data
+    volumeMode: Block
+    fsType: ext4
+    namePattern: "*"
+    blockCleanerCommand:
+    storageClass: true

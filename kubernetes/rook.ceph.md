@@ -1,4 +1,4 @@
-# rook cephfs
+# rook ceph
 
 ## main usage
 
@@ -7,7 +7,7 @@
 ## conceptions
 
 * what's rook
-* what's cephfs
+* what's ceph
 
 ## practise
 
@@ -22,7 +22,7 @@
 
 ### purpose
 
-* combination of `local static provisioner` and `rook cephfs`
+* combination of `local static provisioner` and `rook ceph`
 * providing consistent storage cluster which can be consumed by a storage class
 * create a storage class in kubernetes to dynamically providing pvs
 * created pvs can be used by maria-db installed by helm
@@ -31,14 +31,14 @@
 ### do it
 
 1. setup kubernetes cluster with one master and two workers by `kind`
-    + prepare [kind.cluster.yaml](resources/rook-cephfs/kind.cluster.yaml.md)
+    + prepare [kind.cluster.yaml](resources/rook-ceph/kind.cluster.yaml.md)
         * we need three workers for setting the count of rook monitor count to 3
     + ```shell
       ./kind create cluster --config $(pwd)/kind.cluster.yaml
       ```
 2. setup `local static provisioner` provide one pv from each node, and create a storage class named `rook-local-storage`
    which will only be used by `rook cluster`
-    + prepare [local.static.provisioner.values.yaml](resources/rook-cephfs/local.static.provisioner.values.yaml.md)
+    + prepare [local.static.provisioner.values.yaml](resources/rook-ceph/local.static.provisioner.values.yaml.md)
     + installation
         * ```shell
           git clone --single-branch --branch v2.4.0 https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner.git
@@ -63,9 +63,9 @@
               docker exec -it $WORKER \
                   bash -c '\
                       for VOLUME_INDEX in "01" "02"; do \
-                          mkdir -p /data/virtual-disks/rook-cephfs/$(hostname)-volume-$VOLUME_INDEX \
-                          && mkdir -p /data/local-static-provisioner/rook-cephfs/$(hostname)-volume-$VOLUME_INDEX \
-                          && mount --bind /data/virtual-disks/rook-cephfs/$(hostname)-volume-$VOLUME_INDEX /data/local-static-provisioner/rook-cephfs/$(hostname)-volume-$VOLUME_INDEX \
+                          mkdir -p /data/virtual-disks/rook-ceph/$(hostname)-volume-$VOLUME_INDEX \
+                          && mkdir -p /data/local-static-provisioner/rook-ceph/$(hostname)-volume-$VOLUME_INDEX \
+                          && mount --bind /data/virtual-disks/rook-ceph/$(hostname)-volume-$VOLUME_INDEX /data/local-static-provisioner/rook-ceph/$(hostname)-volume-$VOLUME_INDEX \
                       ;done'
           done
           ```
@@ -83,8 +83,8 @@
               local-pv-b0b78bee   368Gi      RWO            Delete           Available           local-disks             3s
               local-pv-eb1d9042   368Gi      RWO            Delete           Available           local-disks             3s
               ```
-3. install `rook cephfs operator` by helm
-    * prepare [values.yaml](resources/rook-cephfs/values.yaml.md)
+3. install `rook ceph operator` by helm
+    * prepare [values.yaml](resources/rook-ceph/values.yaml.md)
     * ```shell
       docker pull rook/ceph:v1.7.3
       ./kind load docker-image rook/ceph:v1.7.3
@@ -98,7 +98,7 @@
           --atomic
       ```
 4. install `rook cluster`
-    * prepare [cluster-on-pvc.yaml](resources/rook-cephfs/cluster-on-pvc.yaml.md)
+    * prepare [cluster-on-pvc.yaml](resources/rook-ceph/cluster-on-pvc.yaml.md)
         + full configuration can be found
           at [github](https://github.com/rook/rook/blob/v1.7.3/cluster/examples/kubernetes/ceph/cluster-on-pvc.yaml)
     * apply to k8s cluster
@@ -118,7 +118,7 @@
           ./kubectl -n rook-ceph apply -f cluster-on-pvc.yaml
           ```
 5. install maria-db by helm
-    * prepare [values.maria.db.yaml](resources/rook-cephfs/maria.db.values.yaml.md)
+    * prepare [values.maria.db.yaml](resources/rook-ceph/maria.db.values.yaml.md)
     * helm install maria-db
         + ```shell
           ./helm install \
@@ -135,7 +135,7 @@
 7. clean up
     * uninstall maria-db by helm
     * uninstall `rook cluster`
-    * uninstall `rook cephfs operator` by helm
+    * uninstall `rook ceph operator` by helm
     * uninstall kubernetes cluster
         + ```shell
           ./kind delete cluster

@@ -1,0 +1,1 @@
+[local.rook.monitor.values.yaml](local.rook.monitor.values.yaml ':include')

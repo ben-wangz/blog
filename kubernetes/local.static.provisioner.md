@@ -6,7 +6,7 @@
 * limitations
     + not fully automatically
     + bind with `local` storage
-* better in production for general software: [rook cephfs](rook.cephfs.md)
+* better in production for general software: [rook ceph](rook.ceph.md)
 * but it's recommend for software, which implement data replication and recovery, like [TiDB]() // TODO
 
 ## conceptions

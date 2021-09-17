@@ -2,7 +2,7 @@ common:
   setPVOwnerRef: true
 classes:
   - name: local-disks
-    hostDir: /data/local-static-provisioner/rook-cephfs
+    hostDir: /data/local-static-provisioner/rook-ceph
     volumeMode: Filesystem
     fsType: ext4
     namePattern: "*"
