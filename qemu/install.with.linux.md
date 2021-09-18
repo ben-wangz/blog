@@ -76,12 +76,16 @@
       ```
     * open http://localhost:6080/vnc.html with chrome, you will see the vnc client interface
 5. [install centos 8 system](../linux/install.centos.8.by.boot.image.md)
-   * after installation, login the machine with root and shutdown it
-      + ```shell
+    * after installation, login the machine with root and shutdown it
+        + ```shell
           shutdown -h now
           ```
-6. start qemu machine with the virtual disk
-   * ```shell
+6. stop novnc docker container because we won't need it from now on
+    * ```shell
+      docker kill novnc
+      ```
+7. start qemu machine with the virtual disk
+    * ```shell
       qemu-system-x86_64 \
           -accel kvm \
           -cpu kvm64 -smp cpus=1 \
@@ -93,18 +97,14 @@
           -nic user,hostfwd=tcp::1022-:22 \
           -daemonize
       ```
-   * `-nic user,hostfwd=tcp::1022-:22` will bind port `1022` in host with port `22` in guest
-7. login and play with ssh
-   * ```shell
+    * `-nic user,hostfwd=tcp::1022-:22` will bind port `1022` in host with port `22` in guest
+8. login and play with ssh
+    * ```shell
       ssh -o "UserKnownHostsFile /dev/null" -p 1022 root@localhost
       ```
-8. clean
-   * stop novnc docker
-      + ```shell
-          docker kill novnc
+9. clean
+    * stop virtual machine
+        + ```shell
+          ssh -o "UserKnownHostsFile /dev/null" -p 1022 root@localhost 'shutdown -h now'
           ```
-   * stop virtual machine
-      + ```shell
-          
-          ```
-   * you can also kill the process to force stop it
+    * you can also kill the process to force stop it

@@ -1,26 +1,8 @@
 ### create local cluster with kind
 
-1. dependencies
+1. [download kubernetes binary tools](download.kubernetes.binary.tools.md)
     * kind
-        + ```shell
-          BASE_URL=https://github.com/kubernetes-sigs/kind/releases/download
-          # BASE_URL=https://nginx.geekcity.tech/proxy/binary/kind/
-          curl -LO ${BASE_URL}/v0.11.1/kind-linux-amd64
-          curl -LO ${BASE_URL}/v0.11.1/kind-linux-arm64
-          curl -LO ${BASE_URL}/v0.11.1/kind-darwin-amd64
-          curl -LO ${BASE_URL}/v0.11.1/kind-darwin-arm64
-          curl -LO ${BASE_URL}/v0.11.1/kind-windows-amd64
-          ```
     * kubectl
-        + ```shell
-          BASE_URL=https://dl.k8s.io/release
-          # BASE_URL=https://nginx.geekcity.tech/proxy/binary/kubectl/
-          curl -LO ${BASE_URL}/v1.21.2/bin/linux/amd64/kubectl
-          curl -LO ${BASE_URL}/v1.21.2/bin/linux/arm64/kubectl
-          curl -LO ${BASE_URL}/v1.21.2/bin/darwin/amd64/kubectl
-          curl -LO ${BASE_URL}/v1.21.2/bin/darwin/arm64/kubectl
-          curl -LO ${BASE_URL}/v1.21.2/bin/windows/amd64/kubectl.exe
-          ```
 2. configuration
     * [kind.cluster.yaml](resources/kind/kind.cluster.yaml.md)
 3. create cluster

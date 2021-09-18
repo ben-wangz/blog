@@ -14,7 +14,7 @@
 ### pre-requirements
 
 * [a k8s cluster created by kind](create.local.cluster.with.kind.md) have been read and practised
-* k8s binary tools
+* [download kubernetes binary tools](download.kubernetes.binary.tools.md)
     + kind
     + kubectl
     + helm
