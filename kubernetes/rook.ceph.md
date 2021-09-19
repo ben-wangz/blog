@@ -19,6 +19,7 @@
     + kubectl
     + helm
 * [local static provisioner](local.static.provisioner.md) have been read and practised
+* we recommend to use [qemu machine](../qemu/README.md) because we will modify the devices: /dev/loopX
 
 ### purpose
 
@@ -30,15 +31,37 @@
 
 ### do it
 
-1. setup kubernetes cluster with one master and two workers by `kind`
+1. optional, [create centos 8 with qemu](../qemu/create.centos.8.with.qemu.md)
+    * ```shell
+      qemu-system-x86_64 \
+              -accel kvm \
+              -cpu kvm64 -smp cpus=2 \
+              -m 4G \
+              -drive file=$(pwd)/centos.8.qcow2,if=virtio,index=0,media=disk,format=qcow2 \
+              -rtc base=localtime \
+              -pidfile $(pwd)/centos.8.qcow2.pid \
+              -display none \
+              -nic user,hostfwd=tcp::1022-:22 \
+              -daemonize
+      ssh -o "UserKnownHostsFile /dev/null" -p 1022 root@localhost dnf -y install tar git vim
+      ```
+    * login with ssh
+        + ```shell
+          ssh -o "UserKnownHostsFile /dev/null" -p 1022 root@localhost
+          ```
+    * [install docker engine](../docker/installation.md)
+2. download kind, kubectl and helm binaries according
+   to [download kubernetes binary tools](download.kubernetes.binary.tools.md)
+3. setup kubernetes cluster with one master and two workers by `kind`
     + prepare [kind.cluster.yaml](resources/rook-ceph/kind.cluster.yaml.md)
         * we need three workers for setting the count of rook monitor count to 3
     + ```shell
       ./kind create cluster --config $(pwd)/kind.cluster.yaml
       ```
-2. setup `local static provisioner` provide one pv from each node, and create a storage class named `rook-local-storage`
+4. setup `local static provisioner` provide one pv from each node, and create a storage class named `rook-local-storage`
    which will only be used by `rook cluster`
-    + prepare [local.static.provisioner.values.yaml](resources/rook-ceph/local.static.provisioner.values.yaml.md)
+    + prepare [local.rook.monitor.values.yaml](resources/rook-ceph/local.rook.monitor.values.yaml.md)
+    + prepare [local.rook.data.values.yaml](resources/rook-ceph/local.rook.data.values.yaml.md)
     + installation
         * ```shell
           git clone --single-branch --branch v2.4.0 https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner.git
@@ -46,9 +69,15 @@
           ./kind load docker-image k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0
           ./helm install \
               --create-namespace --namespace storage \
-              local-static-provisioner \
+              local-rook-monitor \
               $(pwd)/sig-storage-local-static-provisioner/helm/provisioner/ \
-              --values $(pwd)/local.static.provisioner.values.yaml \
+              --values $(pwd)/local.rook.monitor.values.yaml \
+              --atomic
+          ./helm install \
+              --create-namespace --namespace storage \
+              local-rook-data \
+              $(pwd)/sig-storage-local-static-provisioner/helm/provisioner/ \
+              --values $(pwd)/local.rook.data.values.yaml \
               --atomic
           ```
     + check pods ready
@@ -60,13 +89,23 @@
         * ```shell
           for WORKER in "kind-worker" "kind-worker2" "kind-worker3"
           do
-              docker exec -it $WORKER \
-                  bash -c '\
-                      for VOLUME_INDEX in "01" "02"; do \
-                          mkdir -p /data/virtual-disks/rook-ceph/$(hostname)-volume-$VOLUME_INDEX \
-                          && mkdir -p /data/local-static-provisioner/rook-ceph/$(hostname)-volume-$VOLUME_INDEX \
-                          && mount --bind /data/virtual-disks/rook-ceph/$(hostname)-volume-$VOLUME_INDEX /data/local-static-provisioner/rook-ceph/$(hostname)-volume-$VOLUME_INDEX \
-                      ;done'
+              # TODO risk of mknod major/minor, this is just for testing
+              docker exec -it $WORKER bash -c '\
+                      set -x && HOSTNAME=$(hostname) \
+                          && mkdir -p /data/virtual-disks \
+                          && dd if=/dev/zero of=/data/virtual-disks/$HOSTNAME-volume-monitor bs=1M count=512 \
+                          && dd if=/dev/zero of=/data/virtual-disks/$HOSTNAME-volume-data bs=1M count=1024 \
+                          && MINOR=${HOSTNAME:11} \
+                          && mknod -m 0660 /dev/loop80$MINOR b 7 80$MINOR \
+                          && mknod -m 0660 /dev/loop81$MINOR b 7 81$MINOR \
+                          && losetup /dev/loop80$MINOR /data/virtual-disks/$HOSTNAME-volume-monitor \
+                          && losetup /dev/loop81$MINOR /data/virtual-disks/$HOSTNAME-volume-data \
+                          && mkdir -p /data/local-static-provisioner/rook-monitor/$HOSTNAME-volume-monitor \
+                          && mkfs.ext4 /data/virtual-disks/$HOSTNAME-volume-monitor \
+                          && mount /data/virtual-disks/$HOSTNAME-volume-monitor /data/local-static-provisioner/rook-monitor/$HOSTNAME-volume-monitor \
+                          && mkdir -p /data/local-static-provisioner/rook-data \
+                          && ln -s /dev/loop81$MINOR /data/local-static-provisioner/rook-data/$HOSTNAME-volume-data \
+                      '
           done
           ```
     + check pvs created by `local static provisioner`
@@ -83,7 +122,7 @@
               local-pv-b0b78bee   368Gi      RWO            Delete           Available           local-disks             3s
               local-pv-eb1d9042   368Gi      RWO            Delete           Available           local-disks             3s
               ```
-3. install `rook ceph operator` by helm
+5. install `rook ceph operator` by helm
     * prepare [values.yaml](resources/rook-ceph/values.yaml.md)
     * ```shell
       docker pull rook/ceph:v1.7.3
@@ -97,7 +136,7 @@
           --values values.yaml \
           --atomic
       ```
-4. install `rook cluster`
+6. install `rook cluster`
     * prepare [cluster-on-pvc.yaml](resources/rook-ceph/cluster-on-pvc.yaml.md)
         + full configuration can be found
           at [github](https://github.com/rook/rook/blob/v1.7.3/cluster/examples/kubernetes/ceph/cluster-on-pvc.yaml)
@@ -117,7 +156,7 @@
           done
           ./kubectl -n rook-ceph apply -f cluster-on-pvc.yaml
           ```
-5. install maria-db by helm
+7. install maria-db by helm
     * prepare [values.maria.db.yaml](resources/rook-ceph/maria.db.values.yaml.md)
     * helm install maria-db
         + ```shell
@@ -131,11 +170,27 @@
               --atomic \
               --timeout 600s
           ```
-6. connect to maria-db and check the provisioner of `rook`
-7. clean up
+8. connect to maria-db and check the provisioner of `rook`
+9. clean up
     * uninstall maria-db by helm
     * uninstall `rook cluster`
     * uninstall `rook ceph operator` by helm
+    * uninstall `local-rook-data`
+    * uninstall `local-rook-monitor`
+    * clean the loop devices made by `mknod`
+        + ```shell
+          for WORKER in "kind-worker" "kind-worker2" "kind-worker3"
+          do
+              MINOR=${WORKER:11}
+              docker exec -it $WORKER umount /data/local-static-provisioner/rook-monitor/$WORKER-volume-monitor
+              docker exec -it $WORKER losetup --detach /dev/loop80$MINOR
+              docker exec -it $WORKER rm /dev/loop80$MINOR
+              rm -f /dev/loop80$MINOR
+              docker exec -it $WORKER losetup --detach /dev/loop81$MINOR
+              docker exec -it $WORKER rm /dev/loop81$MINOR
+              rm -f /dev/loop81$MINOR
+          done
+          ```
     * uninstall kubernetes cluster
         + ```shell
           ./kind delete cluster

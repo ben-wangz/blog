@@ -45,5 +45,5 @@
       mv linux-amd64/helm helm
       rm -rf linux-amd64/
       rm -f helm-v3.6.2-linux-amd64.tar.gz
-      chmod 744 kubectl
+      chmod 744 helm
       ```

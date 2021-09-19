@@ -1,0 +1,12 @@
+common:
+  setPVOwnerRef: true
+classes:
+  - name: rook-data
+    hostDir: /data/local-static-provisioner/rook-data
+    volumeMode: Block
+    fsType: ext4
+    namePattern: "*"
+    blockCleanerCommand:
+      - "/scripts/shred.sh"
+      - "2"
+    storageClass: true

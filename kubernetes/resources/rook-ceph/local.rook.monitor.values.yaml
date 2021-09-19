@@ -1,8 +1,8 @@
 common:
   setPVOwnerRef: true
 classes:
-  - name: local-disks
-    hostDir: /data/local-static-provisioner/rook-ceph
+  - name: rook-monitor
+    hostDir: /data/local-static-provisioner/rook-monitor
     volumeMode: Filesystem
     fsType: ext4
     namePattern: "*"
