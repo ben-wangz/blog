@@ -1,3 +1,4 @@
 primary:
   persistence:
     storageClass: local-disks
+    size: 512Mi

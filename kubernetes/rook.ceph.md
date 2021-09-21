@@ -58,7 +58,53 @@
     + ```shell
       ./kind create cluster --config $(pwd)/kind.cluster.yaml
       ```
-4. setup `local static provisioner` provide one pv from each node, and create a storage class named `rook-local-storage`
+4. mount one "virtual disk" into discovery directory at each worker node
+    * we need 6 pvs: 3 for monitors and 3 for data
+    * ```shell
+        for WORKER in "kind-worker" "kind-worker2" "kind-worker3"
+        do
+            docker exec -it $WORKER bash -c '\
+                set -x && HOSTNAME=$(hostname) \
+                    && mkdir -p /data/virtual-disks/monitor/$HOSTNAME-volume-1 \
+                    && mkdir -p /data/local-static-provisioner/rook-monitor/$HOSTNAME-volume-1 \
+                    && mount --bind /data/virtual-disks/monitor/$HOSTNAME-volume-1 /data/local-static-provisioner/rook-monitor/$HOSTNAME-volume-1 \
+            '
+            # TODO choose the rang 0..3 according to yor environment
+            docker exec -it $WORKER bash -c '\
+                set -x && set -e
+                for i in {0..3}; do 
+                    if [ -e /dev/loop$i ]; then 
+                        continue
+                    fi
+                    mknod /dev/loop$i b 7 $i
+                    chown root:disk /dev/loop$i
+                    chmod 660 /dev/loop$i
+                done \
+            '
+            docker exec -it $WORKER bash -c '\
+                set -x && HOSTNAME=$(hostname) \
+                    && mkdir -p /data/virtual-disks/data \
+                    && mkdir -p /data/local-static-provisioner/rook-data/ \
+                    && dd if=/dev/zero of=/data/virtual-disks/data/$HOSTNAME-volume-1 bs=1M count=1024 \
+            '
+        done
+        docker exec -it kind-worker bash -c '\
+            set -x && HOSTNAME=$(hostname)\
+                && losetup -fP /data/virtual-disks/data/$HOSTNAME-volume-1 \
+                && ln -s /dev/loop1 /data/local-static-provisioner/rook-data/$HOSTNAME-volume-1\
+        '
+        docker exec -it kind-worker2 bash -c '\
+            set -x && HOSTNAME=$(hostname)\
+                && losetup -fP /data/virtual-disks/data/$HOSTNAME-volume-1 \
+                && ln -s /dev/loop2 /data/local-static-provisioner/rook-data/$HOSTNAME-volume-1\
+        '
+        docker exec -it kind-worker3 bash -c '\
+            set -x && HOSTNAME=$(hostname)\
+                && losetup -fP /data/virtual-disks/data/$HOSTNAME-volume-1 \
+                && ln -s /dev/loop3 /data/local-static-provisioner/rook-data/$HOSTNAME-volume-1\
+        '
+        ```
+5. setup `local static provisioner` provide one pv from each node, and create a storage class named `rook-local-storage`
    which will only be used by `rook cluster`
     + prepare [local.rook.monitor.values.yaml](resources/rook-ceph/local.rook.monitor.values.yaml.md)
     + prepare [local.rook.data.values.yaml](resources/rook-ceph/local.rook.data.values.yaml.md)
@@ -84,30 +130,6 @@
         * ```shell
           ./kubectl -n storage wait --for=condition=ready pod --all
           ```
-    + mount one "virtual disk" into discovery directory at each worker node
-        * we need 6 pvs: 3 for monitors and 3 for data
-        * ```shell
-          for WORKER in "kind-worker" "kind-worker2" "kind-worker3"
-          do
-              # TODO risk of mknod major/minor, this is just for testing
-              docker exec -it $WORKER bash -c '\
-                      set -x && HOSTNAME=$(hostname) \
-                          && mkdir -p /data/virtual-disks \
-                          && dd if=/dev/zero of=/data/virtual-disks/$HOSTNAME-volume-monitor bs=1M count=512 \
-                          && dd if=/dev/zero of=/data/virtual-disks/$HOSTNAME-volume-data bs=1M count=1024 \
-                          && MINOR=${HOSTNAME:11} \
-                          && mknod -m 0660 /dev/loop80$MINOR b 7 80$MINOR \
-                          && mknod -m 0660 /dev/loop81$MINOR b 7 81$MINOR \
-                          && losetup /dev/loop80$MINOR /data/virtual-disks/$HOSTNAME-volume-monitor \
-                          && losetup /dev/loop81$MINOR /data/virtual-disks/$HOSTNAME-volume-data \
-                          && mkdir -p /data/local-static-provisioner/rook-monitor/$HOSTNAME-volume-monitor \
-                          && mkfs.ext4 /data/virtual-disks/$HOSTNAME-volume-monitor \
-                          && mount /data/virtual-disks/$HOSTNAME-volume-monitor /data/local-static-provisioner/rook-monitor/$HOSTNAME-volume-monitor \
-                          && mkdir -p /data/local-static-provisioner/rook-data \
-                          && ln -s /dev/loop81$MINOR /data/local-static-provisioner/rook-data/$HOSTNAME-volume-data \
-                      '
-          done
-          ```
     + check pvs created by `local static provisioner`
         * ```shell
           ./kubectl get pv
@@ -122,7 +144,7 @@
               local-pv-b0b78bee   368Gi      RWO            Delete           Available           local-disks             3s
               local-pv-eb1d9042   368Gi      RWO            Delete           Available           local-disks             3s
               ```
-5. install `rook ceph operator` by helm
+6. install `rook ceph operator` by helm
     * prepare [values.yaml](resources/rook-ceph/values.yaml.md)
     * ```shell
       docker pull rook/ceph:v1.7.3
@@ -136,14 +158,13 @@
           --values values.yaml \
           --atomic
       ```
-6. install `rook cluster`
+7. install `rook cluster`
     * prepare [cluster-on-pvc.yaml](resources/rook-ceph/cluster-on-pvc.yaml.md)
         + full configuration can be found
           at [github](https://github.com/rook/rook/blob/v1.7.3/cluster/examples/kubernetes/ceph/cluster-on-pvc.yaml)
     * apply to k8s cluster
         + ```shell
-          for IMAGE in "quay.io/ceph/ceph:v16.2.5" \
-              "k8s.gcr.io/sig-storage/csi-attacher:v3.2.1" \
+          for IMAGE in  "k8s.gcr.io/sig-storage/csi-attacher:v3.2.1" \
               "k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.2.0" \
               "k8s.gcr.io/sig-storage/csi-provisioner:v2.2.2" \
               "k8s.gcr.io/sig-storage/csi-resizer:v1.2.0" \
@@ -156,7 +177,7 @@
           done
           ./kubectl -n rook-ceph apply -f cluster-on-pvc.yaml
           ```
-7. install maria-db by helm
+8. install maria-db by helm
     * prepare [values.maria.db.yaml](resources/rook-ceph/maria.db.values.yaml.md)
     * helm install maria-db
         + ```shell
@@ -170,13 +191,19 @@
               --atomic \
               --timeout 600s
           ```
-8. connect to maria-db and check the provisioner of `rook`
-9. clean up
+9. connect to maria-db and check the provisioner of `rook`
+10. clean up
     * uninstall maria-db by helm
     * uninstall `rook cluster`
     * uninstall `rook ceph operator` by helm
     * uninstall `local-rook-data`
+        + ```shell
+          ./helm -n storage delete local-rook-data
+          ```
     * uninstall `local-rook-monitor`
+        + ```shell
+          ./helm -n storage delete local-rook-monitor
+          ```
     * clean the loop devices made by `mknod`
         + ```shell
           for WORKER in "kind-worker" "kind-worker2" "kind-worker3"

@@ -20,10 +20,10 @@ spec:
     # size appropriate for monitor data will be used.
     volumeClaimTemplate:
       spec:
-        storageClassName: local-disks
+        storageClassName: rook-monitor
         resources:
           requests:
-            storage: 10Gi
+            storage: 500Mi
   cephVersion:
     image: quay.io/ceph/ceph:v16.2.5
     allowUnsupported: false
@@ -114,9 +114,9 @@ spec:
             spec:
               resources:
                 requests:
-                  storage: 10Gi
+                  storage: 1Gi
               # IMPORTANT: Change the storage class depending on your environment
-              storageClassName: local-disks
+              storageClassName: rook-data
               volumeMode: Block
               accessModes:
                 - ReadWriteOnce
