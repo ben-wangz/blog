@@ -6,8 +6,8 @@
 
 ## conceptions
 
-* what's rook
-* what's ceph
+* [what's rook](conceptions/rook.md)
+* [what's ceph](conceptions/ceph.md)
 
 ## practise
 
