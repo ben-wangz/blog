@@ -90,17 +90,17 @@
         done
         docker exec -it kind-worker bash -c '\
             set -x && HOSTNAME=$(hostname)\
-                && losetup -fP /data/virtual-disks/data/$HOSTNAME-volume-1 \
+                && losetup /dev/loop1 /data/virtual-disks/data/$HOSTNAME-volume-1 \
                 && ln -s /dev/loop1 /data/local-static-provisioner/rook-data/$HOSTNAME-volume-1\
         '
         docker exec -it kind-worker2 bash -c '\
             set -x && HOSTNAME=$(hostname)\
-                && losetup -fP /data/virtual-disks/data/$HOSTNAME-volume-1 \
+                && losetup /dev/loop2 /data/virtual-disks/data/$HOSTNAME-volume-1 \
                 && ln -s /dev/loop2 /data/local-static-provisioner/rook-data/$HOSTNAME-volume-1\
         '
         docker exec -it kind-worker3 bash -c '\
             set -x && HOSTNAME=$(hostname)\
-                && losetup -fP /data/virtual-disks/data/$HOSTNAME-volume-1 \
+                && losetup /dev/loop3 /data/virtual-disks/data/$HOSTNAME-volume-1 \
                 && ln -s /dev/loop3 /data/local-static-provisioner/rook-data/$HOSTNAME-volume-1\
         '
         ```
