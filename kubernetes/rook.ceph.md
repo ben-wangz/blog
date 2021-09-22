@@ -176,6 +176,10 @@
               ./kind load docker-image $IMAGE
           done
           ./kubectl -n rook-ceph apply -f cluster-on-pvc.yaml
+          # TODO ./kubectl -n rook-ceph logs rook-ceph-osd-prepare-set1-data-02xf5n-6dwgq
+          # TODO "failed to get device info for "/mnt/set1-data-02xf5n": unsupported diskType loop"
+          # TODO not yet support but a batch: https://github.com/rook/rook/issues/7206
+          # TODO https://github.com/rook/rook/blob/master/pkg/clusterd/disk.go#L37
           ```
 8. install maria-db by helm
     * prepare [values.maria.db.yaml](resources/rook-ceph/maria.db.values.yaml.md)
