@@ -86,3 +86,9 @@ hostnamectl set-hostname develop
 ```shell
 ssh -o "UserKnownHostsFile /dev/null" root@aliyun.geekcity.tech "mkdir -p /root/.ssh && chmod 700 /root/.ssh && echo '$SOME_PUBLIC_KEY' >> /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys"
 ```
+
+### check service logs with journalctl
+
+```shell
+journalctl -u docker
+```
