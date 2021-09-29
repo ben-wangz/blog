@@ -48,6 +48,7 @@
 7. mount and test
     * ```shell
       mount /dev/mapper/vgtest-data /mnt
+      df -h
       touch /mnt/test-file
       echo this is a part of testing > /mnt/test-file
       echo this is a another part of testing >> /mnt/test-file

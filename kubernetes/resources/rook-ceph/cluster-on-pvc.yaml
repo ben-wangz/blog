@@ -114,7 +114,7 @@ spec:
             spec:
               resources:
                 requests:
-                  storage: 1Gi
+                  storage: 256Mi
               # IMPORTANT: Change the storage class depending on your environment
               storageClassName: rook-data
               volumeMode: Block

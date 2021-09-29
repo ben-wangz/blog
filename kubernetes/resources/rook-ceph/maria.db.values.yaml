@@ -1,4 +1,4 @@
 primary:
   persistence:
-    storageClass: local-disks
-    size: 512Mi
+    storageClass: rook-cephfs-01
+    size: 256Mi

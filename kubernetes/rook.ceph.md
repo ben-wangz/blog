@@ -34,15 +34,15 @@
 1. optional, [create centos 8 with qemu](../qemu/create.centos.8.with.qemu.md)
     * ```shell
       qemu-system-x86_64 \
-              -accel kvm \
-              -cpu kvm64 -smp cpus=2 \
-              -m 4G \
-              -drive file=$(pwd)/centos.8.qcow2,if=virtio,index=0,media=disk,format=qcow2 \
-              -rtc base=localtime \
-              -pidfile $(pwd)/centos.8.qcow2.pid \
-              -display none \
-              -nic user,hostfwd=tcp::1022-:22 \
-              -daemonize
+          -accel kvm \
+          -cpu kvm64 -smp cpus=2 \
+          -m 4G \
+          -drive file=$(pwd)/centos.8.qcow2,if=virtio,index=0,media=disk,format=qcow2 \
+          -rtc base=localtime \
+          -pidfile $(pwd)/centos.8.qcow2.pid \
+          -display none \
+          -nic user,hostfwd=tcp::1022-:22 \
+          -daemonize
       ssh -o "UserKnownHostsFile /dev/null" -p 1022 root@localhost dnf -y install tar git vim
       ```
     * login with ssh
@@ -50,61 +50,56 @@
           ssh -o "UserKnownHostsFile /dev/null" -p 1022 root@localhost
           ```
     * [install docker engine](../docker/installation.md)
-2. download kind, kubectl and helm binaries according
+2. prepare LVs for data sets
+    * NOTE: cannot create LVs in docker container
+    * ```shell
+      for MINOR in "1" "2" "3"
+      do
+          mkdir -p /data/virtual-disks/data \
+              && if [ ! -e /dev/loop$MINOR ]; then mknod /dev/loop$MINOR b 7 $MINOR; fi \
+              && dd if=/dev/zero of=/data/virtual-disks/data/$HOSTNAME-volume-$MINOR bs=1M count=512 \
+              && losetup /dev/loop$MINOR /data/virtual-disks/data/$HOSTNAME-volume-$MINOR \
+              && vgcreate vgtest$MINOR /dev/loop$MINOR \
+              && lvcreate -L 300M -n data$MINOR vgtest$MINOR
+      done
+      ```
+3. download kind, kubectl and helm binaries according
    to [download kubernetes binary tools](download.kubernetes.binary.tools.md)
-3. setup kubernetes cluster with one master and two workers by `kind`
-    + prepare [kind.cluster.yaml](resources/rook-ceph/kind.cluster.yaml.md)
+4. setup kubernetes cluster with one master and two workers by `kind`
+    * prepare [kind.cluster.yaml](resources/rook-ceph/kind.cluster.yaml.md)
         * we need three workers for setting the count of rook monitor count to 3
-    + ```shell
+    * ```shell
       ./kind create cluster --config $(pwd)/kind.cluster.yaml
       ```
-4. mount one "virtual disk" into discovery directory at each worker node
-    * we need 6 pvs: 3 for monitors and 3 for data
-    * ```shell
-        for WORKER in "kind-worker" "kind-worker2" "kind-worker3"
-        do
-            docker exec -it $WORKER bash -c '\
-                set -x && HOSTNAME=$(hostname) \
-                    && mkdir -p /data/virtual-disks/monitor/$HOSTNAME-volume-1 \
-                    && mkdir -p /data/local-static-provisioner/rook-monitor/$HOSTNAME-volume-1 \
-                    && mount --bind /data/virtual-disks/monitor/$HOSTNAME-volume-1 /data/local-static-provisioner/rook-monitor/$HOSTNAME-volume-1 \
-            '
-            # TODO choose the rang 0..3 according to yor environment
-            docker exec -it $WORKER bash -c '\
-                set -x && set -e
-                for i in {0..3}; do 
-                    if [ -e /dev/loop$i ]; then 
-                        continue
-                    fi
-                    mknod /dev/loop$i b 7 $i
-                    chown root:disk /dev/loop$i
-                    chmod 660 /dev/loop$i
-                done \
-            '
-            docker exec -it $WORKER bash -c '\
-                set -x && HOSTNAME=$(hostname) \
-                    && mkdir -p /data/virtual-disks/data \
-                    && mkdir -p /data/local-static-provisioner/rook-data/ \
-                    && dd if=/dev/zero of=/data/virtual-disks/data/$HOSTNAME-volume-1 bs=1M count=1024 \
-            '
-        done
-        docker exec -it kind-worker bash -c '\
-            set -x && HOSTNAME=$(hostname)\
-                && losetup /dev/loop1 /data/virtual-disks/data/$HOSTNAME-volume-1 \
-                && ln -s /dev/loop1 /data/local-static-provisioner/rook-data/$HOSTNAME-volume-1\
-        '
-        docker exec -it kind-worker2 bash -c '\
-            set -x && HOSTNAME=$(hostname)\
-                && losetup /dev/loop2 /data/virtual-disks/data/$HOSTNAME-volume-1 \
-                && ln -s /dev/loop2 /data/local-static-provisioner/rook-data/$HOSTNAME-volume-1\
-        '
-        docker exec -it kind-worker3 bash -c '\
-            set -x && HOSTNAME=$(hostname)\
-                && losetup /dev/loop3 /data/virtual-disks/data/$HOSTNAME-volume-1 \
-                && ln -s /dev/loop3 /data/local-static-provisioner/rook-data/$HOSTNAME-volume-1\
-        '
-        ```
-5. setup `local static provisioner` provide one pv from each node, and create a storage class named `rook-local-storage`
+5. mount one "virtual disk" into discovery directory at each worker node
+    * we need 6 pvs: 3 for monitors and 3 for data sets
+    * for monitors
+        + ```shell
+          for WORKER in "kind-worker" "kind-worker2" "kind-worker3"
+          do
+              docker exec -it $WORKER bash -c '\
+                  set -x && HOSTNAME=$(hostname) \
+                      && mkdir -p /data/virtual-disks/monitor/$HOSTNAME-volume-1 \
+                      && mkdir -p /data/local-static-provisioner/rook-monitor/$HOSTNAME-volume-1 \
+                      && mount --bind /data/virtual-disks/monitor/$HOSTNAME-volume-1 /data/local-static-provisioner/rook-monitor/$HOSTNAME-volume-1 \
+              '
+          done
+          ```
+    * for data sets
+        + ```shell
+          for WORKER in "kind-worker" "kind-worker2" "kind-worker3"
+          do
+              docker exec -it $WORKER bash -c '\
+                  set -x && HOSTNAME=$(hostname) \
+                      && PREFIX=kind-worker \
+                      && INDEX=${HOSTNAME:${#PREFIX}:1} \
+                      && MINOR=${INDEX:-1} \
+                      && mkdir -p /data/local-static-provisioner/rook-data \
+                      && ln -s /dev/mapper/vgtest$MINOR-data$MINOR /data/local-static-provisioner/rook-data/$HOSTNAME-volume-1
+              '
+          done
+          ```
+6. setup `local static provisioner` provide one pv from each node, and create a storage class named `rook-local-storage`
    which will only be used by `rook cluster`
     + prepare [local.rook.monitor.values.yaml](resources/rook-ceph/local.rook.monitor.values.yaml.md)
     + prepare [local.rook.data.values.yaml](resources/rook-ceph/local.rook.data.values.yaml.md)
@@ -137,14 +132,14 @@
         * expected output is something like
             + ```text
               NAME                CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
-              local-pv-140fc177   368Gi      RWO            Delete           Available           local-disks             3s
-              local-pv-6fb33d11   368Gi      RWO            Delete           Available           local-disks             3s
-              local-pv-a3bd362    368Gi      RWO            Delete           Available           local-disks             3s
-              local-pv-ab80f249   368Gi      RWO            Delete           Available           local-disks             3s
-              local-pv-b0b78bee   368Gi      RWO            Delete           Available           local-disks             3s
-              local-pv-eb1d9042   368Gi      RWO            Delete           Available           local-disks             3s
+              local-pv-19114d56   300Mi      RWO            Delete           Available           rook-data               18s
+              local-pv-3a76903e   36Gi       RWO            Delete           Available           rook-monitor            22s
+              local-pv-8dad2f78   36Gi       RWO            Delete           Available           rook-monitor            22s
+              local-pv-c0bd8dc8   36Gi       RWO            Delete           Available           rook-monitor            22s
+              local-pv-de34da66   300Mi      RWO            Delete           Available           rook-data               18s
+              local-pv-ed8026b0   300Mi      RWO            Delete           Available           rook-data               18s
               ```
-6. install `rook ceph operator` by helm
+7. install `rook ceph operator` by helm
     * prepare [values.yaml](resources/rook-ceph/values.yaml.md)
     * ```shell
       docker pull rook/ceph:v1.7.3
@@ -158,7 +153,7 @@
           --values values.yaml \
           --atomic
       ```
-7. install `rook cluster`
+8. install `rook cluster`
     * prepare [cluster-on-pvc.yaml](resources/rook-ceph/cluster-on-pvc.yaml.md)
         + full configuration can be found
           at [github](https://github.com/rook/rook/blob/v1.7.3/cluster/examples/kubernetes/ceph/cluster-on-pvc.yaml)
@@ -175,16 +170,45 @@
               docker pull $IMAGE
               ./kind load docker-image $IMAGE
           done
+          # /dev/loop0 will be needed to setup osd
+          for WORKER in "kind-worker" "kind-worker2" "kind-worker3"
+          do
+              docker exec -it kind-worker mknod /dev/loop0 b 7 0
+          done
           ./kubectl -n rook-ceph apply -f cluster-on-pvc.yaml
-          # TODO ./kubectl -n rook-ceph logs rook-ceph-osd-prepare-set1-data-02xf5n-6dwgq
-          # TODO "failed to get device info for "/mnt/set1-data-02xf5n": unsupported diskType loop"
-          # TODO not yet support but a batch: https://github.com/rook/rook/issues/7206
-          # TODO https://github.com/rook/rook/blob/master/pkg/clusterd/disk.go#L37
           ```
-8. install maria-db by helm
-    * prepare [values.maria.db.yaml](resources/rook-ceph/maria.db.values.yaml.md)
+9. install rook-ceph toolbox
+    * prepare [toolbox.yaml](resources/rook-ceph/toolbox.yaml.md)
+    * apply to k8s cluster
+        + ```shell
+          ./kubectl -n rook-ceph apply -f toolbox.yaml
+          ```
+    * check ceph status
+        + ```shell
+           ./kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph status
+           ```
+10. create ceph filesystem and storage class
+    * prepare [ceph.filesystem.yaml](resources/rook-ceph/ceph.filesystem.yaml.md)
+    * apply ceph filesystem to k8s cluster
+        + ```shell
+            ./kubectl -n rook-ceph apply -f ceph.filesystem.yaml
+            ```
+    * prepare [ceph.storage.class.yaml](resources/rook-ceph/ceph.storage.class.yaml.md)
+    * apply ceph storage class to k8s cluster
+        + ```shell
+            ./kubectl -n rook-ceph apply -f ceph.storage.class.yaml
+            ```
+    * check ceph status
+        + ```shell
+            ./kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph status
+            ./kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph fs status
+            ```
+11. install maria-db by helm
+    * prepare [maria.db.values.yaml](resources/rook-ceph/maria.db.values.yaml.md)
     * helm install maria-db
         + ```shell
+          docker pull docker.io/bitnami/mariadb:10.5.12-debian-10-r32
+          ./kind load docker-image docker.io/bitnami/mariadb:10.5.12-debian-10-r32
           ./helm install \
               --create-namespace --namespace database \
               maria-db-test \
@@ -195,11 +219,55 @@
               --atomic \
               --timeout 600s
           ```
-9. connect to maria-db and check the provisioner of `rook`
-10. clean up
+12. connect to maria-db and check the provisioner of `rook`
+    * ```shell
+      MYSQL_ROOT_PASSWORD=$(./kubectl get secret --namespace database maria-db-test-mariadb -o jsonpath="{.data.mariadb-root-password}" | base64 --decode)
+      ./kubectl run maria-db-test-mariadb-client \
+          --rm --tty -i \
+          --restart='Never' \
+          --image docker.io/bitnami/mariadb:10.5.12-debian-10-r32 \
+          --namespace database \
+          --env MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD \
+          --command -- bash
+      ```
+    * connect to maria-db with in the pod
+        + ```shell
+          echo "show databases;" | mysql -h maria-db-test-mariadb.database.svc.cluster.local -uroot -p$MYSQL_ROOT_PASSWORD my_database
+          ```
+    * checking pvc and pv
+        + ```shell
+          ./kubectl -n database get pvc
+          ./kubectl get pv
+          ```
+13. clean up
     * uninstall maria-db by helm
+        + ```shell
+          ./helm -n database uninstall maria-db-test
+          # pvc won't be deleted automatically
+          ./kubectl -n database delete pvc data-maria-db-test-mariadb-0
+          ```
     * uninstall `rook cluster`
+        + ```shell
+          ./kubectl -n rook-ceph delete -f ceph.storage.class.yaml
+          ./kubectl -n rook-ceph delete -f ceph.filesystem.yaml
+          ./kubectl -n rook-ceph delete -f cluster-on-pvc.yaml
+          ```
+    * delete dataDirHostPath(`/var/lib/rook`), which is defined by `cluster-on-pvc.yaml`, at each node
+        + ```shell
+          for WORKER in "kind-worker" "kind-worker2" "kind-worker3"
+          do
+              docker exec -it $WORKER rm -rf /var/lib/rook
+          done
+          ```
+    * uninstall `toolbox`
+        + ```shell
+          ./kubectl -n rook-ceph delete -f toolbox.yaml
+          ```
     * uninstall `rook ceph operator` by helm
+        + ```shell
+          ./helm -n rook-ceph uninstall my-rook-ceph-operator
+          ```
+    * delete pvs in namespace named `storage`
     * uninstall `local-rook-data`
         + ```shell
           ./helm -n storage delete local-rook-data
@@ -207,20 +275,6 @@
     * uninstall `local-rook-monitor`
         + ```shell
           ./helm -n storage delete local-rook-monitor
-          ```
-    * clean the loop devices made by `mknod`
-        + ```shell
-          for WORKER in "kind-worker" "kind-worker2" "kind-worker3"
-          do
-              MINOR=${WORKER:11}
-              docker exec -it $WORKER umount /data/local-static-provisioner/rook-monitor/$WORKER-volume-monitor
-              docker exec -it $WORKER losetup --detach /dev/loop80$MINOR
-              docker exec -it $WORKER rm /dev/loop80$MINOR
-              rm -f /dev/loop80$MINOR
-              docker exec -it $WORKER losetup --detach /dev/loop81$MINOR
-              docker exec -it $WORKER rm /dev/loop81$MINOR
-              rm -f /dev/loop81$MINOR
-          done
           ```
     * uninstall kubernetes cluster
         + ```shell
