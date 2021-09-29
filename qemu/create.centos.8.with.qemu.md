@@ -9,7 +9,7 @@
     * download disk already installed
     * start machine with qemu
 3. in practise(take Ubuntu 20.04.2 LTS as an example)
-    * download 
+    * download
         + ```shell
           curl -LO https://nginx.geekcity.tech/proxy/qemu/centos.8.qcow2
           ```
@@ -27,3 +27,8 @@
               -daemonize
           ```
         + note: choose your own accelerator, in this example we use `-accel kvm`
+    * login with ssh
+        + ```shell
+          ssh -o "UserKnownHostsFile /dev/null" -p 1022 root@localhost
+          ```
+        + default password is `123456`
