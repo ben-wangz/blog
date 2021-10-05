@@ -69,7 +69,7 @@
     * prepare [kind.cluster.yaml](resources/rook-ceph/kind.cluster.yaml.md)
         * we need three workers for setting the count of rook monitor count to 3
     * ```shell
-      ./kind create cluster --config $(pwd)/kind.cluster.yaml
+      ./kind create cluster --config $(pwd)/kind.cluster.yaml --image kindest/node:v1.22.1
       ```
 5. mount one "virtual disk" into discovery directory at each worker node
     * we need 6 pvs: 3 for monitors and 3 for data sets
@@ -173,7 +173,11 @@
           # /dev/loop0 will be needed to setup osd
           for WORKER in "kind-worker" "kind-worker2" "kind-worker3"
           do
-              docker exec -it kind-worker mknod /dev/loop0 b 7 0
+              docker exec -it $WORKER mknod /dev/loop0 b 7 0
+              # 3 more loop back devices for rook-ceph
+              #docker exec -it kind-worker mknod /dev/loop4 b 7 4
+              #docker exec -it kind-worker mknod /dev/loop5 b 7 5
+              #docker exec -it kind-worker mknod /dev/loop6 b 7 6
           done
           ./kubectl -n rook-ceph apply -f cluster-on-pvc.yaml
           ```
@@ -185,24 +189,24 @@
           ```
     * check ceph status
         + ```shell
-           ./kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph status
-           ```
+          ./kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph status
+          ```
 10. create ceph filesystem and storage class
     * prepare [ceph.filesystem.yaml](resources/rook-ceph/ceph.filesystem.yaml.md)
     * apply ceph filesystem to k8s cluster
         + ```shell
-            ./kubectl -n rook-ceph apply -f ceph.filesystem.yaml
-            ```
+          ./kubectl -n rook-ceph apply -f ceph.filesystem.yaml
+          ```
     * prepare [ceph.storage.class.yaml](resources/rook-ceph/ceph.storage.class.yaml.md)
     * apply ceph storage class to k8s cluster
         + ```shell
-            ./kubectl -n rook-ceph apply -f ceph.storage.class.yaml
-            ```
+          ./kubectl -n rook-ceph apply -f ceph.storage.class.yaml
+          ```
     * check ceph status
         + ```shell
-            ./kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph status
-            ./kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph fs status
-            ```
+          ./kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph status
+          ./kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph fs status
+          ```
 11. install maria-db by helm
     * prepare [maria.db.values.yaml](resources/rook-ceph/maria.db.values.yaml.md)
     * helm install maria-db
@@ -218,6 +222,11 @@
               --values maria.db.values.yaml \
               --atomic \
               --timeout 600s
+          ```
+    * describe pvc may see "subvolume group 'csi' does not exist"
+    * how to solve
+        + ```shell
+          kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph fs subvolumegroup create ceph-filesystem-01 csi
           ```
 12. connect to maria-db and check the provisioner of `rook`
     * ```shell
