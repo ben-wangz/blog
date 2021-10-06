@@ -19,7 +19,9 @@
       ```
 * CentOS 8
     + ```shell
-      dnf install qemu-kvm
+      dnf install qemu-kvm \
+          && ln -s /usr/libexec/qemu-kvm /root/bin/qemu-kvm \
+          && ln -s /root/bin/qemu-kvm /root/bin/qemu-system-x86_64
       ```
 
 ### check your cpu
