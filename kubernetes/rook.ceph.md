@@ -34,8 +34,8 @@
 1. optional, [create centos 8 with qemu](../qemu/create.centos.8.with.qemu.md)
     * ```shell
       qemu-system-x86_64 \
-          -accel kvm \
-          -cpu kvm64 -smp cpus=2 \
+          -accel hvf \
+          -smp cpus=2 \
           -m 4G \
           -drive file=$(pwd)/centos.8.qcow2,if=virtio,index=0,media=disk,format=qcow2 \
           -rtc base=localtime \
@@ -175,11 +175,13 @@
           do
               docker exec -it $WORKER mknod /dev/loop0 b 7 0
               # 3 more loop back devices for rook-ceph
-              #docker exec -it kind-worker mknod /dev/loop4 b 7 4
-              #docker exec -it kind-worker mknod /dev/loop5 b 7 5
-              #docker exec -it kind-worker mknod /dev/loop6 b 7 6
+              docker exec -it $WORKER mknod /dev/loop4 b 7 4
+              docker exec -it $WORKER mknod /dev/loop5 b 7 5
+              docker exec -it $WORKER mknod /dev/loop6 b 7 6
           done
           ./kubectl -n rook-ceph apply -f cluster-on-pvc.yaml
+          # waiting for osd(s) to be ready, 3 pod named rook-ceph-osd-$index-... are expected to be Running
+          ./kubectl -n rook-ceph get pod -w
           ```
 9. install rook-ceph toolbox
     * prepare [toolbox.yaml](resources/rook-ceph/toolbox.yaml.md)
@@ -189,6 +191,8 @@
           ```
     * check ceph status
         + ```shell
+          # 3 osd(s), 3 mon(s) and 1 pool are expected
+          # pgs(if exists any) should be active and clean
           ./kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph status
           ```
 10. create ceph filesystem and storage class
@@ -204,9 +208,21 @@
           ```
     * check ceph status
         + ```shell
+          # pgs(if exists any) should be active and clean
           ./kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph status
+          ```
+        + ```shell
+          # one file system is expected
           ./kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- ceph fs status
           ```
+            + expected output is something like
+                * ```text
+                  ceph-filesystem-01 - 0 clients
+                  ==================
+                  POOL               TYPE     USED  AVAIL
+                  ceph-filesystem-01-metadata  metadata     0    277M
+                  ceph-filesystem-01-data0     data       0    277M
+                  ```
 11. install maria-db by helm
     * prepare [maria.db.values.yaml](resources/rook-ceph/maria.db.values.yaml.md)
     * helm install maria-db
