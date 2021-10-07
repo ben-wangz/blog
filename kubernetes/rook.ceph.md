@@ -34,9 +34,9 @@
 1. optional, [create centos 8 with qemu](../qemu/create.centos.8.with.qemu.md)
     * ```shell
       qemu-system-x86_64 \
-          -accel hvf \
-          -smp cpus=2 \
-          -m 4G \
+          -accel kvm \
+          -smp cpus=3 \
+          -m 5G \
           -drive file=$(pwd)/centos.8.qcow2,if=virtio,index=0,media=disk,format=qcow2 \
           -rtc base=localtime \
           -pidfile $(pwd)/centos.8.qcow2.pid \
@@ -60,7 +60,7 @@
               && dd if=/dev/zero of=/data/virtual-disks/data/$HOSTNAME-volume-$MINOR bs=1M count=512 \
               && losetup /dev/loop$MINOR /data/virtual-disks/data/$HOSTNAME-volume-$MINOR \
               && vgcreate vgtest$MINOR /dev/loop$MINOR \
-              && lvcreate -L 300M -n data$MINOR vgtest$MINOR
+              && lvcreate -L 512M -n data$MINOR vgtest$MINOR
       done
       ```
 3. download kind, kubectl and helm binaries according
