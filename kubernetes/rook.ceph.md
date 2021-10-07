@@ -60,7 +60,7 @@
               && dd if=/dev/zero of=/data/virtual-disks/data/$HOSTNAME-volume-$MINOR bs=1M count=512 \
               && losetup /dev/loop$MINOR /data/virtual-disks/data/$HOSTNAME-volume-$MINOR \
               && vgcreate vgtest$MINOR /dev/loop$MINOR \
-              && lvcreate -L 512M -n data$MINOR vgtest$MINOR
+              && lvcreate -L 500M -n data$MINOR vgtest$MINOR
       done
       ```
 3. download kind, kubectl and helm binaries according
@@ -132,12 +132,12 @@
         * expected output is something like
             + ```text
               NAME                CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
-              local-pv-19114d56   300Mi      RWO            Delete           Available           rook-data               18s
-              local-pv-3a76903e   36Gi       RWO            Delete           Available           rook-monitor            22s
-              local-pv-8dad2f78   36Gi       RWO            Delete           Available           rook-monitor            22s
-              local-pv-c0bd8dc8   36Gi       RWO            Delete           Available           rook-monitor            22s
-              local-pv-de34da66   300Mi      RWO            Delete           Available           rook-data               18s
-              local-pv-ed8026b0   300Mi      RWO            Delete           Available           rook-data               18s
+              local-pv-19114d56   500Mi      RWO            Delete           Available           rook-data               8s
+              local-pv-3a76903e   36Gi       RWO            Delete           Available           rook-monitor            10s
+              local-pv-8dad2f78   36Gi       RWO            Delete           Available           rook-monitor            9s
+              local-pv-c0bd8dc8   36Gi       RWO            Delete           Available           rook-monitor            10s
+              local-pv-de34da66   500Mi      RWO            Delete           Available           rook-data               8s
+              local-pv-ed8026b0   500Mi      RWO            Delete           Available           rook-data               8s
               ```
 7. install `rook ceph operator` by helm
     * prepare [values.yaml](resources/rook-ceph/values.yaml.md)
@@ -217,11 +217,15 @@
           ```
             + expected output is something like
                 * ```text
-                  ceph-filesystem-01 - 0 clients
+                  ceph-filesystem-01 - 1 clients
                   ==================
+                  RANK      STATE               MDS              ACTIVITY     DNS    INOS   DIRS   CAPS
+                  0        active      ceph-filesystem-01-a  Reqs:    0 /s    10     13     12      1
+                  0-s   standby-replay  ceph-filesystem-01-b  Evts:    0 /s     0      3      2      0
                   POOL               TYPE     USED  AVAIL
-                  ceph-filesystem-01-metadata  metadata     0    277M
-                  ceph-filesystem-01-data0     data       0    277M
+                  ceph-filesystem-01-metadata  metadata  96.0k   469M
+                  ceph-filesystem-01-data0     data       0    469M
+                  MDS version: ceph version 16.2.5 (0883bdea7337b95e4b611c768c0279868462204a) pacific (stable)
                   ```
 11. install maria-db by helm
     * prepare [maria.db.values.yaml](resources/rook-ceph/maria.db.values.yaml.md)
