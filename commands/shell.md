@@ -81,7 +81,7 @@ fi
 hostnamectl set-hostname develop
 ```
 
-### add remote key 
+### add remote key
 
 ```shell
 ssh -o "UserKnownHostsFile /dev/null" root@aliyun.geekcity.tech "mkdir -p /root/.ssh && chmod 700 /root/.ssh && echo '$SOME_PUBLIC_KEY' >> /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys"
@@ -91,4 +91,10 @@ ssh -o "UserKnownHostsFile /dev/null" root@aliyun.geekcity.tech "mkdir -p /root/
 
 ```shell
 journalctl -u docker
+```
+
+### script path
+
+```shell
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 ```

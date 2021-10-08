@@ -1,0 +1,5 @@
+image:
+  repository: localhost:5000/kubernetesui/dashboard
+  tag: v2.3.1
+  pullPolicy: IfNotPresent
+  pullSecrets: [ ]
