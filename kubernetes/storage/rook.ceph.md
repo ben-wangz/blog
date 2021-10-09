@@ -6,20 +6,20 @@
 
 ## conceptions
 
-* [what's rook](conceptions/rook.md)
-* [what's ceph](conceptions/ceph.md)
+* [what's rook](../conceptions/rook.md)
+* [what's ceph](../conceptions/ceph.md)
 
 ## practise
 
 ### pre-requirements
 
-* [a k8s cluster created by kind](create.local.cluster.with.kind.md) have been read and practised
-* [download kubernetes binary tools](download.kubernetes.binary.tools.md)
+* [a k8s cluster created by kind](../create.local.cluster.with.kind.md) have been read and practised
+* [download kubernetes binary tools](../download.kubernetes.binary.tools.md)
     + kind
     + kubectl
     + helm
 * [local static provisioner](local.static.provisioner.md) have been read and practised
-* we recommend to use [qemu machine](../qemu/README.md) because we will modify the devices: /dev/loopX
+* we recommend to use [qemu machine](../../qemu/README.md) because we will modify the devices: /dev/loopX
 
 ### purpose
 
@@ -31,7 +31,7 @@
 
 ### do it
 
-1. optional, [create centos 8 with qemu](../qemu/create.centos.8.with.qemu.md)
+1. optional, [create centos 8 with qemu](../../qemu/create.centos.8.with.qemu.md)
     * ```shell
       qemu-system-x86_64 \
           -accel kvm \
@@ -49,7 +49,7 @@
         + ```shell
           ssh -o "UserKnownHostsFile /dev/null" -p 1022 root@localhost
           ```
-    * [install docker engine](../docker/installation.md)
+    * [install docker engine](../../docker/installation.md)
 2. prepare LVs for data sets
     * NOTE: cannot create LVs in docker container
     * ```shell
@@ -64,7 +64,7 @@
       done
       ```
 3. download kind, kubectl and helm binaries according
-   to [download kubernetes binary tools](download.kubernetes.binary.tools.md)
+   to [download kubernetes binary tools](../download.kubernetes.binary.tools.md)
 4. setup kubernetes cluster with one master and two workers by `kind`
     * prepare [kind.cluster.yaml](resources/rook-ceph/kind.cluster.yaml.md)
         * we need three workers for setting the count of rook monitor count to 3

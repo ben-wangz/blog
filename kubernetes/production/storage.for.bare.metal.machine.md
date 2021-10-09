@@ -20,8 +20,8 @@
 * k8s binary tools
     + kubectl
     + helm
-* [local static provisioner](../local.static.provisioner.md) have been read and practised
-* [rook ceph](../rook.ceph.md) have been read and practised
+* [local static provisioner](../storage/local.static.provisioner.md) have been read and practised
+* [rook ceph](../storage/rook.ceph.md) have been read and practised
 
 ### purpose
 

@@ -4,8 +4,6 @@
 * [create local cluster with kind](create.local.cluster.with.kind.md)
 * [storage](storage/README.md)
 * [basic components](basic/README.md)
-* [local static provisioner](local.static.provisioner.md)
-* [rook ceph](rook.ceph.md)
 * [monitor](monitor/README.md)
 * production
     + [installation with network](production/installation.with.network.md)

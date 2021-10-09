@@ -27,8 +27,8 @@
 
 ### pre-requirements
 
-* [a k8s cluster created by kind](create.local.cluster.with.kind.md)
-* we recommend to use [qemu machine](../qemu/README.md) because we will modify the devices: /dev/loopX
+* [a k8s cluster created by kind](../create.local.cluster.with.kind.md)
+* we recommend to use [qemu machine](../../qemu/README.md) because we will modify the devices: /dev/loopX
 
 ### purpose
 
@@ -44,14 +44,14 @@
 
 ### do it
 
-1. optional, [create centos 8 with qemu](../qemu/create.centos.8.with.qemu.md)
+1. optional, [create centos 8 with qemu](../../qemu/create.centos.8.with.qemu.md)
     * remember to modify `cpus=2` and `-m 6G`
     * ```shell
       dnf -y install tar git vim
       ```
-    * [install docker engine](../docker/installation.md)
+    * [install docker engine](../../docker/installation.md)
 2. download kind, kubectl and helm binaries according
-   to [download kubernetes binary tools](download.kubernetes.binary.tools.md)
+   to [download kubernetes binary tools](../download.kubernetes.binary.tools.md)
 3. create kubernetes cluster by kind
     * [kind.cluster.yaml](resources/local-static-provisioner/kind.cluster.yaml.md)
     * ```shell
