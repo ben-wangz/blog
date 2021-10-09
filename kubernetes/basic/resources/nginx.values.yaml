@@ -1,0 +1,16 @@
+image:
+  registry: localhost:5000/docker.io
+  repository: bitnami/nginx
+  tag: 1.21.3-debian-10-r29
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+service:
+  type: ClusterIP
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+  hostname: my.nginx.tech
+  path: /my-nginx-prefix/?(.*)
+  tls: false

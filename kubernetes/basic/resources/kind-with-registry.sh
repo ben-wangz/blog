@@ -18,6 +18,15 @@ fi
 cat <<EOF | $KIND_BINARY create cluster --image kindest/node:v1.22.1 --config=-
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  extraPortMappings:
+    - containerPort: 32080
+      hostPort: 80
+      protocol: TCP
+    - containerPort: 32443
+      hostPort: 443
+      protocol: TCP
 containerdConfigPatches:
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]
@@ -41,4 +50,3 @@ data:
     host: "localhost:${reg_port}"
     help: "https://kind.sigs.k8s.io/docs/user/local-registry/"
 EOF
-
