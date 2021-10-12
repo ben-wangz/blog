@@ -51,19 +51,25 @@
           --atomic
       ```
 4. config issuer(s)
+    * create `test` namespace
+        + ```shell
+          ./bin/kubectl create namespace test
+          ```
     * `self-signed` issuer
         + prepare [self.signed.issuer.yaml](resources/self.signed.issuer.yaml.md)
         + ```shell
           ./bin/kubectl -n test apply -f self.signed.issuer.yaml
           ```
     * `letsencrypt-staging` issuer
-        + prepare [self.signed.issuer.yaml](letsencrypt.staging.issuer.yaml.md)
+        + prepare [letsencrypt.staging.issuer.yaml](resources/letsencrypt.staging.issuer.yaml.md)
         + ```shell
           ./bin/kubectl -n test apply -f letsencrypt.staging.issuer.yaml
           ```
     * `letsencrypt-prod` issuer
-        + NOTE: [limits for requests](https://letsencrypt.org/docs/rate-limits/)
-        + prepare [self.signed.issuer.yaml](letsencrypt.prod.issuer.yaml.md)
+        + NOTE: a domain name is needed. and in this case `letsencrypt-prod.nginx.geekcity.tech` will be used
+        + NOTE: take care of [limits for requests](https://letsencrypt.org/docs/rate-limits/)
+        + NOTE: `letsencrypt-prod.nginx.geekcity.tech` needs point to ingress port which can be accessed from network
+        + prepare [letsencrypt.prod.issuer.yaml](resources/letsencrypt.prod.issuer.yaml.md)
         + ```shell
           ./bin/kubectl -n test apply -f letsencrypt.prod.issuer.yaml
           ```
@@ -79,7 +85,7 @@
         + ```shell
           ./bin/helm install \
               --create-namespace --namespace test \
-              my-nginx \
+              self-signed-nginx \
               nginx \
               --version 9.5.7 \
               --repo https://charts.bitnami.com/bitnami \
@@ -108,4 +114,33 @@
               </html>
               ```
     * play with `letsencrypt-staging`
+        + prepare [letsencrypt.staging.nginx.values.yaml](resources/letsencrypt.staging.nginx.values.yaml.md)
+        + ```shell
+          ./bin/helm install \
+              --create-namespace --namespace test \
+              letsencrypt-staging-nginx \
+              nginx \
+              --version 9.5.7 \
+              --repo https://charts.bitnami.com/bitnami \
+              --values $(pwd)/letsencrypt.staging.nginx.values.yaml \
+              --atomic
+          ```
+        + ```shell
+          curl --insecure --header 'Host: letsencrypt-staging.nginx.tech' https://localhost/my-nginx-prefix/
+          ```
     * play with `letsencrypt-prod`
+        + prepare [letsencrypt.prod.nginx.values.yaml](resources/letsencrypt.prod.nginx.values.yaml.md)
+        + ```shell
+          ./bin/helm install \
+              --create-namespace --namespace test \
+              letsencrypt-prod-nginx \
+              nginx \
+              --version 9.5.7 \
+              --repo https://charts.bitnami.com/bitnami \
+              --values $(pwd)/letsencrypt.prod.nginx.values.yaml \
+              --atomic
+          ```
+        + ```shell
+          curl https://letsencrypt-prod.nginx.geekcity.tech/my-nginx-prefix/
+          ```
+        + access from you browser: https://letsencrypt-prod.nginx.geekcity.tech/my-nginx-prefix/
