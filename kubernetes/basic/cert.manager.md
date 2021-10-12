@@ -1,0 +1,111 @@
+# ingress nginx
+
+## main usage
+
+* ingress nginx to expose http/https endpoints
+
+## conceptions
+
+* none
+
+## practise
+
+### pre-requirements
+
+* none
+
+### purpose
+
+* create a kubernetes cluster by kind
+* setup ingress-nginx
+* setup cert-manager
+* install nginx service and access it with https
+
+### do it
+
+1. [create local cluster for testing](local.cluster.for.testing.md)
+2. setup [ingress-nginx](ingress.nginx.md)
+3. install ingress nginx
+    * prepare [cert.manager.values.yaml](resources/cert.manager.values.yaml.md)
+    * prepare images
+        + ```shell
+          for IMAGE in "quay.io/jetstack/cert-manager-controller:v1.5.4" \
+              "quay.io/jetstack/cert-manager-webhook:v1.5.4" \
+              "quay.io/jetstack/cert-manager-cainjector:v1.5.4" \
+              "quay.io/jetstack/cert-manager-ctl:v1.5.4"
+          do
+              LOCAL_IMAGE="localhost:5000/$IMAGE"
+              docker pull $IMAGE
+              docker image tag $IMAGE $LOCAL_IMAGE
+              docker push $LOCAL_IMAGE
+          done
+          ```
+    * ```shell
+      ./bin/helm install \
+          --create-namespace --namespace basic-components \
+          my-cert-manager \
+          cert-manager \
+          --version 1.5.4 \
+          --repo https://charts.jetstack.io \
+          --values $(pwd)/cert.manager.values.yaml \
+          --atomic
+      ```
+4. config issuer(s)
+    * `self-signed` issuer
+        + prepare [self.signed.issuer.yaml](resources/self.signed.issuer.yaml.md)
+        + ```shell
+          ./bin/kubectl -n test apply -f self.signed.issuer.yaml
+          ```
+    * `letsencrypt-staging` issuer
+        + prepare [self.signed.issuer.yaml](letsencrypt.staging.issuer.yaml.md)
+        + ```shell
+          ./bin/kubectl -n test apply -f letsencrypt.staging.issuer.yaml
+          ```
+    * `letsencrypt-prod` issuer
+        + NOTE: [limits for requests](https://letsencrypt.org/docs/rate-limits/)
+        + prepare [self.signed.issuer.yaml](letsencrypt.prod.issuer.yaml.md)
+        + ```shell
+          ./bin/kubectl -n test apply -f letsencrypt.prod.issuer.yaml
+          ```
+5. checking with nginx service
+    * prepare images
+        + ```shell
+          docker pull docker.io/bitnami/nginx:1.21.3-debian-10-r29
+          docker image tag docker.io/bitnami/nginx:1.21.3-debian-10-r29 localhost:5000/docker.io/bitnami/nginx:1.21.3-debian-10-r29
+          docker push localhost:5000/docker.io/bitnami/nginx:1.21.3-debian-10-r29
+          ```
+    * play with `self-signed` issuer
+        + prepare [self.signed.nginx.values.yaml](resources/self.signed.nginx.values.yaml.md)
+        + ```shell
+          ./bin/helm install \
+              --create-namespace --namespace test \
+              my-nginx \
+              nginx \
+              --version 9.5.7 \
+              --repo https://charts.bitnami.com/bitnami \
+              --values $(pwd)/self.signed.nginx.values.yaml \
+              --atomic
+          ```
+        + ```shell
+          curl --insecure --header 'Host: self-signed.nginx.tech' https://localhost/my-nginx-prefix/
+          ```
+        + expected output is something like
+            * ```html
+              <!DOCTYPE html>
+              <html>
+              <head>
+              <title>Welcome to nginx!</title>
+              <style>
+              html { color-scheme: light dark; }
+              body { width: 35em; margin: 0 auto;
+              font-family: Tahoma, Verdana, Arial, sans-serif; }
+              </style>
+              </head>
+              <body>
+              <h1>Welcome to nginx!</h1>
+              ...
+              </body>
+              </html>
+              ```
+    * play with `letsencrypt-staging`
+    * play with `letsencrypt-prod`
