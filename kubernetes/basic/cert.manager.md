@@ -51,9 +51,9 @@
           --atomic
       ```
 4. config issuer(s)
-    * create `test` namespace
+    * create `test` namespace if not exists
         + ```shell
-          ./bin/kubectl create namespace test
+          ./bin/kubectl create namespace test --dry-run=client -o yaml | ./bin/kubectl apply -f -
           ```
     * `self-signed` issuer
         + prepare [self.signed.issuer.yaml](resources/self.signed.issuer.yaml.md)
@@ -71,6 +71,8 @@
         + NOTE: `letsencrypt-prod.nginx.geekcity.tech` needs point to ingress port which can be accessed from network
         + prepare [letsencrypt.prod.issuer.yaml](resources/letsencrypt.prod.issuer.yaml.md)
         + ```shell
+          docker pull "quay.io/jetstack/cert-manager-acmesolver:v1.5.4"
+          ./bin/kind load docker-image "quay.io/jetstack/cert-manager-acmesolver:v1.5.4"
           ./bin/kubectl -n test apply -f letsencrypt.prod.issuer.yaml
           ```
 5. checking with nginx service
