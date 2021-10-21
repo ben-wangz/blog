@@ -45,7 +45,7 @@
           cp /etc/kubernetes/admin.conf $HOME/.kube/config
           chown $(id -u):$(id -g) $HOME/.kube/config
           ```
-    * copy [calico.yaml](../resources/calico.yaml.md) as file /tmp/calico.yaml and apply it to k8s cluster
+    * copy [calico.yaml](../resources/calico.yaml.md) as file `/tmp/calico.yaml` and apply it to k8s cluster
         + ```shell
           kubectl apply -f /tmp/calico.yaml
           ```

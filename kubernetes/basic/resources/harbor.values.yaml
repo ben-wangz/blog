@@ -1,0 +1,143 @@
+persistence:
+  enabled: true
+  persistentVolumeClaim:
+    registry:
+      storageClass: standard
+      size: 4Gi
+    jobservice:
+      storageClass: standard
+      size: 1Gi
+    chartmuseum:
+      storageClass: standard
+      size: 1Gi
+    trivy:
+      storageClass: standard
+      size: 2Gi
+volumePermissions:
+  image:
+    registry: localhost:5000/docker.io
+    repository: bitnami/bitnami-shell
+    tag: 10-debian-10-r173
+    pullPolicy: IfNotPresent
+nginxImage:
+  registry: localhost:5000/docker.io
+  repository: bitnami/nginx
+  tag: 1.21.1-debian-10-r46
+  pullPolicy: IfNotPresent
+portalImage:
+  registry: localhost:5000/docker.io
+  repository: bitnami/harbor-portal
+  tag: 2.3.2-debian-10-r2
+  pullPolicy: IfNotPresent
+coreImage:
+  registry: localhost:5000/docker.io
+  repository: bitnami/harbor-core
+  tag: 2.3.2-debian-10-r2
+  pullPolicy: IfNotPresent
+jobserviceImage:
+  registry: localhost:5000/docker.io
+  repository: bitnami/harbor-jobservice
+  tag: 2.3.2-debian-10-r2
+  pullPolicy: IfNotPresent
+registryImage:
+  registry: localhost:5000/docker.io
+  repository: bitnami/harbor-registry
+  tag: 2.3.2-debian-10-r2
+  pullPolicy: IfNotPresent
+registryctlImage:
+  registry: localhost:5000/docker.io
+  repository: bitnami/harbor-registryctl
+  tag: 2.3.2-debian-10-r2
+  pullPolicy: IfNotPresent
+chartMuseumImage:
+  registry: localhost:5000/docker.io
+  repository: bitnami/chartmuseum
+  tag: 0.13.1-debian-10-r149
+  pullPolicy: IfNotPresent
+clairImage:
+  registry: localhost:5000/docker.io
+  repository: bitnami/harbor-clair
+  tag: 2.3.2-debian-10-r2
+  pullPolicy: IfNotPresent
+clairAdapterImage:
+  registry: localhost:5000/docker.io
+  repository: bitnami/harbor-adapter-clair
+  tag: 2.3.2-debian-10-r2
+  pullPolicy: IfNotPresent
+notaryServerImage:
+  registry: localhost:5000/docker.io
+  repository: bitnami/harbor-notary-server
+  tag: 2.3.2-debian-10-r2
+  pullPolicy: IfNotPresent
+notarySignerImage:
+  registry: localhost:5000/docker.io
+  repository: bitnami/harbor-notary-signer
+  tag: 2.3.2-debian-10-r2
+  pullPolicy: IfNotPresent
+trivyImage:
+  registry: localhost:5000/docker.io
+  repository: bitnami/harbor-adapter-trivy
+  tag: 2.3.2-debian-10-r2
+  pullPolicy: IfNotPresent
+postgresql:
+  persistence:
+    enabled: true
+    storageClass: standard
+    size: 4Gi
+  image:
+    registry: localhost:5000/docker.io
+    repository: bitnami/postgresql
+    tag: 11.13.0-debian-10-r12
+  volumePermissions:
+    image:
+      registry: localhost:5000/docker.io
+      repository: bitnami/bitnami-shell
+      tag: 10-debian-10-r172
+      pullPolicy: IfNotPresent
+  metrics:
+    image:
+      registry: localhost:5000/docker.io
+      repository: bitnami/postgres-exporter
+      tag: 0.10.0-debian-10-r40
+      pullPolicy: IfNotPresent
+redis:
+  master:
+    persistence:
+      enabled: true
+      storageClass: standard
+      size: 2Gi
+  replica:
+    replicaCount: 3
+    persistence:
+      enabled: true
+      storageClass: standard
+      size: 2Gi
+  image:
+    registry: localhost:5000/docker.io
+    repository: bitnami/redis
+    tag: 6.2.5-debian-10-r11
+    pullPolicy: IfNotPresent
+  sentinel:
+    image:
+      registry: localhost:5000/docker.io
+      repository: bitnami/redis-sentinel
+      tag: 6.2.5-debian-10-r11
+      pullPolicy: IfNotPresent
+  metrics:
+    image:
+      registry: localhost:5000/docker.io
+      repository: bitnami/redis-exporter
+      tag: 1.24.0-debian-10-r48
+      pullPolicy: IfNotPresent
+  volumePermissions:
+    image:
+      registry: localhost:5000/docker.io
+      repository: bitnami/bitnami-shell
+      tag: 10-debian-10-r151
+      pullPolicy: IfNotPresent
+  sysctl:
+    image:
+      registry: localhost:5000/docker.io
+      repository: bitnami/bitnami-shell
+      tag: 10-debian-10-r151
+      pullPolicy: IfNotPresent

@@ -25,7 +25,7 @@
 
 1. [create local cluster for testing](local.cluster.for.testing.md)
 2. setup [ingress-nginx](ingress.nginx.md)
-3. install ingress nginx
+3. install cert manager
     * prepare [cert.manager.values.yaml](resources/cert.manager.values.yaml.md)
     * prepare images
         + ```shell
