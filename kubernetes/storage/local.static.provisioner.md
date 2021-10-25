@@ -71,8 +71,9 @@
       # docker image can be download 
       # from https://nginx.geekcity.tech/proxy/docker.images/k8s.gcr.io_sig-storage_local-volume-provisioner_v2.4.0.dim
       # if can not be pulled
-      docker pull k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0
-      ./kind load docker-image k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0
+      IMAGE="k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0"
+      docker image inspect $IMAGE || docker pull $IMAGE
+      ./kind load docker-image $IMAGE
       ```
     * ```shell
       ./helm install \
@@ -156,8 +157,9 @@
     + prepare [pvc.test.with.job.yaml](resources/local-static-provisioner/pvc.test.with.job.yaml.md)
     + apply a pvc
         * ```shell
-          docker pull busybox:1.33.1-uclibc
-          ./kind load docker-image busybox:1.33.1-uclibc
+          IMAGE="busybox:1.33.1-uclibc"
+          docker image inspect $IMAGE || docker pull $IMAGE
+          ./kind load docker-image $IMAGE
           ./kubectl -n default apply -f $(pwd)/pvc.test.with.job.yaml
           ```
     + check binding
@@ -172,8 +174,9 @@
     + prepare [values.maria.db.yaml](resources/local-static-provisioner/maria.db.values.yaml.md)
     + helm install maria-db
         * ```shell
-          docker pull docker.io/bitnami/mariadb:10.5.12-debian-10-r32
-          ./kind load docker-image docker.io/bitnami/mariadb:10.5.12-debian-10-r32
+          IMAGE="docker.io/bitnami/mariadb:10.5.12-debian-10-r32"
+          docker image inspect $IMAGE || docker pull $IMAGE
+          ./kind load docker-image $IMAGE
           ./helm install \
               --create-namespace --namespace database \
               maria-db-test \
@@ -187,8 +190,9 @@
     + connect to maria-db
         * start a pod to run mysql client
             + ```shell
-              docker pull docker.io/bitnami/mariadb:10.5.12-debian-10-r32
-              ./kind load docker-image docker.io/bitnami/mariadb:10.5.12-debian-10-r32
+              IMAGE="docker.io/bitnami/mariadb:10.5.12-debian-10-r32"
+              docker image inspect $IMAGE || docker pull $IMAGE
+              ./kind load docker-image $IMAGE
               ROOT_PASSWORD=$(./kubectl get secret --namespace database \
                   maria-db-test-mariadb \
                   -o jsonpath="{.data.mariadb-root-password}" \

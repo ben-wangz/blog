@@ -30,7 +30,7 @@
           for IMAGE in "k8s.gcr.io/ingress-nginx/controller:v1.0.3" "k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.0"
           do
               LOCAL_IMAGE="localhost:5000/$IMAGE"
-              docker pull $IMAGE
+              docker image inspect $IMAGE || docker pull $IMAGE
               docker image tag $IMAGE $LOCAL_IMAGE
               docker push $LOCAL_IMAGE
           done
@@ -49,9 +49,10 @@
     * prepare [nginx.values.yaml](resources/nginx.values.yaml.md)
     * prepare images
         + ```shell
-          docker pull docker.io/bitnami/nginx:1.21.3-debian-10-r29
-          docker image tag docker.io/bitnami/nginx:1.21.3-debian-10-r29 localhost:5000/docker.io/bitnami/nginx:1.21.3-debian-10-r29
-          docker push localhost:5000/docker.io/bitnami/nginx:1.21.3-debian-10-r29
+          IMAGE="docker.io/bitnami/nginx:1.21.3-debian-10-r29"
+          docker image inspect $IMAGE || docker pull $IMAGE
+          docker image tag $IMAGE localhost:5000/$IMAGE
+          docker push localhost:5000/$IMAGE
           ```
     * ```shell
       ./bin/helm install \

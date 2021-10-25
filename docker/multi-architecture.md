@@ -66,7 +66,8 @@
     * you can use `docker buildx ls` to check buildx environment again
 3. pull the stable buildkit image and inspect the builder used
     * ```shell
-      docker pull moby/buildkit:buildx-stable-1
+      IMAGE="moby/buildkit:buildx-stable-1"
+      docker image inspect $IMAGE || docker pull $IMAGE
       docker buildx inspect --bootstrap
       ```
     * a buildx container will be created after running the inspect command

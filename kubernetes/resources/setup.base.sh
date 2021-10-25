@@ -57,5 +57,6 @@ sysctl --system
 # install
 systemctl enable kubelet
 systemctl start kubelet
-docker pull registry.aliyuncs.com/google_containers/coredns:1.8.4
-docker tag registry.aliyuncs.com/google_containers/coredns:1.8.4 registry.aliyuncs.com/google_containers/coredns:v1.8.4
+COREDNS_ORIGIN_IMAGE=registry.aliyuncs.com/google_containers/coredns:1.8.4
+docker image inspect $COREDNS_ORIGIN_IMAGE || docker pull $COREDNS_ORIGIN_IMAGE
+docker tag $COREDNS_ORIGIN_IMAGE registry.aliyuncs.com/google_containers/coredns:v1.8.4

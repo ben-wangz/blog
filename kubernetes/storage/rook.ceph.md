@@ -106,8 +106,9 @@
     + installation
         * ```shell
           git clone --single-branch --branch v2.4.0 https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner.git
-          docker pull k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0
-          ./kind load docker-image k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0
+          IMAGE="k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0"
+          docker image inspect $IMAGE || docker pull $IMAGE
+          ./kind load docker-image $IMAGE
           ./helm install \
               --create-namespace --namespace storage \
               local-rook-monitor \
@@ -142,8 +143,9 @@
 7. install `rook ceph operator` by helm
     * prepare [values.yaml](resources/rook-ceph/values.yaml.md)
     * ```shell
-      docker pull rook/ceph:v1.7.3
-      ./kind load docker-image rook/ceph:v1.7.3
+      IMAGE="rook/ceph:v1.7.3"
+      docker image inspect $IMAGE || docker pull $IMAGE
+      ./kind load docker-image $IMAGE
       ./helm install \
           --create-namespace --namespace rook-ceph \
           my-rook-ceph-operator \
@@ -167,7 +169,7 @@
               "quay.io/ceph/ceph:v16.2.5" \
               "quay.io/cephcsi/cephcsi:v3.4.0"
           do
-              docker pull $IMAGE
+              docker image inspect $IMAGE || docker pull $IMAGE
               ./kind load docker-image $IMAGE
           done
           # /dev/loop0 will be needed to setup osd
@@ -231,8 +233,9 @@
     * prepare [maria.db.values.yaml](resources/rook-ceph/maria.db.values.yaml.md)
     * helm install maria-db
         + ```shell
-          docker pull docker.io/bitnami/mariadb:10.5.12-debian-10-r32
-          ./kind load docker-image docker.io/bitnami/mariadb:10.5.12-debian-10-r32
+          IMAGE="docker.io/bitnami/mariadb:10.5.12-debian-10-r32"
+          docker image inspect $IMAGE || docker pull $IMAGE
+          ./kind load docker-image $IMAGE
           ./helm install \
               --create-namespace --namespace database \
               maria-db-test \

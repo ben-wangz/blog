@@ -35,7 +35,7 @@
               "quay.io/jetstack/cert-manager-ctl:v1.5.4"
           do
               LOCAL_IMAGE="localhost:5000/$IMAGE"
-              docker pull $IMAGE
+              docker image inspect $IMAGE || docker pull $IMAGE
               docker image tag $IMAGE $LOCAL_IMAGE
               docker push $LOCAL_IMAGE
           done
@@ -71,16 +71,18 @@
         + NOTE: `letsencrypt-prod.nginx.geekcity.tech` needs point to ingress port which can be accessed from network
         + prepare [letsencrypt.prod.issuer.yaml](resources/letsencrypt.prod.issuer.yaml.md)
         + ```shell
-          docker pull "quay.io/jetstack/cert-manager-acmesolver:v1.5.4"
-          ./bin/kind load docker-image "quay.io/jetstack/cert-manager-acmesolver:v1.5.4"
+          IMAGE="quay.io/jetstack/cert-manager-acmesolver:v1.5.4"
+          docker image inspect $IMAGE || docker pull $IMAGE
+          ./bin/kind load docker-image $IMAGE
           ./bin/kubectl -n test apply -f letsencrypt.prod.issuer.yaml
           ```
 5. checking with nginx service
     * prepare images
         + ```shell
-          docker pull docker.io/bitnami/nginx:1.21.3-debian-10-r29
-          docker image tag docker.io/bitnami/nginx:1.21.3-debian-10-r29 localhost:5000/docker.io/bitnami/nginx:1.21.3-debian-10-r29
-          docker push localhost:5000/docker.io/bitnami/nginx:1.21.3-debian-10-r29
+          IMAGE="docker.io/bitnami/nginx:1.21.3-debian-10-r29"
+          docker image inspect $IMAGE || docker pull $IMAGE
+          docker image tag $IMAGE localhost:5000/$IMAGE
+          docker push localhost:5000/$IMAGE
           ```
     * play with `self-signed` issuer
         + prepare [self.signed.nginx.values.yaml](resources/self.signed.nginx.values.yaml.md)
