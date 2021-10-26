@@ -71,7 +71,7 @@ echo "1984c349d5d6b74279402325b6985587d1d32c01695f2946819ce25b638baa0e *ubuntu-2
 
 ```shell
 if type firewall-cmd > /dev/null 2>&1; then 
-    firewall-cmd --permanent --add-port=%s/tcp; 
+    firewall-cmd --permanent --add-port=8080/tcp; 
 fi
 ```
 

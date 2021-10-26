@@ -7,7 +7,7 @@ source<(kubectl completionbash)
 ### port forwarding
 
 ```shell
-kubectl port-forward --address 0.0.0.0 8080:80 # local:pod
+kubectl port-forward --address 0.0.0.0 $SERVICE_OR_POD 8080:80 # local:pod
 ```
 
 ### update certs
