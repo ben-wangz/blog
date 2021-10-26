@@ -43,7 +43,8 @@
       ```
 2. download boot image of centos 8
     * ```shell
-      curl -LO https://mirrors.aliyun.com/centos/8.4.2105/isos/x86_64/CentOS-8.4.2105-x86_64-boot.iso
+      curl -LO http://mirrors.aliyun.com/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-20211020-boot.iso
+      ln -s CentOS-Stream-8-x86_64-20211020-boot.iso CentOS-Stream-8-x86_64-boot.iso
       ```
 3. start qemu machine with boot image and the virtual disk created
     * ```shell
@@ -51,7 +52,7 @@
           -accel kvm \
           -cpu kvm64 -smp cpus=1 \
           -m 1G \
-          -drive file=$(pwd)/CentOS-8.4.2105-x86_64-boot.iso,index=1,media=cdrom \
+          -drive file=$(pwd)/CentOS-Stream-8-x86_64-boot.iso,index=1,media=cdrom \
           -drive file=$(pwd)/centos.8.qcow2,if=virtio,index=0,media=disk,format=qcow2 \
           -rtc base=localtime \
           -pidfile $(pwd)/centos.8.qcow2.pid \
