@@ -1,4 +1,4 @@
-# ingress nginx
+# cert manager
 
 ## main usage
 
