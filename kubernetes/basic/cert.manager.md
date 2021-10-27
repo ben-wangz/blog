@@ -85,10 +85,6 @@
           docker push localhost:5000/$IMAGE
           ```
     * play with `self-signed` issuer
-        + prepare [nginx.certificate.yaml](resources/nginx.certificate.yaml.md)
-        + ```shell
-          ./bin/kubectl -n test apply -f nginx.certificate.yaml
-          ```
         + prepare [self.signed.nginx.values.yaml](resources/self.signed.nginx.values.yaml.md)
         + ```shell
           ./bin/helm install \
