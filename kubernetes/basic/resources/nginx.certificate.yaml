@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nginx-certificate
+spec:
+  secretName: self-signed.nginx.tech-tls
+  duration: 2160h
+  renewBefore: 360h
+  isCA: true
+  commonName: self-signed.nginx.tech
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  dnsNames:
+    - self-signed.nginx.tech
+  issuerRef:
+    name: self-signed-issuer
+    kind: Issuer
+    group: cert-manager.io

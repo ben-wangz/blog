@@ -55,10 +55,10 @@
         + ```shell
           ./bin/kubectl create namespace test --dry-run=client -o yaml | ./bin/kubectl apply -f -
           ```
-    * `self-signed` issuer
-        + prepare [self.signed.issuer.yaml](resources/self.signed.issuer.yaml.md)
+    * combination of `self-signed` issuer and `CA` issuer
+        + prepare [self.signed.and.ca.issuer.yaml](resources/self.signed.and.ca.issuer.yaml.md)
         + ```shell
-          ./bin/kubectl -n test apply -f self.signed.issuer.yaml
+          ./bin/kubectl -n test apply -f self.signed.and.ca.issuer.yaml
           ```
     * `letsencrypt-staging` issuer
         + prepare [letsencrypt.staging.issuer.yaml](resources/letsencrypt.staging.issuer.yaml.md)
@@ -85,6 +85,10 @@
           docker push localhost:5000/$IMAGE
           ```
     * play with `self-signed` issuer
+        + prepare [nginx.certificate.yaml](resources/nginx.certificate.yaml.md)
+        + ```shell
+          ./bin/kubectl -n test apply -f nginx.certificate.yaml
+          ```
         + prepare [self.signed.nginx.values.yaml](resources/self.signed.nginx.values.yaml.md)
         + ```shell
           ./bin/helm install \
@@ -116,6 +120,30 @@
               ...
               </body>
               </html>
+              ```
+        + optional, use tls.crt with your browser: take `wget` as an example
+            * NOTES
+                + `curl` is too strict for ssl, we didn't make it...
+                + auto generated tls is a `BadConfig` for the certificate is being created by a SelfSigned issuer which
+                  has an empty Issuer DN
+            * extract `tls.crt`
+                + ```shell
+                  kubectl -n test get secret self-signed.nginx.tech-tls -o jsonpath="{.data.tls\\.crt}" | base64 --decode > tls.crt
+                  ```
+            * import `tls.crt` into your system
+                + with mac/windows just double click them and modify strategy to trust them
+                + for centos 8
+                    * ```shell
+                      cp tls.crt /etc/pki/ca-trust/source/anchors/
+                      update-ca-trust extract
+                      # how to delete it?
+                      #rm /etc/pki/ca-trust/source/anchors/tls.crt
+                      #update-ca-trust extract
+                      ```
+            * ```shell
+              echo "127.0.0.1 self-signed.nginx.tech" >> /etc/hosts
+              # you'll see the welcome page
+              wget -O - https://self-signed.nginx.tech/my-nginx-prefix/
               ```
     * play with `letsencrypt-staging`
         + prepare [letsencrypt.staging.nginx.values.yaml](resources/letsencrypt.staging.nginx.values.yaml.md)

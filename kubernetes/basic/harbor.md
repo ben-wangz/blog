@@ -34,9 +34,9 @@
 3. setup [cert-manager](cert.manager.md)
 4. configure self-signed issuer
     * `self-signed` issuer
-        + prepare [self.signed.issuer.yaml](resources/self.signed.issuer.yaml.md)
+        + prepare [self.signed.issuer.yaml](resources/self.signed.and.ca.issuer.yaml.md)
         + ```shell
-          ./bin/kubectl -n basic-components apply -f self.signed.issuer.yaml
+          ./bin/kubectl -n basic-components apply -f self.signed.and.ca.issuer.yaml
           ```
 5. setup harbor
     * prepare [harbor.values.yaml](resources/harbor.values.yaml.md)
