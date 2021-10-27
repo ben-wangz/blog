@@ -84,7 +84,7 @@
           docker image tag $IMAGE localhost:5000/$IMAGE
           docker push localhost:5000/$IMAGE
           ```
-    * play with `self-signed` issuer
+    * play with the combination of `self-signed` issuer and `CA` issuer
         + prepare [self.signed.nginx.values.yaml](resources/self.signed.nginx.values.yaml.md)
         + ```shell
           ./bin/helm install \
@@ -126,6 +126,14 @@
                 + ```shell
                   kubectl -n test get secret self-signed.nginx.tech-tls -o jsonpath="{.data.tls\\.crt}" | base64 --decode > tls.crt
                   ```
+                + `tls.crt` should be the same as `connect.service.crt`
+                    * ```shell
+                      openssl s_client \
+                          -connect localhost:443 \
+                          -servername self-signed.nginx.tech \
+                          -showcerts </dev/null 2>/dev/null \
+                          | sed -n '/^-----BEGIN CERT/,/^-----END CERT/p' > connect.service.crt
+                      ```
             * import `tls.crt` into your system
                 + with mac/windows just double click them and modify strategy to trust them
                 + for centos 8
