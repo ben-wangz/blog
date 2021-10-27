@@ -133,6 +133,8 @@
                           -servername self-signed.nginx.tech \
                           -showcerts </dev/null 2>/dev/null \
                           | sed -n '/^-----BEGIN CERT/,/^-----END CERT/p' > connect.service.crt
+                      # the output should be empty
+                      diff connect.service.crt tls.crt
                       ```
             * import `tls.crt` into your system
                 + with mac/windows just double click them and modify strategy to trust them
