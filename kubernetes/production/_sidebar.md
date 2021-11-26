@@ -1,2 +1,2 @@
 * [HOME](/README.md)
-* [kubernetes](README.md)
+* [kubernetes](../README.md)
