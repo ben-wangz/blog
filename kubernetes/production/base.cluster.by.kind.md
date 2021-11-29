@@ -73,9 +73,36 @@
       ```
 
 ## install docker-registry
-1. 
 
-## install gitea
+1. prepare [docker.registry.values.yaml](resources/docker.registry.values.yaml.md)
+2. prepare images
+    * ```shell
+      for IMAGE in "registry:2.7.1"
+      do
+          LOCAL_IMAGE="localhost:5000/$IMAGE"
+          docker image inspect $IMAGE || docker pull $IMAGE
+          docker image tag $IMAGE $LOCAL_IMAGE
+          docker push $LOCAL_IMAGE
+      done
+      ```
+3. install by helm
+    * ```shell
+      ./bin/helm install \
+          --create-namespace --namespace basic-components \
+          my-docker-registry \
+          docker-registry \
+          --version 1.14.0 \
+          --repo https://helm.twun.io \
+          --values $(pwd)/docker.registry.values.yaml \
+          --atomic
+      ```
+4. configure ingress
+    * NOTE: ingress in helm chart is not compatible enough for us, we have to install ingress manually
+    * prepare [docker.registry.ingress.yaml](resources/docker.registry.ingress.yaml.md)
+    * apply ingress
+        + ```shell
+          ./bin/kubectl -n basic-components apply -f docker.registry.ingress.yaml
+          ```
 
 ## install nginx to service the doc of this project
 
