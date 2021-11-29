@@ -1,4 +1,4 @@
-# blog of ben.wangz
+# ben.wangz's blog
 
 * [useful commands](commands/README.md)
 * [qemu](qemu/README.md)
