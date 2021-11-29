@@ -1,0 +1,40 @@
+image:
+  registry: localhost:5000/docker.io
+  repository: bitnami/nginx
+  tag: 1.21.3-debian-10-r29
+  pullPolicy: IfNotPresent
+  pullSecrets: [ ]
+extraVolumes:
+  - name: git-ssh-key-vol
+    secret:
+      secretName: git-ssh-key-secret
+      items:
+        - key: id_rsa
+          path: id_rsa
+          mode: 0600
+service:
+  type: ClusterIP
+cloneStaticSiteFromGit:
+  image:
+    registry: localhost:5000
+    repository: docker.io/bitnami/git
+    tag: 2.33.0-debian-10-r53
+  enabled: true
+  repository: git@github.com:ben-wangz/blog.git
+  branch: main
+  interval: 60
+  extraVolumeMounts:
+    - name: git-ssh-key-vol
+      mountPath: /root/.ssh
+  extraEnvVars:
+    - name: GIT_SSH_COMMAND
+      value: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/issuer: letsencrypt-prod-issuer
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+  hostname: blog.geekcity.tech
+  path: /?(.*)
+  tls: true

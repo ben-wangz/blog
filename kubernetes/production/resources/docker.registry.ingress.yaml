@@ -6,12 +6,13 @@ metadata:
     app.kubernetes.io/name: docker-registry-ingress
     app.kubernetes.io/instance: my-docker-registry-ingress
   annotations:
+    cert-manager.io/issuer: letsencrypt-prod-issuer
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/proxy-body-size: 5g
 spec:
   rules:
-    - host: docker.registry.lan
+    - host: docker.registry.geekcity.tech
       http:
         paths:
           - path: /?(.*)
@@ -23,5 +24,5 @@ spec:
                   number: 5000
   tls:
     - hosts:
-        - docker.registry.lan
-      secretName: docker.registry.lan-tls
+        - docker.registry.geekcity.tech
+      secretName: docker-registry-geekcity-tech-tls

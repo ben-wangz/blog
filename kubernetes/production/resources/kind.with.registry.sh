@@ -14,7 +14,7 @@ if [ "${running}" != 'true' ]; then
     --restart=always \
     -p "127.0.0.1:${REGISTRY_PORT}:5000" \
     --name "${REGISTRY_NAME}" \
-    -d registry:2
+    -d registry:2.7.1
 fi
 
 # create a cluster with the local registry enabled in containerd
