@@ -73,6 +73,7 @@
       ```
 
 ## install docker-registry
+1. 
 
 ## install gitea
 
