@@ -11,3 +11,7 @@
           --add-host host.docker.internal:host-gateway \
           ...
       ```
+3. remove all stopped containers
+    + ```shell
+      docker container prune
+      ```
