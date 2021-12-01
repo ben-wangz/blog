@@ -1,0 +1,1 @@
+[gitea.values.yaml](gitea.values.yaml ':include')

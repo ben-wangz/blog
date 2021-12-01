@@ -5,4 +5,5 @@
 * [storage](storage/README.md)
 * [basic components](basic/README.md)
 * [monitor](monitor/README.md)
+* [software](software/README.md)
 * [production](production/README.md)
