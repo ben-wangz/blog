@@ -65,10 +65,15 @@
           ```
     * create `gitea-admin-secret`
         + ```shell
+          # uses the "Array" declaration
+          # referencing the variable again with as $PASSWORD an index array is the same as ${PASSWORD[0]}
+          ./bin/kubectl get namespace application \
+              || ./bin/kubectl create namespace application
+          PASSWORD=($((echo -n $RANDOM | md5sum 2>/dev/null) || (echo -n $RANDOM | md5 2>/dev/null)))
           ./bin/kubectl -n application \
               create secret generic gitea-admin-secret \
-              ---from-literal=username=admin \
-              --from-literal=password=$((echo $RANDOM | md5sum 2>/dev/null) || (echo $RANDOM | md5 2>/dev/null))
+              --from-literal=username=admin \
+              --from-literal=password=$PASSWORD
           ```
     * install with helm
         + ```shell

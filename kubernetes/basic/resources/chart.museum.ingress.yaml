@@ -1,0 +1,10 @@
+image:
+  repository: localhost:5000/ghcr.io/helm/chartmuseum
+  tag: v0.13.1
+  pullPolicy: IfNotPresent
+volumePermissions:
+  image:
+    registry: localhost:5000/docker.io
+    repository: bitnami/minideb
+    tag: buster
+    pullPolicy: IfNotPresent

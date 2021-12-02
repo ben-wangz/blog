@@ -2,7 +2,7 @@
 
 ## main usage
 
-* a registry for docker
+* chart-museum for helm charts
 
 ## conceptions
 
@@ -24,8 +24,8 @@
 * create a kubernetes cluster by kind
 * setup ingress
 * setup cert-manager and self-signed issuer
-* setup docker registry
-* test docker registry
+* setup chart-museum
+* test chart-museum
 
 ### do it
 
@@ -38,11 +38,12 @@
         + ```shell
           ./bin/kubectl -n basic-components apply -f self.signed.and.ca.issuer.yaml
           ```
-5. setup docker registry
-    * prepare [docker.registry.values.yaml](resources/docker.registry.values.yaml.md)
+5. setup chart-museum
+    * prepare [chart.museum.values.yaml](resources/chart.museum.values.yaml.md)
     * prepare images
         + ```shell
-          for IMAGE in "registry:2.7.1"
+          for IMAGE in "ghcr.io/helm/chartmuseum:0.13.1" \
+              "bitnami/minideb:buster"
           do
               LOCAL_IMAGE="localhost:5000/$IMAGE"
               docker image inspect $IMAGE || docker pull $IMAGE
@@ -54,21 +55,14 @@
         + ```shell
           ./bin/helm install \
               --create-namespace --namespace basic-components \
-              my-docker-registry \
-              docker-registry \
-              --version 1.14.0 \
-              --repo https://helm.twun.io \
-              --values $(pwd)/docker.registry.values.yaml \
+              my-chart-museum \
+              chartmuseum \
+              --version 3.4.0 \
+              --repo https://chartmuseum.github.io/charts \
+              --values chart.museum.values.yaml \
               --atomic
           ```
-    * configure ingress
-        + NOTE: ingress in helm chart is not compatible enough for us, we have to install ingress manually
-        + prepare [docker.registry.ingress.yaml](resources/docker.registry.ingress.yaml.md)
-        + apply ingress
-            * ```shell
-              ./bin/kubectl -n basic-components apply -f docker.registry.ingress.yaml
-              ```
-6. test `docker push` and `docker pull` from `docker-registry`
+6. test `helm push` and `helm pull` from `chart-museum`
     * configure `/etc/hosts` to point `` to the host
     * configure docker client as our tls is self-signed
         + ```shell
