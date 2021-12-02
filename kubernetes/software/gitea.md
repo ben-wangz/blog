@@ -70,9 +70,10 @@
           ./bin/kubectl get namespace application \
               || ./bin/kubectl create namespace application
           PASSWORD=($((echo -n $RANDOM | md5sum 2>/dev/null) || (echo -n $RANDOM | md5 2>/dev/null)))
+          # NOTE: username should have at least 6 characters
           ./bin/kubectl -n application \
               create secret generic gitea-admin-secret \
-              --from-literal=username=admin \
+              --from-literal=username=gitea_admin \
               --from-literal=password=$PASSWORD
           ```
     * install with helm
@@ -86,3 +87,11 @@
               --values gitea.values.yaml \
               --atomic
           ```
+4. register an account
+5. visit gitea from website
+    * port-forward
+        + ```shell
+          ./bin/kubectl --namespace application port-forward svc/my-gitea-http 3000:3000 --address 0.0.0.0
+          ```
+    * visit http://$HOST:3000
+6. visit gitea with ssh
