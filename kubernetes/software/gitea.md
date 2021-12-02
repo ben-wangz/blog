@@ -51,11 +51,11 @@
     * prepare images
         + ```shell
           for IMAGE in "gitea/gitea:1.15.3" \
-              "bitnami/memcached:1.6.9-debian-10-r114" \
-              "bitnami/memcached-exporter:0.8.0-debian-10-r105" \
-              "bitnami/postgresql:11.11.0-debian-10-r62" \
-              "bitnami/bitnami-shell:10" \
-              "bitnami/postgres-exporter:0.9.0-debian-10-r34"
+              "docker.io/bitnami/memcached:1.6.9-debian-10-r114" \
+              "docker.io/bitnami/memcached-exporter:0.8.0-debian-10-r105" \
+              "docker.io/bitnami/postgresql:11.11.0-debian-10-r62" \
+              "docker.io/bitnami/bitnami-shell:10" \
+              "docker.io/bitnami/postgres-exporter:0.9.0-debian-10-r34"
           do
               LOCAL_IMAGE="localhost:5000/$IMAGE"
               docker image inspect $IMAGE || docker pull $IMAGE
@@ -78,7 +78,7 @@
     * install with helm
         + ```shell
           ./bin/helm install \
-              --create-namespace --namespace basic-components \
+              --create-namespace --namespace application \
               my-gitea \
               gitea \
               --version 4.1.1 \

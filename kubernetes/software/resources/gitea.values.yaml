@@ -42,8 +42,8 @@ gitea:
       enabled: true
 memcached:
   image:
-    registry: docker.io
-    repository: localhost:5000/bitnami/memcached
+    registry: localhost:5000/docker.io
+    repository: bitnami/memcached
     tag: 1.6.9-debian-10-r114
     pullPolicy: IfNotPresent
   service:
@@ -52,8 +52,8 @@ memcached:
     enabled: false
   metrics:
     image:
-      registry: docker.io
-      repository: localhost:5000/bitnami/memcached-exporter
+      registry: localhost:5000/docker.io
+      repository: bitnami/memcached-exporter
       tag: 0.8.0-debian-10-r105
       pullPolicy: IfNotPresent
 postgresql:
@@ -64,8 +64,8 @@ postgresql:
       postgresqlPassword: gitea
       servicePort: 5432
   image:
-    registry: docker.io
-    repository: localhost:5000/bitnami/postgresql
+    registry: localhost:5000/docker.io
+    repository: bitnami/postgresql
     tag: 11.11.0-debian-10-r62
     pullPolicy: IfNotPresent
   persistence:
@@ -73,13 +73,13 @@ postgresql:
     storageClass: standard
   volumePermissions:
     image:
-      registry: docker.io
-      repository: localhost:5000/bitnami/bitnami-shell
+      registry: localhost:5000/docker.io
+      repository: bitnami/bitnami-shell
       tag: "10"
       pullPolicy: IfNotPresent
   metrics:
     image:
-      registry: docker.io
-      repository: localhost:5000/bitnami/postgres-exporter
+      registry: localhost:5000/docker.io
+      repository: bitnami/postgres-exporter
       tag: 0.9.0-debian-10-r34
       pullPolicy: IfNotPresent
