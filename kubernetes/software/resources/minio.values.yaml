@@ -16,6 +16,7 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/proxy-body-size: 10g
   hostname: web.minio.local
   path: /?(.*)
   tls: false
@@ -24,6 +25,7 @@ apiIngress:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/proxy-body-size: 10g
   hostname: api.minio.local
   path: /?(.*)
   tls: false
