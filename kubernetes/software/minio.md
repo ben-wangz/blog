@@ -1,4 +1,4 @@
-# gitea
+# minio
 
 ## main usage
 
