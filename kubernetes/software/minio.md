@@ -107,32 +107,32 @@
           ./bin/kubectl -n application exec -it my-minio-tool \
               -- bash -c 'mc config host add minio http://$MINIO_SERVER_HOST:$MINIO_SERVER_PORT $MINIO_SERVER_ACCESS_KEY $MINIO_SERVER_SECRET_KEY'
           ```
-    * list buckets(run commands in pod created)
+    * list buckets
         + ```shell
           ./bin/kubectl -n application exec -it my-minio-tool \
               -- bash -c 'mc ls minio'
           ```
-    * create bucket(run commands in pod created)
+    * create bucket
         + ```shell
           ./bin/kubectl -n application exec -it my-minio-tool \
               -- bash -c 'mc mb minio/bucket-from-client-a && mc mb minio/bucket-from-client-b'
           ```
-    * delete bucket(run commands in pod created)
+    * delete bucket
         + ```shell
           ./bin/kubectl -n application exec -it my-minio-tool \
               -- bash -c 'mc rb minio/bucket-from-client-a'
           ```
-    * list file in bucket(run commands in pod created)
+    * list file in bucket
         + ```shell
           ./bin/kubectl -n application exec -it my-minio-tool \
               -- bash -c 'mc ls minio/bucket-from-client-b'
           ```
-    * add file to bucket(run commands in pod created)
+    * add file to bucket
         + ```shell
           ./bin/kubectl -n application exec -it my-minio-tool \
               -- bash -c 'mc cp /etc/hosts minio/bucket-from-client-b/hosts && mc cp /etc/hosts minio/bucket-from-client-b/hosts-copy'
           ```
-    * delete file from bucket(run commands in pod created)
+    * delete file from bucket
         + ```shell
           ./bin/kubectl -n application exec -it my-minio-tool \
               -- bash -c 'mc rm minio/bucket-from-client-b/hosts'
