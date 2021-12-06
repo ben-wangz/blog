@@ -5,7 +5,7 @@
     * kind
     * kubectl
 3. configuration
-    * [kind.cluster.yaml](resources/kind/kind.cluster.yaml.md)
+    * [kind.cluster.yaml](resources/create.local.cluster.with.kind/kind.cluster.yaml.md)
 4. create cluster
     * ```shell
       kind create cluster --config $(pwd)/kind.cluster.yaml

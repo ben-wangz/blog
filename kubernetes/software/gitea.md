@@ -24,7 +24,7 @@
 
 1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
 2. install ingress nginx
-    * prepare [ingress.nginx.values.yaml](../basic/resources/ingress.nginx.values.yaml.md)
+    * prepare [ingress.nginx.values.yaml](../basic/resources/ingress.nginx/ingress.nginx.values.yaml.md)
     * prepare images
         + ```shell
           for IMAGE in "k8s.gcr.io/ingress-nginx/controller:v1.0.3" "k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.0"

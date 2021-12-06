@@ -54,7 +54,7 @@
 
 ### test with kind
 
-1. prepare [all.in.one.8.repo](../kubernetes/resources/all.in.one.8.repo.md)
+1. prepare [all.in.one.8.repo](resources/create.qemu.machine.for.kind/all.in.one.8.repo.md)
 2. replace yum repositories
     * ```shell
       REPO_CONTENT=$(cat all.in.one.8.repo) \
@@ -76,7 +76,7 @@
               && scp $SSH_OPTIONS -P 10022 kubectl helm kind root@localhost:/root/bin
           ```
 5. prepare docker images
-    * run scripts in [download.and.load.function.sh](resources/download.and.load.function.sh.md)
+    * run scripts in [download.and.load.function.sh](resources/create.qemu.machine.for.kind/download.and.load.function.sh.md)
     * ```shell
       TOPIC_DIRECTORY="create.qemu.machine.for.kind"
       BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
@@ -85,8 +85,8 @@
           "docker.io_kindest_node_v1.22.1.dim"
       ```
 6. create cluster with a local docker registry
-    * prepare [kind.cluster.yaml](resources/kind.cluster.yaml.md)
-    * prepare [kind.with.registry.sh](resources/kind.with.registry.sh.md)
+    * prepare [kind.cluster.yaml](resources/create.qemu.machine.for.kind/kind.cluster.yaml.md)
+    * prepare [kind.with.registry.sh](resources/create.qemu.machine.for.kind/kind.with.registry.sh.md)
     * create cluster
         + ```shell
           SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" \

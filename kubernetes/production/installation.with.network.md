@@ -22,7 +22,7 @@
         + ```shell
           rm -rf /etc/yum.repos.d/*
           ```
-    * based on your os system, copy [all.in.one.8.repo](../resources/all.in.one.8.repo.md) as file `/etc/yum.repos.d/all.in.one.repo`
+    * based on your os system, copy [all.in.one.8.repo](../resources/create.qemu.machine.for.kind/all.in.one.8.repo.md) as file `/etc/yum.repos.d/all.in.one.repo`
 3. install base environment for all nodes
     * copy [setup.base.sh](../resources/setup.base.sh.md) as file `/tmp/setup.base.sh`
     * ```shell

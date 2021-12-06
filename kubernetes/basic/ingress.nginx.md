@@ -24,7 +24,7 @@
 
 1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
 2. download and load images to qemu machine(run command at the host of qemu machine)
-    * run scripts in [download.and.load.function.sh](../resources/download.and.load.function.sh.md)
+    * run scripts in [download.and.load.function.sh](../resources/create.qemu.machine.for.kind/download.and.load.function.sh.md)
     * ```shell
       TOPIC_DIRECTORY="ingress.nginx.basic"
       BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
@@ -34,7 +34,7 @@
           "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim"
       ```
 3. install ingress nginx
-    * prepare [ingress.nginx.values.yaml](resources/ingress.nginx.values.yaml.md)
+    * prepare [ingress.nginx.values.yaml](resources/ingress.nginx/ingress.nginx.values.yaml.md)
     * prepare images
         + ```shell
           for IMAGE in "k8s.gcr.io/ingress-nginx/controller:v1.0.3" \
