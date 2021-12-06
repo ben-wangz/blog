@@ -24,33 +24,8 @@
 
 1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
 2. download and load images to qemu machine(run command at the host of qemu machine)
+    * run scripts in [download.and.load.function.sh](../resources/download.and.load.function.sh.md)
     * ```shell
-      function download_and_load()
-      {
-          TOPIC_DIRECTORY=$1
-          BASE_URL=$2
-          IMAGE_LIST="${@:3}"
-          
-          # prepare directories
-          IMAGE_FILE_DIRECTORY_AT_HOST=docker-images/$TOPIC_DIRECTORY
-          IMAGE_FILE_DIRECTORY_AT_QEMU_MACHINE=/root/docker-images/$TOPIC_DIRECTORY
-          mkdir -p $IMAGE_FILE_DIRECTORY_AT_HOST
-          SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
-          ssh $SSH_OPTIONS -p 10022 root@localhost "mkdir -p $IMAGE_FILE_DIRECTORY_AT_QEMU_MACHINE"
-      
-          for IMAGE_FILE in $IMAGE_LIST
-          do
-              IMAGE_FILE_AT_HOST=docker-images/$TOPIC_DIRECTORY/$IMAGE_FILE
-              IMAGE_FILE_AT_QEMU_MACHINE=$IMAGE_FILE_DIRECTORY_AT_QEMU_MACHINE/$IMAGE_FILE
-              if [ ! -f $IMAGE_FILE_AT_HOST ]; then
-                  TMP_FILE=$IMAGE_FILE_AT_HOST.tmp
-                  curl -o $TMP_FILE -L ${BASE_URL}/$TOPIC_DIRECTORY/$IMAGE_FILE
-                  mv $TMP_FILE $IMAGE_FILE_AT_HOST
-              fi
-              scp $SSH_OPTIONS -P 10022 $IMAGE_FILE_AT_HOST root@localhost:$IMAGE_FILE_AT_QEMU_MACHINE \
-                  && ssh $SSH_OPTIONS -p 10022 root@localhost "docker image load -i $IMAGE_FILE_AT_QEMU_MACHINE"
-          done
-      }
       TOPIC_DIRECTORY="ingress.nginx.basic"
       BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \

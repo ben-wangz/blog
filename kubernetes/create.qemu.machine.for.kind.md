@@ -76,28 +76,14 @@
               && scp $SSH_OPTIONS -P 10022 kubectl helm kind root@localhost:/root/bin
           ```
 5. prepare docker images
-    * download and load docker images
-        + ```shell
-          TOPIC_DIRECTORY=create.qemu.machine.for.kind
-          mkdir -p docker-images/$TOPIC_DIRECTORY
-          BASE_URL=https://nginx.geekcity.tech/proxy/docker-images/x86_64
-          for IMAGE_FILE in "docker.io_registry_2.7.1.dim" \
-              "docker.io_kindest_node_v1.22.1.dim"
-          do
-              IMAGE_FILE_AT_HOST=docker-images/$TOPIC_DIRECTORY/$IMAGE_FILE
-              IMAGE_FILE_DIRECTORY_AT_QEMU_MACHINE=/root/docker-images/$TOPIC_DIRECTORY
-              IMAGE_FILE_AT_QEMU_MACHINE=$IMAGE_FILE_DIRECTORY_AT_QEMU_MACHINE/$IMAGE_FILE
-              if [ ! -f $IMAGE_FILE_AT_HOST ]; then
-                  TMP_FILE=$IMAGE_FILE_AT_HOST.tmp
-                  curl -o $TMP_FILE -L ${BASE_URL}/$TOPIC_DIRECTORY/$IMAGE_FILE
-                  mv $TMP_FILE $IMAGE_FILE_AT_HOST
-              fi
-              SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" \
-                  && ssh $SSH_OPTIONS -p 10022 root@localhost "mkdir -p $IMAGE_FILE_DIRECTORY_AT_QEMU_MACHINE" \
-                  && scp $SSH_OPTIONS -P 10022 $IMAGE_FILE_AT_HOST root@localhost:$IMAGE_FILE_AT_QEMU_MACHINE \
-                  && ssh $SSH_OPTIONS -p 10022 root@localhost "docker image load -i $IMAGE_FILE_AT_QEMU_MACHINE"
-          done
-          ```
+    * run scripts in [download.and.load.function.sh](resources/download.and.load.function.sh.md)
+    * ```shell
+      TOPIC_DIRECTORY="create.qemu.machine.for.kind"
+      BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
+      download_and_load $TOPIC_DIRECTORY $BASE_URL \
+          "docker.io_registry_2.7.1.dim" \
+          "docker.io_kindest_node_v1.22.1.dim"
+      ```
 6. create cluster with a local docker registry
     * prepare [kind.cluster.yaml](resources/kind.cluster.yaml.md)
     * prepare [kind.with.registry.sh](resources/kind.with.registry.sh.md)
