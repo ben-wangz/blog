@@ -23,50 +23,89 @@
 ### do it
 
 1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
-2. install ingress nginx
+2. download and load images to qemu machine(run command at the host of qemu machine)
+    * ```shell
+      function download_and_load()
+      {
+          TOPIC_DIRECTORY=$1
+          BASE_URL=$2
+          IMAGE_LIST="${@:3}"
+          
+          # prepare directories
+          IMAGE_FILE_DIRECTORY_AT_HOST=docker-images/$TOPIC_DIRECTORY
+          IMAGE_FILE_DIRECTORY_AT_QEMU_MACHINE=/root/docker-images/$TOPIC_DIRECTORY
+          mkdir -p $IMAGE_FILE_DIRECTORY_AT_HOST
+          SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+          ssh $SSH_OPTIONS -p 10022 root@localhost "mkdir -p $IMAGE_FILE_DIRECTORY_AT_QEMU_MACHINE"
+      
+          for IMAGE_FILE in $IMAGE_LIST
+          do
+              IMAGE_FILE_AT_HOST=docker-images/$TOPIC_DIRECTORY/$IMAGE_FILE
+              IMAGE_FILE_AT_QEMU_MACHINE=$IMAGE_FILE_DIRECTORY_AT_QEMU_MACHINE/$IMAGE_FILE
+              if [ ! -f $IMAGE_FILE_AT_HOST ]; then
+                  TMP_FILE=$IMAGE_FILE_AT_HOST.tmp
+                  curl -o $TMP_FILE -L ${BASE_URL}/$TOPIC_DIRECTORY/$IMAGE_FILE
+                  mv $TMP_FILE $IMAGE_FILE_AT_HOST
+              fi
+              scp $SSH_OPTIONS -P 10022 $IMAGE_FILE_AT_HOST root@localhost:$IMAGE_FILE_AT_QEMU_MACHINE \
+                  && ssh $SSH_OPTIONS -p 10022 root@localhost "docker image load -i $IMAGE_FILE_AT_QEMU_MACHINE"
+          done
+      }
+      TOPIC_DIRECTORY="ingress.nginx.basic"
+      BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
+      download_and_load $TOPIC_DIRECTORY $BASE_URL \
+          "k8s.gcr.io_ingress-nginx_controller_v1.0.3.dim" \
+          "k8s.gcr.io_ingress-nginx_kube-webhook-certgen_v1.0.dim" \
+          "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim"
+      ```
+3. install ingress nginx
     * prepare [ingress.nginx.values.yaml](resources/ingress.nginx.values.yaml.md)
     * prepare images
         + ```shell
-          for IMAGE in "k8s.gcr.io/ingress-nginx/controller:v1.0.3" "k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.0"
+          for IMAGE in "k8s.gcr.io/ingress-nginx/controller:v1.0.3" \
+              "k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.0"
           do
               LOCAL_IMAGE="localhost:5000/$IMAGE"
-              docker image inspect $IMAGE || docker pull $IMAGE
+              docker image inspect $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
               docker image tag $IMAGE $LOCAL_IMAGE
               docker push $LOCAL_IMAGE
           done
           ```
     * ```shell
-      ./bin/helm install \
+      helm install \
           --create-namespace --namespace basic-components \
           my-ingress-nginx \
           ingress-nginx \
           --version 4.0.5 \
           --repo https://kubernetes.github.io/ingress-nginx \
-          --values $(pwd)/ingress.nginx.values.yaml \
+          --values ingress.nginx.values.yaml \
           --atomic
       ```
-3. install nginx service
+4. install nginx service
     * prepare [nginx.values.yaml](resources/nginx.values.yaml.md)
     * prepare images
         + ```shell
-          IMAGE="docker.io/bitnami/nginx:1.21.3-debian-10-r29"
-          docker image inspect $IMAGE || docker pull $IMAGE
-          docker image tag $IMAGE localhost:5000/$IMAGE
-          docker push localhost:5000/$IMAGE
+          for IMAGE in "docker.io/bitnami/nginx:1.21.3-debian-10-r29"
+          do
+              LOCAL_IMAGE="localhost:5000/$IMAGE"
+              docker image inspect $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
+              docker image tag $IMAGE $LOCAL_IMAGE
+              docker push $LOCAL_IMAGE
+          done
           ```
     * ```shell
-      ./bin/helm install \
+      helm install \
           --create-namespace --namespace test \
           my-nginx \
           nginx \
           --version 9.5.7 \
           --repo https://charts.bitnami.com/bitnami \
-          --values $(pwd)/nginx.values.yaml \
+          --values nginx.values.yaml \
           --atomic
       ```
-4. access nginx service with ingress
+5. access nginx service with ingress
     + ```shell
-      curl --header 'Host: my.nginx.tech' http://localhost/my-nginx-prefix/
+      curl --header 'Host: my.nginx.local' http://localhost/my-nginx-prefix/
       ```
     + expected output is something like
         * ```html
@@ -94,7 +133,7 @@
           </body>
           </html>
           ```
-5. NOTES
+6. NOTES
     * `ingress-nginx` use `NodePort` as serviceType, whose nodePorts contains 32080(http) and 32443(https)
     * 32080(http) and 32443(https) mapped to 80 and 443 at localhost(the host machine of kind cluster) by kind
       configuration
