@@ -1,14 +1,23 @@
+# install qemu with linux
+
+## purpose
+
+* start QEMU virtual machine with KVM(Kernel-based Virtual Machine) accelerator
+
+## pre-requirements
+
+* linux operating system with x86_64 chip(take Ubuntu 20.04.2 LTS as an example)
+* cpu support virtualization(to use KVM accelerator)
+
+## do it
+
 ### create centos 8 with qemu
 
-1. create step by step
+1. install qemu
     * [install with linux](install.with.linux.md)
     * [install with mac](install.with.mac.md)
     * TODO: [install with windows]()
-2. if you do not want to install system
-    * install qemu
-    * download disk already installed
-    * start machine with qemu
-3. in practise(take Ubuntu 20.04.2 LTS as an example)
+2. in practise(take Ubuntu 20.04.2 LTS as an example)
     * download
         + ```shell
           curl -LO https://nginx.geekcity.tech/proxy/qemu/centos.8.qcow2

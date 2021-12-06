@@ -44,7 +44,7 @@
           ssh -o "UserKnownHostsFile /dev/null" -p 1022 root@localhost
           ```
         + default password is `123456`
-    * optional, replace yum repositories with [all.in.one.8.repo](../resources/all.in.one.8.repo.md)
+    * replace yum repositories with [all.in.one.8.repo](../resources/all.in.one.8.repo.md)
     * install docker
         + ```shell
           dnf -y install tar yum-utils device-mapper-persistent-data lvm2 docker-ce \

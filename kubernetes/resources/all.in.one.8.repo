@@ -12,7 +12,6 @@ gpgkey=https://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-Official
 
 [AppStream]
 name=CentOS-$releasever - AppStream - mirrors.aliyun.com
-failovermethod=priority
 baseurl=https://mirrors.aliyun.com/centos/$releasever/AppStream/$basearch/os/
 gpgcheck=1
 gpgkey=https://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-Official

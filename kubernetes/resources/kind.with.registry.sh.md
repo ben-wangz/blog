@@ -1,0 +1,1 @@
+[kind.with.registry.sh](kind.with.registry.sh ':include')

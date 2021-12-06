@@ -20,6 +20,7 @@
 * CentOS 8
     + ```shell
       dnf install qemu-kvm \
+          && mkdir -p /root/bin \
           && ln -s /usr/libexec/qemu-kvm /root/bin/qemu-kvm \
           && ln -s /root/bin/qemu-kvm /root/bin/qemu-system-x86_64
       ```
@@ -43,8 +44,8 @@
       ```
 2. download boot image of centos 8
     * ```shell
-      curl -LO http://mirrors.aliyun.com/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-20211020-boot.iso
-      ln -s CentOS-Stream-8-x86_64-20211020-boot.iso CentOS-Stream-8-x86_64-boot.iso
+      curl -LO http://mirrors.aliyun.com/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-boot.iso
+      ln -s CentOS-Stream-8-x86_64-latest-boot.iso CentOS-Stream-8-x86_64-boot.iso
       ```
 3. start qemu machine with boot image and the virtual disk created
     * ```shell

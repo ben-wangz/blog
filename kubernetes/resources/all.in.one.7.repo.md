@@ -1,1 +1,0 @@
-[all.in.one.7.repo](all.in.one.7.repo ':include')
