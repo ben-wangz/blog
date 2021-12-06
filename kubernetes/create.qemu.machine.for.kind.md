@@ -37,7 +37,7 @@
               -nic user,hostfwd=tcp::10022-:22,hostfwd=tcp::10080-:80,hostfwd=tcp::10443-:443 \
               -daemonize
           ```
-        + note: 10022, 10080 and 10443 is redirected to the ports of qemu-machine
+        + note: 10022, 10080 and 10443 are redirected to the ports of qemu-machine
 
 ### access the machine started with ssh
 
