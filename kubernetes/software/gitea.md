@@ -22,7 +22,7 @@
 
 ### do it
 
-1. [create local cluster for testing](../basic/local.cluster.for.testing.md)
+1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
 2. install ingress nginx
     * prepare [ingress.nginx.values.yaml](../basic/resources/ingress.nginx.values.yaml.md)
     * prepare images

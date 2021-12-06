@@ -27,4 +27,4 @@
 
 ### do it
 
-1. [create local cluster for testing](local.cluster.for.testing.md)
+1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)

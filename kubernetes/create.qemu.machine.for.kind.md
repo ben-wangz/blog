@@ -116,3 +116,7 @@
               "/root/bin/kubectl -n kube-system wait --for=condition=ready pod --all \
                   && /root/bin/kubectl get pod --all-namespaces"
           ```
+7. login with ssh and enjoy
+    * ```shell
+      ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022 root@localhost
+      ```

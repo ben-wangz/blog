@@ -23,7 +23,7 @@
 
 ### do it
 
-1. [create local cluster for testing](local.cluster.for.testing.md)
+1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
 2. setup [ingress-nginx](ingress.nginx.md)
 3. install cert manager
     * prepare [cert.manager.values.yaml](resources/cert.manager.values.yaml.md)
