@@ -56,7 +56,10 @@
           --values cert.manager.values.yaml \
           --atomic
       ```
-5. config issuer(s)
+
+## checking with nginx service
+
+1. config issuer(s)
     * create `test` namespace if not exists
         + ```shell
           kubectl get namespace test > /dev/null 2>&1 || kubectl create namespace test
@@ -79,16 +82,13 @@
         + ```shell
           kubectl -n test apply -f letsencrypt.prod.issuer.yaml
           ```
-
-## checking with nginx service
-
-1. prepare images
+2. prepare images
     * run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
     * ```shell
       load_image "localhost:5000" \
           "docker.io/bitnami/nginx:1.21.3-debian-10-r29"
       ```
-2. play with the combination of `self-signed` issuer and `CA` issuer
+3. play with the combination of `self-signed` issuer and `CA` issuer
     + prepare [self.signed.nginx.values.yaml](resources/cert.manager/self.signed.nginx.values.yaml.md)
     + ```shell
       helm install \
@@ -154,9 +154,10 @@
             + ```shell
               echo "127.0.0.1 self-signed.nginx.local" >> /etc/hosts
               # you'll see the welcome page
-              wget -O - https://self-signed.nginx.local/my-nginx-prefix/
+              dnf -y install wget \
+                  && wget -O - https://self-signed.nginx.local/my-nginx-prefix/
               ```
-3. play with `letsencrypt-staging`
+4. play with `letsencrypt-staging`
     + prepare [letsencrypt.staging.nginx.values.yaml](resources/cert.manager/letsencrypt.staging.nginx.values.yaml.md)
     + ```shell
       helm install \
@@ -171,7 +172,7 @@
     + ```shell
       curl --insecure --header 'Host: letsencrypt-staging.nginx.local' https://localhost/my-nginx-prefix/
       ```
-4. play with `letsencrypt-prod`
+5. play with `letsencrypt-prod`
     + prepare [letsencrypt.prod.nginx.values.yaml](resources/cert.manager/letsencrypt.prod.nginx.values.yaml.md)
     + NOTE: `letsencrypt-prod.nginx.geekcity.tech` should be pointed to your host, otherwise `letsencrypt` can not find
       the `acmesolver`

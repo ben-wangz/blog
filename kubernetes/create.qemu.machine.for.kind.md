@@ -52,7 +52,7 @@
                   && chmod 600 .ssh/authorized_keys"
       ```
 
-### test with kind
+### create kind cluster
 
 1. prepare [all.in.one.8.repo](resources/create.qemu.machine.for.kind/all.in.one.8.repo.md)
 2. replace yum repositories
@@ -68,6 +68,13 @@
               && systemctl enable docker \
               && systemctl start docker"
       ```
+    * pre-configure docker-registry to support `insecure.docker.registry.local:80` which may be needed later
+        + prepare [docker.daemon.json](resources/create.qemu.machine.for.kind/docker.daemon.json.md)
+        + ```shell
+          SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" \
+              && scp $SSH_OPTIONS -P 10022 docker.daemon.json root@localhost:/etc/docker/daemon.json \
+              && ssh $SSH_OPTIONS -p 10022 root@localhost "systemctl restart docker"
+          ```
 4. [download kubernetes binary tools](../kubernetes/download.kubernetes.binary.tools.md)
     * copy to `/root/bin`
         + ```shell
@@ -76,7 +83,8 @@
               && scp $SSH_OPTIONS -P 10022 kubectl helm kind root@localhost:/root/bin
           ```
 5. prepare docker images
-    * run scripts in [download.and.load.function.sh](resources/create.qemu.machine.for.kind/download.and.load.function.sh.md)
+    * run scripts
+      in [download.and.load.function.sh](resources/create.qemu.machine.for.kind/download.and.load.function.sh.md)
     * ```shell
       TOPIC_DIRECTORY="create.qemu.machine.for.kind"
       BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
