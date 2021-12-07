@@ -35,7 +35,7 @@
           "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim"
       ```
 4. install cert manager
-    * prepare [cert.manager.values.yaml](resources/cert.manager.values.yaml.md)
+    * prepare [cert.manager.values.yaml](resources/cert.manager/cert.manager.values.yaml.md)
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
@@ -62,12 +62,12 @@
           kubectl get namespace test > /dev/null 2>&1 || kubectl create namespace test
           ```
     * combination of `self-signed` issuer and `CA` issuer
-        + prepare [self.signed.and.ca.issuer.yaml](resources/self.signed.and.ca.issuer.yaml.md)
+        + prepare [self.signed.and.ca.issuer.yaml](resources/cert.manager/self.signed.and.ca.issuer.yaml.md)
         + ```shell
           kubectl -n test apply -f self.signed.and.ca.issuer.yaml
           ```
     * `letsencrypt-staging` issuer
-        + prepare [letsencrypt.staging.issuer.yaml](resources/letsencrypt.staging.issuer.yaml.md)
+        + prepare [letsencrypt.staging.issuer.yaml](resources/cert.manager/letsencrypt.staging.issuer.yaml.md)
         + ```shell
           kubectl -n test apply -f letsencrypt.staging.issuer.yaml
           ```
@@ -75,7 +75,7 @@
         + NOTE: a domain name is needed. and in this case `letsencrypt-prod.nginx.geekcity.tech` will be used
         + NOTE: take care of [limits for requests](https://letsencrypt.org/docs/rate-limits/)
         + NOTE: `letsencrypt-prod.nginx.geekcity.tech` needs point to ingress port which can be accessed from network
-        + prepare [letsencrypt.prod.issuer.yaml](resources/letsencrypt.prod.issuer.yaml.md)
+        + prepare [letsencrypt.prod.issuer.yaml](resources/cert.manager/letsencrypt.prod.issuer.yaml.md)
         + ```shell
           kubectl -n test apply -f letsencrypt.prod.issuer.yaml
           ```
@@ -89,7 +89,7 @@
           "docker.io/bitnami/nginx:1.21.3-debian-10-r29"
       ```
 2. play with the combination of `self-signed` issuer and `CA` issuer
-    + prepare [self.signed.nginx.values.yaml](resources/self.signed.nginx.values.yaml.md)
+    + prepare [self.signed.nginx.values.yaml](resources/cert.manager/self.signed.nginx.values.yaml.md)
     + ```shell
       helm install \
           --create-namespace --namespace test \
@@ -157,7 +157,7 @@
               wget -O - https://self-signed.nginx.local/my-nginx-prefix/
               ```
 3. play with `letsencrypt-staging`
-    + prepare [letsencrypt.staging.nginx.values.yaml](resources/letsencrypt.staging.nginx.values.yaml.md)
+    + prepare [letsencrypt.staging.nginx.values.yaml](resources/cert.manager/letsencrypt.staging.nginx.values.yaml.md)
     + ```shell
       helm install \
           --create-namespace --namespace test \
@@ -172,7 +172,7 @@
       curl --insecure --header 'Host: letsencrypt-staging.nginx.local' https://localhost/my-nginx-prefix/
       ```
 4. play with `letsencrypt-prod`
-    + prepare [letsencrypt.prod.nginx.values.yaml](resources/letsencrypt.prod.nginx.values.yaml.md)
+    + prepare [letsencrypt.prod.nginx.values.yaml](resources/cert.manager/letsencrypt.prod.nginx.values.yaml.md)
     + NOTE: `letsencrypt-prod.nginx.geekcity.tech` should be pointed to your host, otherwise `letsencrypt` can not find
       the `acmesolver`
     + ```shell

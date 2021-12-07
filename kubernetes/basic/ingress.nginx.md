@@ -52,7 +52,7 @@
 ## test with nginx service
 
 1. install nginx service
-    * prepare [nginx.values.yaml](resources/nginx.values.yaml.md)
+    * prepare [nginx.values.yaml](resources/ingress.nginx/nginx.values.yaml.md)
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell

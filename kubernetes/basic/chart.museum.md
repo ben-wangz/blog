@@ -34,7 +34,7 @@
 3. setup [cert-manager](cert.manager.md)
 4. configure self-signed issuer
     * `self-signed` issuer
-        + prepare [self.signed.and.ca.issuer.yaml](resources/self.signed.and.ca.issuer.yaml.md)
+        + prepare [self.signed.and.ca.issuer.yaml](resources/cert.manager/self.signed.and.ca.issuer.yaml.md)
         + ```shell
           ./bin/kubectl -n basic-components apply -f self.signed.and.ca.issuer.yaml
           ```
