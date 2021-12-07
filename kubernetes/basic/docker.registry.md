@@ -8,18 +8,7 @@
 
 * none
 
-## practise
-
-### pre-requirements
-
-* [a k8s cluster created by kind](../create.local.cluster.with.kind.md) have been read and practised
-* [download kubernetes binary tools](../download.kubernetes.binary.tools.md)
-    + kind
-    + kubectl
-    + helm
-* we recommend to use [qemu machine](../../qemu/README.md)
-
-### purpose
+## purpose
 
 * create a kubernetes cluster by kind
 * setup ingress
@@ -27,7 +16,7 @@
 * setup docker registry
 * test docker registry
 
-### do it
+## do it
 
 1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
 2. setup [ingress-nginx](ingress.nginx.md)

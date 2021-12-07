@@ -8,23 +8,19 @@
 
 * none
 
-## practise
-
-### pre-requirements
-
-* none
-
-### purpose
+## purpose
 
 * create a kubernetes cluster by kind
 * setup ingress-nginx
 * install nginx service and access it with ingress
 
-### do it
+## installation
 
 1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
 2. download and load images to qemu machine(run command at the host of qemu machine)
-    * run scripts in [download.and.load.function.sh](../resources/create.qemu.machine.for.kind/download.and.load.function.sh.md)
+    * run scripts
+      in [download.and.load.function.sh](../resources/create.qemu.machine.for.kind/download.and.load.function.sh.md) to
+      load function `download_and_load`
     * ```shell
       TOPIC_DIRECTORY="ingress.nginx.basic"
       BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
@@ -36,15 +32,11 @@
 3. install ingress nginx
     * prepare [ingress.nginx.values.yaml](resources/ingress.nginx/ingress.nginx.values.yaml.md)
     * prepare images
+        + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
-          for IMAGE in "k8s.gcr.io/ingress-nginx/controller:v1.0.3" \
+          load_image "localhost:5000" \
+              "k8s.gcr.io/ingress-nginx/controller:v1.0.3" \
               "k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.0"
-          do
-              LOCAL_IMAGE="localhost:5000/$IMAGE"
-              docker image inspect $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
-              docker image tag $IMAGE $LOCAL_IMAGE
-              docker push $LOCAL_IMAGE
-          done
           ```
     * ```shell
       helm install \
@@ -56,17 +48,16 @@
           --values ingress.nginx.values.yaml \
           --atomic
       ```
-4. install nginx service
+
+## test with nginx service
+
+1. install nginx service
     * prepare [nginx.values.yaml](resources/nginx.values.yaml.md)
     * prepare images
+        + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
-          for IMAGE in "docker.io/bitnami/nginx:1.21.3-debian-10-r29"
-          do
-              LOCAL_IMAGE="localhost:5000/$IMAGE"
-              docker image inspect $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
-              docker image tag $IMAGE $LOCAL_IMAGE
-              docker push $LOCAL_IMAGE
-          done
+          load_image "localhost:5000" \
+              "docker.io/bitnami/nginx:1.21.3-debian-10-r29"
           ```
     * ```shell
       helm install \
@@ -78,7 +69,7 @@
           --values nginx.values.yaml \
           --atomic
       ```
-5. access nginx service with ingress
+2. access nginx service with ingress
     + ```shell
       curl --header 'Host: my.nginx.local' http://localhost/my-nginx-prefix/
       ```
@@ -108,7 +99,7 @@
           </body>
           </html>
           ```
-6. NOTES
+3. NOTES
     * `ingress-nginx` use `NodePort` as serviceType, whose nodePorts contains 32080(http) and 32443(https)
     * 32080(http) and 32443(https) mapped to 80 and 443 at localhost(the host machine of kind cluster) by kind
       configuration

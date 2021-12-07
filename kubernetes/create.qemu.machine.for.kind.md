@@ -11,7 +11,7 @@
 * centos stream 8 operating system with x86_64 chip
 * cpu support virtualization(to use KVM accelerator)
 
-## do it
+## installation
 
 ### start centos stream 8 with qemu
 
