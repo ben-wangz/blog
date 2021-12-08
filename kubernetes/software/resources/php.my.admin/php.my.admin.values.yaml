@@ -1,0 +1,23 @@
+image:
+  registry: insecure.docker.registry.local:80/docker.io
+  repository: bitnami/phpmyadmin
+  tag: 5.1.1-debian-10-r147
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+ingress:
+  enabled: true
+  hostname: phpmyadmin.local
+  pathType: ImplementationSpecific
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/issuer: self-signed-issuer
+  tls: true
+db:
+  allowArbitraryServer: true
+metrics:
+  image:
+    registry: insecure.docker.registry.local:80/docker.io
+    repository: bitnami/apache-exporter
+    tag: 0.10.1-debian-10-r54
+    pullPolicy: IfNotPresent

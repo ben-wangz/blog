@@ -1,4 +1,4 @@
-# docker registry
+# kind cluster with basic components
 
 ## main usage
 
@@ -47,9 +47,12 @@
       ```
 8. configure `/etc/hosts` for `docker-registry` and `chart-museum`
     * ```shell
-      echo 127.0.0.1 docker.registry.local >> /etc/hosts \
-          && echo 127.0.0.1 insecure.docker.registry.local >> /etc/hosts \
-          && echo 127.0.0.1 chart.museum.local >> /etc/hosts
+      echo 172.17.0.1 docker.registry.local >> /etc/hosts \
+          && echo 172.17.0.1 insecure.docker.registry.local >> /etc/hosts \
+          && echo 172.17.0.1 chart.museum.local >> /etc/hosts \
+          && docker exec kind-control-plane bash -c 'echo 172.17.0.1 docker.registry.local >> /etc/hosts' \
+          && docker exec kind-control-plane bash -c 'echo 172.17.0.1 insecure.docker.registry.local >> /etc/hosts' \
+          && docker exec kind-control-plane bash -c 'echo 172.17.0.1 chart.museum.local >> /etc/hosts'
       ```
 
 ## test nginx whose endpoint exposed by ingress
@@ -82,7 +85,7 @@
 1. push
     * ```shell
       for DOCKER_REGISTRY_URL in "docker.registry.local:443" \
-          "insecure.docker.registry.local:443"
+          "insecure.docker.registry.local:80"
       do
           DOCKER_IMAGE="registry:2.7.1" \
               && docker tag $DOCKER_IMAGE $DOCKER_REGISTRY_URL/$DOCKER_IMAGE \
@@ -92,7 +95,7 @@
 2. pull
     * ```shell
       for DOCKER_REGISTRY_URL in "docker.registry.local:443" \
-          "insecure.docker.registry.local:443"
+          "insecure.docker.registry.local:80"
       do
           DOCKER_IMAGE="registry:2.7.1" \
               && docker image rm $DOCKER_REGISTRY_URL/$DOCKER_IMAGE \

@@ -1,0 +1,54 @@
+primary:
+  configuration: |-
+    [mysqld]
+    skip-name-resolve
+    explicit_defaults_for_timestamp
+    basedir=/opt/bitnami/mariadb
+    plugin_dir=/opt/bitnami/mariadb/plugin
+    port=3306
+    socket=/opt/bitnami/mariadb/tmp/mysql.sock
+    tmpdir=/opt/bitnami/mariadb/tmp
+    max_allowed_packet=16M
+    bind-address=0.0.0.0
+    pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+    log-error=/opt/bitnami/mariadb/logs/mysqld.log
+    character-set-server=UTF8
+    collation-server=utf8_general_ci
+    slow_query_log = 1
+    long_query_time = 2
+    slow_query_log_file = /tmp/slow_query.log
+
+    [client]
+    port=3306
+    socket=/opt/bitnami/mariadb/tmp/mysql.sock
+    default-character-set=UTF8
+    plugin_dir=/opt/bitnami/mariadb/plugin
+
+    [manager]
+    port=3306
+    socket=/opt/bitnami/mariadb/tmp/mysql.sock
+    pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+  service:
+    type: ClusterIP
+  persistence:
+    storageClass: standard
+    size: 8Gi
+  extraEnvVars:
+    - name: TZ
+      value: "Asia/Shanghai"
+image:
+  registry: insecure.docker.registry.local:80/docker.io
+  repository: bitnami/mariadb
+  tag: 10.5.12-debian-10-r0
+  pullPolicy: IfNotPresent
+volumePermissions:
+  registry: insecure.docker.registry.local:80/docker.io
+  repository: bitnami/bitnami-shell
+  tag: 10-debian-10-r153
+  pullPolicy: Always
+metrics:
+  image:
+    registry: insecure.docker.registry.local:80/docker.io
+    repository: bitnami/mysqld-exporter
+    tag: 0.13.0-debian-10-r56
+    pullPolicy: IfNotPresent

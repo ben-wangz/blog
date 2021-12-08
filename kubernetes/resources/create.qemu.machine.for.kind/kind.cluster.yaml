@@ -19,5 +19,5 @@ containerdConfigPatches:
   - |-
     [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:5000"]
       endpoint = ["http://kind-registry:5000"]
-    [plugins."io.containerd.grpc.v1.cri".registry.mirrors."insecure.docker.registry.local:8080"]
-      endpoint = ["http://insecure.docker.registry.local:8080"]
+    [plugins."io.containerd.grpc.v1.cri".registry.mirrors."insecure.docker.registry.local:80"]
+      endpoint = ["http://insecure.docker.registry.local:80"]

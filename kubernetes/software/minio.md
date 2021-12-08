@@ -8,19 +8,13 @@
 
 * none
 
-## practise
-
-### pre-requirements
-
-* none
-
-### purpose
+## purpose
 
 * create a kubernetes cluster by kind
 * setup ingress-nginx
 * install minio
 
-### do it
+## installation
 
 1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
 2. install ingress nginx
