@@ -21,7 +21,7 @@ ingress:
     cert-manager.io/issuer: self-signed-issuer
     nginx.ingress.kubernetes.io/rewrite-target: /$1
   hosts:
-    - name: my.chart.museum.local
+    - name: chart.museum.local
       path: /?(.*)
       tls: true
-      tlsSecret: my.chart.museum.local-tls
+      tlsSecret: chart.museum.local-tls

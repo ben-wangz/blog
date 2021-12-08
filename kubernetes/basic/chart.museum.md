@@ -49,7 +49,7 @@
           ```
     * install by helm
         + ```shell
-          ./bin/helm install \
+          helm install \
               --create-namespace --namespace basic-components \
               my-chart-museum \
               chartmuseum \
@@ -62,15 +62,15 @@
 ## test
 
 1. test `push`
-    * configure `/etc/hosts` to point `my.chart.museum.local` to the host
+    * configure `/etc/hosts` to point `chart.museum.local` to the host
         + ```shell
-          echo 127.0.0.1 my.chart.museum.local >> /etc/hosts
+          echo 127.0.0.1 chart.museum.local >> /etc/hosts
           ```
     * push
         + ```shell
           helm create mychart \
               && helm package mychart \
-              && curl --insecure --data-binary "@mychart-0.1.0.tgz" https://my.chart.museum.local/api/charts
+              && curl --insecure --data-binary "@mychart-0.1.0.tgz" https://chart.museum.local/api/charts
           ```
 2. test `pull`
     * pull
@@ -78,6 +78,6 @@
           rm -rf mychart mychart-0.1.0.tgz \
               && helm pull mychart \
                   --version 0.1.0 \
-                  --repo https://my.chart.museum.local \
+                  --repo https://chart.museum.local \
                   --insecure-skip-tls-verify
           ```
