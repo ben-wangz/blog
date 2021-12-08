@@ -4,4 +4,3 @@
 * [cert-manager](cert.manager.md)
 * [docker-registry](docker.registry.md)
 * [chart-museum](chart.museum.md)
-* [dashboard](dashboard.md)

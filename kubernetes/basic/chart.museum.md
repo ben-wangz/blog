@@ -39,7 +39,7 @@
           kubectl -n basic-components apply -f self.signed.and.ca.issuer.yaml
           ```
 6. setup chart-museum
-    * prepare [chart.museum.values.yaml](resources/chart.museum.values.yaml.md)
+    * prepare [chart.museum.values.yaml](resources/chart.museum/chart.museum.values.yaml.md)
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell

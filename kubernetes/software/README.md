@@ -2,4 +2,5 @@
 
 * [gitea](gitea.md)
 * [minio](minio.md)
-* [harbor](../software/harbor.md)
+* [dashboard](dashboard.md)
+* [harbor](harbor.md)
