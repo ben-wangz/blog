@@ -30,11 +30,11 @@
 ### do it
 
 1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
-2. setup [ingress-nginx](ingress.nginx.md)
-3. setup [cert-manager](cert.manager.md)
+2. setup [ingress-nginx](../basic/ingress.nginx.md)
+3. setup [cert-manager](../basic/cert.manager.md)
 4. configure self-signed issuer
     * `self-signed` issuer
-        + prepare [self.signed.issuer.yaml](resources/cert.manager/self.signed.and.ca.issuer.yaml.md)
+        + prepare [self.signed.issuer.yaml](../basic/resources/cert.manager/self.signed.and.ca.issuer.yaml.md)
         + ```shell
           ./bin/kubectl -n basic-components apply -f self.signed.and.ca.issuer.yaml
           ```

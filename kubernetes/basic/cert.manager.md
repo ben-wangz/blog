@@ -128,7 +128,8 @@
               an empty Issuer DN
         * extract `tls.crt`
             + ```shell
-              kubectl -n test get secret self-signed.nginx.local-tls -o jsonpath="{.data.tls\\.crt}" | base64 --decode > tls.crt
+              kubectl -n test get secret self-signed.nginx.local-tls -o jsonpath="{.data.tls\\.crt}" \
+                  | base64 --decode > tls.crt
               ```
             + `tls.crt` should be the same as `connect.service.crt`
                 * ```shell
@@ -144,11 +145,11 @@
             + with mac/windows just double click them and modify strategy to trust them
             + for centos stream 8
                 * ```shell
-                  cp tls.crt /etc/pki/ca-trust/source/anchors/
-                  update-ca-trust extract
+                  cp tls.crt /etc/pki/ca-trust/source/anchors/ \
+                      && update-ca-trust extract
                   # how to delete it?
-                  #rm /etc/pki/ca-trust/source/anchors/tls.crt
-                  #update-ca-trust extract
+                  #rm /etc/pki/ca-trust/source/anchors/tls.crt \
+                  #    && update-ca-trust extract
                   ```
         * test with `wget`
             + ```shell

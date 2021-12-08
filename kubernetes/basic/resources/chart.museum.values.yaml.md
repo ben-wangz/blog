@@ -1,1 +1,1 @@
-[chart.museum.ingress.yaml](chart.museum.ingress.yaml ':include')
+[chart.museum.ingress.yaml](chart.museum.values.yaml ':include')

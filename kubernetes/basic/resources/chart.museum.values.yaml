@@ -1,0 +1,27 @@
+image:
+  repository: localhost:5000/ghcr.io/helm/chartmuseum
+  tag: v0.13.1
+  pullPolicy: IfNotPresent
+volumePermissions:
+  image:
+    registry: localhost:5000/docker.io
+    repository: bitnami/minideb
+    tag: buster
+    pullPolicy: IfNotPresent
+persistence:
+  enabled: true
+  size: 2Gi
+env:
+  open:
+    DISABLE_API: false
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/issuer: self-signed-issuer
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+  hosts:
+    - name: my.chart.museum.local
+      path: /?(.*)
+      tls: true
+      tlsSecret: my.chart.museum.local-tls

@@ -8,18 +8,7 @@
 
 * none
 
-## practise
-
-### pre-requirements
-
-* [a k8s cluster created by kind](../create.local.cluster.with.kind.md) have been read and practised
-* [download kubernetes binary tools](../download.kubernetes.binary.tools.md)
-    + kind
-    + kubectl
-    + helm
-* we recommend to use [qemu machine](../../qemu/README.md)
-
-### purpose
+## purpose
 
 * create a kubernetes cluster by kind
 * setup ingress
@@ -27,29 +16,36 @@
 * setup chart-museum
 * test chart-museum
 
-### do it
+## installation
 
 1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
 2. setup [ingress-nginx](ingress.nginx.md)
 3. setup [cert-manager](cert.manager.md)
-4. configure self-signed issuer
+4. download and load images to qemu machine(run command at the host of qemu machine)
+    * run scripts
+      in [download.and.load.function.sh](../resources/create.qemu.machine.for.kind/download.and.load.function.sh.md) to
+      load function `download_and_load`
+    * ```shell
+      TOPIC_DIRECTORY="chart.museum.basic"
+      BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
+      download_and_load $TOPIC_DIRECTORY $BASE_URL \
+          "ghcr.io_helm_chartmuseum_v0.13.1.dim" \
+          "bitnami_minideb_buster.dim"
+      ```
+5. configure self-signed issuer
     * `self-signed` issuer
         + prepare [self.signed.and.ca.issuer.yaml](resources/cert.manager/self.signed.and.ca.issuer.yaml.md)
         + ```shell
-          ./bin/kubectl -n basic-components apply -f self.signed.and.ca.issuer.yaml
+          kubectl -n basic-components apply -f self.signed.and.ca.issuer.yaml
           ```
-5. setup chart-museum
+6. setup chart-museum
     * prepare [chart.museum.values.yaml](resources/chart.museum.values.yaml.md)
     * prepare images
+        + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
-          for IMAGE in "ghcr.io/helm/chartmuseum:0.13.1" \
+          load_image "localhost:5000" \
+              "ghcr.io/helm/chartmuseum:v0.13.1" \
               "bitnami/minideb:buster"
-          do
-              LOCAL_IMAGE="localhost:5000/$IMAGE"
-              docker image inspect $IMAGE || docker pull $IMAGE
-              docker image tag $IMAGE $LOCAL_IMAGE
-              docker push $LOCAL_IMAGE
-          done
           ```
     * install by helm
         + ```shell
@@ -62,20 +58,26 @@
               --values chart.museum.values.yaml \
               --atomic
           ```
-6. test `helm push` and `helm pull` from `chart-museum`
-    * configure `/etc/hosts` to point `` to the host
-    * configure docker client as our tls is self-signed
+
+## test
+
+1. test `push`
+    * configure `/etc/hosts` to point `my.chart.museum.local` to the host
         + ```shell
-          mkdir -p /etc/docker/certs.d/docker.registry.lan:443 \
-              && ./bin/kubectl -n basic-components get secret docker-registry-lan-tls -o jsonpath="{.data.tls\\.crt}" | base64 --decode > /etc/docker/certs.d/docker.registry.lan:443/ca.crt
+          echo 127.0.0.1 my.chart.museum.local >> /etc/hosts
           ```
-    * tag and push
+    * push
         + ```shell
-          docker tag registry:2.7.1 docker.registry.lan:443/registry:2.7.1 \
-              && docker push docker.registry.lan:443/registry:2.7.1
+          helm create mychart \
+              && helm package mychart \
+              && curl --insecure --data-binary "@mychart-0.1.0.tgz" https://my.chart.museum.local/api/charts
           ```
+2. test `pull`
     * pull
         + ```shell
-          docker image rm docker.registry.lan:443/registry:2.7.1 \
-              && docker pull docker.registry.lan:443/registry:2.7.1
+          rm -rf mychart mychart-0.1.0.tgz \
+              && helm pull mychart \
+                  --version 0.1.0 \
+                  --repo https://my.chart.museum.local \
+                  --insecure-skip-tls-verify
           ```
