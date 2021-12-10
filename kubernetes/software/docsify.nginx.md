@@ -27,7 +27,7 @@
           "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim" \
           "docker.io_bitnami_git_2.33.0-debian-10-r53.dim"
       ```
-1. prepare ssh-key-secret
+3. prepare ssh-key-secret
     * create `rsa keys` by `ssh-keygen` if not generated before
         + ```shell
           mkdir -p ssh-keys/ \
@@ -35,15 +35,15 @@
           ```
     * create namespace `application` if not exists
         + ```shell
-          ./bin/kubectl get namespace application \
-              || ./bin/kubectl create namespace application
+          kubectl get namespace application \
+              || kubectl create namespace application
           ```
     * generate `git-ssh-key-secret`
         + ```shell
-          ./bin/kubectl -n application create secret generic git-ssh-key-secret --from-file=ssh-keys/
+          kubectl -n application create secret generic git-ssh-key-secret --from-file=ssh-keys/
           ```
     * add `ssh-keys/id_rsa.pub` to git repo server as deploy key
-2. install
+4. install
     * prepare [blog.values.yaml](resources/docsify.nginx/blog.values.yaml.md)
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
@@ -54,7 +54,7 @@
           ```
     * install by helm
         * ```shell
-          ./bin/helm install \
+          helm install \
               --create-namespace --namespace application \
               blog \
               nginx \
@@ -81,5 +81,3 @@
     * ```shell
       kubectl -n application delete secret git-ssh-key-secret
       ```
-
-
