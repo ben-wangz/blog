@@ -76,9 +76,7 @@
       ./helm install \
           --create-namespace --namespace rook-ceph \
           rook-ceph \
-          rook-ceph \
-          --repo https://charts.rook.io/release \
-          --version 1.7.3 \
+          https://resource.geekcity.tech/kubernetes/charts/https/charts.rook.io/release/rook-ceph-v1.7.3.tgz \
           --values rook.ceph.operator.values.yaml \
           --atomic
       ```

@@ -52,9 +52,7 @@
           helm install \
               --create-namespace --namespace basic-components \
               my-chart-museum \
-              chartmuseum \
-              --version 3.4.0 \
-              --repo https://chartmuseum.github.io/charts \
+              https://resource.geekcity.tech/kubernetes/charts/https/chartmuseum.github.io/charts/chartmuseum-3.4.0.tgz \
               --values chart.museum.values.yaml \
               --atomic
           ```

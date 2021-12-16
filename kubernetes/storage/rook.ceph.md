@@ -149,9 +149,7 @@
       ./helm install \
           --create-namespace --namespace rook-ceph \
           my-rook-ceph-operator \
-          rook-ceph \
-          --repo https://charts.rook.io/release \
-          --version 1.7.3 \
+          https://resource.geekcity.tech/kubernetes/charts/https/charts.rook.io/release/rook-ceph-v1.7.3.tgz \
           --values values.yaml \
           --atomic
       ```
@@ -239,9 +237,7 @@
           ./helm install \
               --create-namespace --namespace database \
               maria-db-test \
-              mariadb \
-              --version 9.5.1 \
-              --repo https://charts.bitnami.com/bitnami \
+              https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/mariadb-9.4.2.tgz \
               --values maria.db.values.yaml \
               --atomic \
               --timeout 600s

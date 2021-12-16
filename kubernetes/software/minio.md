@@ -34,9 +34,7 @@
           ./bin/helm install \
               --create-namespace --namespace basic-components \
               my-ingress-nginx \
-              ingress-nginx \
-              --version 4.0.5 \
-              --repo https://kubernetes.github.io/ingress-nginx \
+              https://resource.geekcity.tech/kubernetes/charts/https/kubernetes.github.io/ingress-nginx/ingress-nginx-4.0.5.tgz \
               --values ingress.nginx.values.yaml \
               --atomic
           ```
@@ -59,9 +57,7 @@
           ./bin/helm install \
               --create-namespace --namespace application \
               my-minio \
-              minio \
-              --version 8.1.2 \
-              --repo https://charts.bitnami.com/bitnami \
+              https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/minio-8.1.2.tgz \
               --values minio.values.yaml \
               --atomic
           ```

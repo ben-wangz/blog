@@ -48,9 +48,7 @@
           helm install \
               --create-namespace --namespace application \
               my-phpmyadmin \
-              phpmyadmin \
-              --version 8.3.1 \
-              --repo https://charts.bitnami.com/bitnami \
+              https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/phpmyadmin-8.3.1.tgz \
               --values php.my.admin.values.yaml \
               --atomic
           ```

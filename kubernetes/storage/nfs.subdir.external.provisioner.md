@@ -65,9 +65,7 @@
           helm install \
               --create-namespace --namespace nfs-provisioner \
               my-nfs-subdir-external-provisioner \
-              nfs-subdir-external-provisioner \
-              --version 4.0.14 \
-              --repo https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner \
+              https://resource.geekcity.tech/kubernetes/charts/https/kubernetes-sigs.github.io/nfs-subdir-external-provisioner/nfs-subdir-external-provisioner-4.0.14.tgz \
               --values nfs.subdir.external.provisioner.values.yaml \
               --atomic
           ```
@@ -89,9 +87,7 @@
           helm install \
               --create-namespace --namespace test \
               my-maria-db \
-              mariadb \
-              --version 9.4.2 \
-              --repo https://charts.bitnami.com/bitnami \
+              https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/mariadb-9.4.2.tgz \
               --values test.maria.db.values.yaml \
               --atomic
           ```

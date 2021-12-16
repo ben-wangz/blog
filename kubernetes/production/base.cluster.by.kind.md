@@ -30,9 +30,7 @@
       ./bin/helm install \
           --create-namespace --namespace basic-components \
           my-ingress-nginx \
-          ingress-nginx \
-          --version 4.0.5 \
-          --repo https://kubernetes.github.io/ingress-nginx \
+          https://resource.geekcity.tech/kubernetes/charts/https/kubernetes.github.io/ingress-nginx/ingress-nginx-4.0.5.tgz \
           --values ingress.nginx.values.yaml \
           --atomic
       ```
@@ -58,9 +56,7 @@
       ./bin/helm install \
           --create-namespace --namespace basic-components \
           my-cert-manager \
-          cert-manager \
-          --version 1.5.4 \
-          --repo https://charts.jetstack.io \
+          https://resource.geekcity.tech/kubernetes/charts/https/charts.jetstack.io/cert-manager-v1.5.4.tgz \
           --values cert.manager.values.yaml \
           --atomic
       ```
@@ -94,9 +90,7 @@
       ./bin/helm install \
           --create-namespace --namespace basic-components \
           my-docker-registry \
-          docker-registry \
-          --version 1.14.0 \
-          --repo https://helm.twun.io \
+          https://resource.geekcity.tech/kubernetes/charts/https/helm.twun.io/docker-registry-1.14.0.tgz \
           --values docker.registry.values.yaml \
           --atomic
       ```
@@ -153,9 +147,7 @@
       ./bin/helm install \
           --create-namespace --namespace application \
           blog \
-          nginx \
-          --version 9.5.7 \
-          --repo https://charts.bitnami.com/bitnami \
+          https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/nginx-9.5.7.tgz \
           --values blog.values.yaml \
           --atomic
       ```
@@ -179,9 +171,7 @@
       ./bin/helm install \
           --create-namespace --namespace application \
           ant-doc \
-          nginx \
-          --version 9.5.7 \
-          --repo https://charts.bitnami.com/bitnami \
+          https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/nginx-9.5.7.tgz \
           --values ant.doc.values.yaml \
           --atomic
       ```
@@ -209,9 +199,7 @@
       ./bin/helm install \
           --create-namespace --namespace nfs-provisioner \
           my-nfs-subdir-external-provisioner \
-          nfs-subdir-external-provisioner \
-          --version 4.0.14 \
-          --repo https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner \
+          https://resource.geekcity.tech/kubernetes/charts/https/kubernetes-sigs.github.io/nfs-subdir-external-provisioner/nfs-subdir-external-provisioner-4.0.14.tgz \
           --values nfs.subdir.external.provisioner.values.yaml \
           --atomic
       ```
@@ -241,9 +229,7 @@
       ./bin/helm install \
           --create-namespace --namespace application \
           resource-nginx \
-          nginx \
-          --version 9.5.7 \
-          --repo https://charts.bitnami.com/bitnami \
+          https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/nginx-9.5.7.tgz \
           --values resource.nginx.values.yaml \
           --atomic
       ```
@@ -253,6 +239,13 @@
           -l "app.kubernetes.io/name=nginx,app.kubernetes.io/instance=resource-nginx" \
           -o jsonpath="{.items[0].metadata.name}") \
           && ./bin/kubectl -n application cp -c busybox /etc/fstab $POD_NAME:/root/data/
+      ```
+6. manage files
+    * ```shell
+      POD_NAME=$(./bin/kubectl get pod -n application \
+          -l "app.kubernetes.io/name=nginx,app.kubernetes.io/instance=resource-nginx" \
+          -o jsonpath="{.items[0].metadata.name}") \
+          && ./bin/kubectl -n application exec -it $POD_NAME -c busybox -- sh
       ```
 
 ## install grafana

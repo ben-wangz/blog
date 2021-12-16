@@ -48,9 +48,7 @@
           helm install \
               --create-namespace --namespace application \
               resource-nginx \
-              nginx \
-              --version 9.5.7 \
-              --repo https://charts.bitnami.com/bitnami \
+              https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/nginx-9.5.7.tgz \
               --values resource.nginx.values.yaml \
               --atomic
           ```

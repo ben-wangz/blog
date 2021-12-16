@@ -180,9 +180,7 @@
           ./helm install \
               --create-namespace --namespace database \
               maria-db-test \
-              mariadb \
-              --version 9.5.1 \
-              --repo https://charts.bitnami.com/bitnami \
+              https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/mariadb-9.4.2.tgz \
               --values maria.db.values.yaml \
               --atomic \
               --timeout 600s

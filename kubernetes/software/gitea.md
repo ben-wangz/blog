@@ -72,9 +72,7 @@
           helm install \
               --create-namespace --namespace application \
               my-gitea \
-              gitea \
-              --version 4.1.1 \
-              --repo https://dl.gitea.io/charts \
+              https://resource.geekcity.tech/kubernetes/charts/https/dl.gitea.io/charts/gitea-4.1.1.tgz \
               --values gitea.values.yaml \
               --atomic
           ```

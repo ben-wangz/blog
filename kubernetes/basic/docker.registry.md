@@ -50,9 +50,7 @@
           helm install \
               --create-namespace --namespace basic-components \
               my-docker-registry \
-              docker-registry \
-              --version 1.14.0 \
-              --repo https://helm.twun.io \
+              https://resource.geekcity.tech/kubernetes/charts/https/helm.twun.io/docker-registry-1.14.0.tgz \
               --values docker.registry.values.yaml \
               --atomic
           ```

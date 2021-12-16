@@ -50,9 +50,7 @@
       helm install \
           --create-namespace --namespace basic-components \
           my-cert-manager \
-          cert-manager \
-          --version 1.5.4 \
-          --repo https://charts.jetstack.io \
+          https://resource.geekcity.tech/kubernetes/charts/https/charts.jetstack.io/cert-manager-v1.5.4.tgz \
           --values cert.manager.values.yaml \
           --atomic
       ```
@@ -94,9 +92,7 @@
       helm install \
           --create-namespace --namespace test \
           self-signed-nginx \
-          nginx \
-          --version 9.5.7 \
-          --repo https://charts.bitnami.com/bitnami \
+          https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/nginx-9.5.7.tgz \
           --values self.signed.nginx.values.yaml \
           --atomic
       ```
@@ -164,9 +160,7 @@
       helm install \
           --create-namespace --namespace test \
           letsencrypt-staging-nginx \
-          nginx \
-          --version 9.5.7 \
-          --repo https://charts.bitnami.com/bitnami \
+          https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/nginx-9.5.7.tgz \
           --values letsencrypt.staging.nginx.values.yaml \
           --atomic
       ```
@@ -181,9 +175,7 @@
       helm install \
           --create-namespace --namespace test \
           letsencrypt-prod-nginx \
-          nginx \
-          --version 9.5.7 \
-          --repo https://charts.bitnami.com/bitnami \
+          https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/nginx-9.5.7.tgz \
           --values letsencrypt.prod.nginx.values.yaml \
           --atomic
       ```

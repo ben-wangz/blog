@@ -45,9 +45,7 @@
           helm install \
               --create-namespace --namespace application \
               my-maria-db \
-              mariadb \
-              --version 9.4.2 \
-              --repo https://charts.bitnami.com/bitnami \
+              https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/mariadb-9.4.2.tgz \
               --values maria.db.values.yaml \
               --atomic
           ```
