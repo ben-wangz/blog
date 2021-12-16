@@ -24,7 +24,7 @@
       load function `download_and_load`
     * ```shell
       TOPIC_DIRECTORY="nfs.subdir.external.provisioner"
-      BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
+      BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
           "k8s.gcr.io_sig-storage_nfs-subdir-external-provisioner_v4.0.2.dim" \
           "docker.io_bitnami_mariadb_10.5.12-debian-10-r0.dim" \

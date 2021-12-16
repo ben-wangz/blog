@@ -20,7 +20,7 @@
 2. in practise(take Ubuntu 20.04.2 LTS as an example)
     * download
         + ```shell
-          curl -LO https://nginx.geekcity.tech/proxy/qemu/centos.8.qcow2
+          curl -LO https://resource.geekcity.tech/qemu/centos.8.qcow2
           ```
     * start with qemu
         + ```shell

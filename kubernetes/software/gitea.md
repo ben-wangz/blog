@@ -29,7 +29,7 @@
       load function `download_and_load`
     * ```shell
       TOPIC_DIRECTORY="gitea.software"
-      BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
+      BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
           "docker.io_bitnami_memcached_1.6.9-debian-10-r114.dim" \
           "docker.io_bitnami_memcached-exporter_0.8.0-debian-10-r105.dim" \

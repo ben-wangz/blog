@@ -22,7 +22,7 @@
       load function `download_and_load`
     * ```shell
       TOPIC_DIRECTORY="php.my.admin.software"
-      BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
+      BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
           "docker.io_bitnami_phpmyadmin_5.1.1-debian-10-r147.dim" \
               "docker.io_bitnami_apache-exporter_0.10.1-debian-10-r54.dim"

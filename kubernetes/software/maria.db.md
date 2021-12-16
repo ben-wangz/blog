@@ -24,7 +24,7 @@
       load function `download_and_load`
     * ```shell
       TOPIC_DIRECTORY="maria.db.software"
-      BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
+      BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
           "docker.io_bitnami_mariadb_10.5.12-debian-10-r0.dim" \
           "docker.io_bitnami_bitnami-shell_10-debian-10-r153.dim" \

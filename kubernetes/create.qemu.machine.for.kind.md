@@ -22,7 +22,7 @@
 2. in practise
     * download
         + ```shell
-          curl -LO https://nginx.geekcity.tech/proxy/qemu/centos.8.qcow2
+          curl -LO https://resource.geekcity.tech/qemu/centos.8.qcow2
           ```
     * start with qemu
         + ```shell
@@ -87,7 +87,7 @@
       in [download.and.load.function.sh](resources/create.qemu.machine.for.kind/download.and.load.function.sh.md)
     * ```shell
       TOPIC_DIRECTORY="create.qemu.machine.for.kind"
-      BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
+      BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
           "docker.io_registry_2.7.1.dim" \
           "docker.io_kindest_node_v1.22.1.dim"

@@ -22,7 +22,7 @@
       load function `download_and_load`
     * ```shell
       TOPIC_DIRECTORY="docsify.nginx.software"
-      BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
+      BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
           "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim" \
           "docker.io_bitnami_git_2.33.0-debian-10-r53.dim"

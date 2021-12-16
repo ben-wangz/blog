@@ -1,0 +1,42 @@
+image:
+  registry: localhost:5000
+  repository: docker.io/bitnami/nginx
+  tag: 1.21.3-debian-10-r29
+  pullPolicy: IfNotPresent
+  pullSecrets: [ ]
+service:
+  type: ClusterIP
+  port: 8080
+extraVolumes:
+  - name: resource-nginx-volume
+    persistentVolumeClaim:
+      claimName: resource-nginx-pvc
+extraVolumeMounts:
+  - name: resource-nginx-volume
+    mountPath: /usr/share/nginx/html
+serverBlock: |-
+  server {
+    listen 8080;
+    location / {
+      root   /usr/share/nginx/html;
+      autoindex on;
+    }
+  }
+sidecars:
+  - name: busybox
+    image: localhost:5000/docker.io/busybox:1.33.1-uclibc
+    imagePullPolicy: Always
+    command: [ 'sh', '-c', 'tail -f /etc/hosts' ]
+    volumeMounts:
+      - name: resource-nginx-volume
+        mountPath: "/root/data"
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/issuer: letsencrypt-prod-issuer
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/proxy-body-size: 5g
+  hostname: resource.geekcity.tech
+  path: /?(.*)
+  tls: true

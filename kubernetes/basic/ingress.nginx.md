@@ -23,7 +23,7 @@
       load function `download_and_load`
     * ```shell
       TOPIC_DIRECTORY="ingress.nginx.basic"
-      BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
+      BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
           "k8s.gcr.io_ingress-nginx_controller_v1.0.3.dim" \
           "k8s.gcr.io_ingress-nginx_kube-webhook-certgen_v1.0.dim" \

@@ -69,7 +69,7 @@
 6. install `local-static-provisioner` with helm
     * ```shell
       # docker image can be download 
-      # from https://nginx.geekcity.tech/proxy/docker.images/k8s.gcr.io_sig-storage_local-volume-provisioner_v2.4.0.dim
+      # from https://resource.geekcity.tech/kubernetes/docker-images/x86_64/others/k8s.gcr.io_sig-storage_local-volume-provisioner_v2.4.0.dim
       # if can not be pulled
       IMAGE="k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0"
       docker image inspect $IMAGE || docker pull $IMAGE

@@ -25,7 +25,7 @@
       load function `download_and_load`
     * ```shell
       TOPIC_DIRECTORY="cert.manager.basic"
-      BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
+      BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
           "quay.io_jetstack_cert-manager-controller_v1.5.4.dim" \
           "quay.io_jetstack_cert-manager-webhook_v1.5.4.dim" \

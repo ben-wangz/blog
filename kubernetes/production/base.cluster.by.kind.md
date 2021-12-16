@@ -20,7 +20,7 @@
           "k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.0"
       do
           LOCAL_IMAGE="localhost:5000/$IMAGE"
-          docker image inspect $IMAGE || docker pull $IMAGE
+          docker inspect $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
           docker image tag $IMAGE $LOCAL_IMAGE
           docker push $LOCAL_IMAGE
       done
@@ -48,7 +48,7 @@
           "quay.io/jetstack/cert-manager-ctl:v1.5.4"
       do
           LOCAL_IMAGE="localhost:5000/$IMAGE"
-          docker image inspect $IMAGE || docker pull $IMAGE
+          docker inspect $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
           docker image tag $IMAGE $LOCAL_IMAGE
           docker push $LOCAL_IMAGE
       done
@@ -68,7 +68,7 @@
     * prepare [letsencrypt.prod.issuer.yaml](resources/letsencrypt.prod.issuer.yaml.md)
     * ```shell
       IMAGE="quay.io/jetstack/cert-manager-acmesolver:v1.5.4"
-      docker image inspect $IMAGE || docker pull $IMAGE
+      docker inspect $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
       ./bin/kind load docker-image $IMAGE
       ./bin/kubectl -n basic-components apply -f letsencrypt.prod.issuer.yaml
       (./bin/kubectl get namespace application \
@@ -84,7 +84,7 @@
       for IMAGE in "registry:2.7.1"
       do
           LOCAL_IMAGE="localhost:5000/$IMAGE"
-          docker image inspect $IMAGE || docker pull $IMAGE
+          docker inspect $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
           docker image tag $IMAGE $LOCAL_IMAGE
           docker push $LOCAL_IMAGE
       done
@@ -143,7 +143,7 @@
           "docker.io/bitnami/git:2.33.0-debian-10-r53"
       do
           LOCAL_IMAGE="localhost:5000/$IMAGE"
-          docker pull $IMAGE
+          docker inspect $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
           docker image tag $IMAGE $LOCAL_IMAGE
           docker push $LOCAL_IMAGE
       done
@@ -169,7 +169,7 @@
           "docker.io/bitnami/git:2.33.0-debian-10-r53"
       do
           LOCAL_IMAGE="localhost:5000/$IMAGE"
-          docker pull $IMAGE
+          docker inspect $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
           docker image tag $IMAGE $LOCAL_IMAGE
           docker push $LOCAL_IMAGE
       done
@@ -187,8 +187,73 @@
       ```
 
 ## install nfs subdir external provisioner
+
+1. prepare nfs service
+    * use NAS from aliyun
+        + host: `051c649500-wdc91.cn-hangzhou.nas.aliyuncs.com`
+        + path: `/`
+        + options: `vers=4,minorversion=0,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport`
+2. prepare [nfs.subdir.external.provisioner.values.yaml](resources/nfs.subdir.external.provisioner.values.yaml.md)
+3. prepare images
+    * ```shell
+      for IMAGE in "k8s.gcr.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2"
+      do
+          LOCAL_IMAGE="localhost:5000/$IMAGE"
+          docker inspect $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
+          docker image tag $IMAGE $LOCAL_IMAGE
+          docker push $LOCAL_IMAGE
+      done
+      ```
+4. install by helm
+    + ```shell
+      ./bin/helm install \
+          --create-namespace --namespace nfs-provisioner \
+          my-nfs-subdir-external-provisioner \
+          nfs-subdir-external-provisioner \
+          --version 4.0.14 \
+          --repo https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner \
+          --values nfs.subdir.external.provisioner.values.yaml \
+          --atomic
+      ```
+
 ## install resource-nginx
 
+1. create pvc named `resource-nginx-pvc`
+    * prepare [resource.nginx.pvc.yaml](resources/resource.nginx.pvc.yaml.md)
+    * ```shell
+      ./bin/kubectl -n application apply -f resource.nginx.pvc.yaml
+      ```
+2. prepare [resource.nginx.values.yaml](resources/resource.nginx.values.yaml.md)
+3. prepare images
+    * ```shell
+      for IMAGE in "docker.io/bitnami/nginx:1.21.3-debian-10-r29" \
+          "docker.io/bitnami/git:2.33.0-debian-10-r53" \
+          "docker.io/busybox:1.33.1-uclibc"
+      do
+          LOCAL_IMAGE="localhost:5000/$IMAGE"
+          docker inspect $IMAGE > /dev/null 2>&1 || docker pull $IMAGE
+          docker image tag $IMAGE $LOCAL_IMAGE
+          docker push $LOCAL_IMAGE
+      done
+      ```
+4. install by helm
+    * ```shell
+      ./bin/helm install \
+          --create-namespace --namespace application \
+          resource-nginx \
+          nginx \
+          --version 9.5.7 \
+          --repo https://charts.bitnami.com/bitnami \
+          --values resource.nginx.values.yaml \
+          --atomic
+      ```
+5. cp file into `resource.nginx`
+    * ```shell
+      POD_NAME=$(./bin/kubectl get pod -n application \
+          -l "app.kubernetes.io/name=nginx,app.kubernetes.io/instance=resource-nginx" \
+          -o jsonpath="{.items[0].metadata.name}") \
+          && ./bin/kubectl -n application cp -c busybox /etc/fstab $POD_NAME:/root/data/
+      ```
 
 ## install grafana
 
