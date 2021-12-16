@@ -60,18 +60,16 @@
         + ```shell
           # uses the "Array" declaration
           # referencing the variable again with as $PASSWORD an index array is the same as ${PASSWORD[0]}
-          ./bin/kubectl get namespace application \
-              || ./bin/kubectl create namespace application
           PASSWORD=($((echo -n $RANDOM | md5sum 2>/dev/null) || (echo -n $RANDOM | md5 2>/dev/null)))
           # NOTE: username should have at least 6 characters
-          ./bin/kubectl -n application \
+          kubectl -n application \
               create secret generic gitea-admin-secret \
               --from-literal=username=gitea_admin \
               --from-literal=password=$PASSWORD
           ```
     * install by helm
         + ```shell
-          ./bin/helm install \
+          helm install \
               --create-namespace --namespace application \
               my-gitea \
               gitea \
