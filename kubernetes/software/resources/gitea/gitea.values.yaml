@@ -1,0 +1,131 @@
+image:
+  repository: localhost:5000/gitea/gitea
+  tag: 1.15.3
+  pullPolicy: IfNotPresent
+service:
+  http:
+    type: ClusterIP
+  ssh:
+    type: NodePort
+    port: 22
+    nodePort: 32022
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 10g
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    cert-manager.io/issuer: self-signed-issuer
+  hosts:
+    - host: gitea.local
+      paths:
+        - path: /?(.*)
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: gitea.local-tls
+      hosts:
+        - gitea.local
+persistence:
+  enabled: true
+  size: 8Gi
+  storageClass: standard
+gitea:
+  admin:
+    existingSecret: gitea-admin-secret
+    email: "ben.wangz@foxmail.com"
+  database:
+    builtIn:
+      postgresql:
+        enabled: true
+      mysql:
+        enabled: false
+      mariadb:
+        enabled: false
+  cache:
+    builtIn:
+      enabled: true
+  config:
+    repository:
+      MAX_CREATION_LIMIT: 10
+      DISABLED_REPO_UNITS: repo.wiki,repo.ext_wiki,repo.projects
+      DEFAULT_REPO_UNITS: repo.code,repo.releases,repo.issues,repo.pulls
+      DISABLE_STARS: true
+      DEFAULT_BRANCH: main
+    ui:
+      SHOW_USER_EMAIL: false
+      SEARCH_REPO_DESCRIPTION: false
+    server:
+      LANDING_PAGE: login
+      DOMAIN: gitea.local
+      SSH_DOMAIN: gitea.local
+      SSH_AUTHORIZED_PRINCIPALS_ALLOW: email
+    admin:
+      DISABLE_REGULAR_ORG_CREATION: true
+    security:
+      INSTALL_LOCK: true
+    service:
+      REGISTER_EMAIL_CONFIRM: true
+      DISABLE_REGISTRATION: true
+      ENABLE_NOTIFY_MAIL: true
+      DEFAULT_ALLOW_CREATE_ORGANIZATION: false
+      SHOW_MILESTONES_DASHBOARD_PAGE: false
+    service.explore:
+      DISABLE_USERS_PAGE: true
+    mailer:
+      ENABLED: true
+      IS_TLS_ENABLED: true
+      MAILER_TYPE: smtp
+      HOST: smtpdm.aliyun.com:465
+      FROM: messenger@email.catconti.icu
+      USER: messenger@email.catconti.icu
+      PASSWD: WSXqaz1234
+    i18n:
+      LANGS: en-US,zh-CN
+      NAMES: English,简体中文
+    oauth2:
+      ENABLE: false
+    other:
+      SHOW_FOOTER_VERSION: false
+memcached:
+  image:
+    registry: localhost:5000/docker.io
+    repository: bitnami/memcached
+    tag: 1.6.9-debian-10-r114
+    pullPolicy: IfNotPresent
+  service:
+    port: 11211
+  persistence:
+    enabled: false
+  metrics:
+    image:
+      registry: localhost:5000/docker.io
+      repository: bitnami/memcached-exporter
+      tag: 0.8.0-debian-10-r105
+      pullPolicy: IfNotPresent
+postgresql:
+  global:
+    postgresql:
+      postgresqlDatabase: gitea
+      postgresqlUsername: gitea
+      postgresqlPassword: gitea
+      servicePort: 5432
+  image:
+    registry: localhost:5000/docker.io
+    repository: bitnami/postgresql
+    tag: 11.11.0-debian-10-r62
+    pullPolicy: IfNotPresent
+  persistence:
+    size: 10Gi
+    storageClass: standard
+  volumePermissions:
+    image:
+      registry: localhost:5000/docker.io
+      repository: bitnami/bitnami-shell
+      tag: "10"
+      pullPolicy: IfNotPresent
+  metrics:
+    image:
+      registry: localhost:5000/docker.io
+      repository: bitnami/postgres-exporter
+      tag: 0.9.0-debian-10-r34
+      pullPolicy: IfNotPresent

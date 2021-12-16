@@ -186,6 +186,10 @@
           --atomic
       ```
 
+## install nfs subdir external provisioner
+## install resource-nginx
+
+
 ## install grafana
 
 ## install k8s dashboard

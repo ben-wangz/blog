@@ -22,46 +22,39 @@
 
 ### do it
 
-1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
-2. install ingress nginx
-    * prepare [ingress.nginx.values.yaml](../basic/resources/ingress.nginx/ingress.nginx.values.yaml.md)
-    * prepare images
+1. [prepare a kind cluster with basic components](../basic/kind.cluster.md)
+2. download and load images to qemu machine(run command at the host of qemu machine)
+    * run scripts
+      in [download.and.load.function.sh](../resources/create.qemu.machine.for.kind/download.and.load.function.sh.md) to
+      load function `download_and_load`
+    * ```shell
+      TOPIC_DIRECTORY="gitea.software"
+      BASE_URL="https://nginx.geekcity.tech/proxy/docker-images/x86_64"
+      download_and_load $TOPIC_DIRECTORY $BASE_URL \
+          "docker.io_bitnami_memcached_1.6.9-debian-10-r114.dim" \
+          "docker.io_bitnami_memcached-exporter_0.8.0-debian-10-r105.dim" \
+          "docker.io_bitnami_postgresql_11.11.0-debian-10-r62.dim" \
+          "docker.io_bitnami_bitnami-shell_10.dim" \
+          "docker.io_bitnami_postgres-exporter_0.9.0-debian-10-r34.dim"
+      ```
+3. configure self-signed issuer
+    * `self-signed` issuer
+        + prepare [self.signed.and.ca.issuer.yaml](../basic/resources/cert.manager/self.signed.and.ca.issuer.yaml.md)
         + ```shell
-          for IMAGE in "k8s.gcr.io/ingress-nginx/controller:v1.0.3" "k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.0"
-          do
-              LOCAL_IMAGE="localhost:5000/$IMAGE"
-              docker image inspect $IMAGE || docker pull $IMAGE
-              docker image tag $IMAGE $LOCAL_IMAGE
-              docker push $LOCAL_IMAGE
-          done
+          kubectl get namespace application > /dev/null 2>&1 || kubectl create namespace application \
+              && kubectl -n application apply -f self.signed.and.ca.issuer.yaml
           ```
-    * install with helm
-        + ```shell
-          ./bin/helm install \
-              --create-namespace --namespace basic-components \
-              my-ingress-nginx \
-              ingress-nginx \
-              --version 4.0.5 \
-              --repo https://kubernetes.github.io/ingress-nginx \
-              --values ingress.nginx.values.yaml \
-              --atomic
-          ```
-3. install gitea
-    * prepare [gitea.values.yaml](resources/gitea.values.yaml.md)
+4. install gitea
+    * prepare [gitea.values.yaml](resources/gitea/gitea.values.yaml.md)
     * prepare images
+        + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
-          for IMAGE in "gitea/gitea:1.15.3" \
+          load_image "docker.registry.local:443" \
               "docker.io/bitnami/memcached:1.6.9-debian-10-r114" \
               "docker.io/bitnami/memcached-exporter:0.8.0-debian-10-r105" \
               "docker.io/bitnami/postgresql:11.11.0-debian-10-r62" \
               "docker.io/bitnami/bitnami-shell:10" \
               "docker.io/bitnami/postgres-exporter:0.9.0-debian-10-r34"
-          do
-              LOCAL_IMAGE="localhost:5000/$IMAGE"
-              docker image inspect $IMAGE || docker pull $IMAGE
-              docker image tag $IMAGE $LOCAL_IMAGE
-              docker push $LOCAL_IMAGE
-          done
           ```
     * create `gitea-admin-secret`
         + ```shell
@@ -76,7 +69,7 @@
               --from-literal=username=gitea_admin \
               --from-literal=password=$PASSWORD
           ```
-    * install with helm
+    * install by helm
         + ```shell
           ./bin/helm install \
               --create-namespace --namespace application \
@@ -87,11 +80,11 @@
               --values gitea.values.yaml \
               --atomic
           ```
-4. register an account
-5. visit gitea from website
-    * port-forward
-        + ```shell
-          ./bin/kubectl --namespace application port-forward svc/my-gitea-http 3000:3000 --address 0.0.0.0
-          ```
-    * visit http://$HOST:3000
-6. visit gitea with ssh
+5. visit gitea via website
+    * ```shell
+      curl --insecure https://gitea.local
+      ```
+6. visit gitea via ssh
+    * ```shell
+      
+      ```
