@@ -8,17 +8,16 @@
 
 * none
 
-## practise
+## purpose
 
-### pre-requirements
+* prepare a kind cluster with basic components
+* install `gitea`
 
-* none
-
-### purpose
+## installation
 
 * create a kubernetes cluster by kind
 * setup ingress-nginx
-* install gitea
+* install `gitea`
 
 ### do it
 
