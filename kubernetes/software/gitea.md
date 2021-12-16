@@ -31,6 +31,7 @@
       TOPIC_DIRECTORY="gitea.software"
       BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
+          "gitea_gitea_1.15.3.dim" \
           "docker.io_bitnami_memcached_1.6.9-debian-10-r114.dim" \
           "docker.io_bitnami_memcached-exporter_0.8.0-debian-10-r105.dim" \
           "docker.io_bitnami_postgresql_11.11.0-debian-10-r62.dim" \
@@ -49,7 +50,8 @@
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
-          load_image "docker.registry.local:443" \
+          load_image "localhost:5000" \
+              "gitea/gitea:1.15.3" \
               "docker.io/bitnami/memcached:1.6.9-debian-10-r114" \
               "docker.io/bitnami/memcached-exporter:0.8.0-debian-10-r105" \
               "docker.io/bitnami/postgresql:11.11.0-debian-10-r62" \
@@ -76,11 +78,43 @@
               --values gitea.values.yaml \
               --atomic
           ```
-5. visit gitea via website
+
+## test
+
+1. check connection
     * ```shell
-      curl --insecure https://gitea.local
+      curl --insecure --header 'Host: gitea.local' https://localhost
       ```
-6. visit gitea via ssh
+2. visit gitea via website
+    * configure hosts
+        + ```shell
+          echo $QEMU_HOST_IP gitea.local >> /etc/hosts
+          ```
+    * visit `https://gitea.local:10443/` with your browser
+    * extract username and password of admin user
+        + ```shell
+          kubectl -n application get secret gitea-admin-secret -o jsonpath="{.data.username}" | base64 --decode && echo
+          kubectl -n application get secret gitea-admin-secret -o jsonpath="{.data.password}" | base64 --decode && echo
+          ```
+    * login as admin user
+    * create repository named `test-repo`
+    * add ssh public key
+3. visit gitea via ssh
     * ```shell
+      # in QEMU machine
+      dnf -y install git
+      echo 127.0.0.1 gitea.local >> /etc/hosts
+      git config --global user.email "you@example.com"
+      git config --global user.name "Your Name"
       
+      mkdir test-repo && cd test-repo
+      
+      touch README.md
+      git init
+      git checkout -b main
+      git add README.md
+      git commit -m "first commit"
+      git remote add origin ssh://git@gitea.local:1022/gitea_admin/test-repo.git
+      git push -u origin main
       ```
+4. test email feature

@@ -58,6 +58,7 @@ gitea:
       LANDING_PAGE: login
       DOMAIN: gitea.local
       SSH_DOMAIN: gitea.local
+      SSH_PORT: 1022
       SSH_AUTHORIZED_PRINCIPALS_ALLOW: email
     admin:
       DISABLE_REGULAR_ORG_CREATION: true
@@ -76,9 +77,9 @@ gitea:
       IS_TLS_ENABLED: true
       MAILER_TYPE: smtp
       HOST: smtpdm.aliyun.com:465
-      FROM: messenger@email.catconti.icu
-      USER: messenger@email.catconti.icu
-      PASSWD: WSXqaz1234
+      FROM: messenger@email.gitea.geekcity.tech
+      USER: messenger@email.gitea.geekcity.tech
+      PASSWD: change_password_to_your_own
     i18n:
       LANGS: en-US,zh-CN
       NAMES: English,简体中文
