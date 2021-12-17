@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio-tool
+  labels:
+    app.kubernetes.io/name: minio-tool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: minio-tool
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: minio-tool
+    spec:
+      containers:
+        - name: minio-tool
+          image: insecure.docker.registry.local:80/docker.io/bitnami/minio-client:2021.9.2-debian-10-r17
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+            - name: MINIO_SERVER_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: access-key
+                  name: my-minio
+            - name: MINIO_SERVER_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: secret-key
+                  name: my-minio
+            - name: MINIO_SERVER_HOST
+              value: my-minio
+            - name: MINIO_SERVER_PORT
+              value: "9000"
+          command:
+            - tail
+            - -f
+            - /etc/hosts

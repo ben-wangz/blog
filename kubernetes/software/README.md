@@ -8,4 +8,3 @@
 * [minio](minio.md)
 * [gitea](gitea.md)
 * [redis-cluster](redis-cluster.md)
-* [confluence](confluence.md)

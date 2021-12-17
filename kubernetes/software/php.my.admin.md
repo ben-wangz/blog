@@ -34,7 +34,7 @@
           kubectl get namespace application > /dev/null 2>&1 || kubectl create namespace application \
               && kubectl -n application apply -f self.signed.and.ca.issuer.yaml
           ```
-6. install `phpMyAdmin`
+4. install `phpMyAdmin`
     * prepare [php.my.admin.values.yaml](resources/php.my.admin/php.my.admin.values.yaml.md)
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
