@@ -1,5 +1,5 @@
 image:
-  repository: localhost:5000/gitea/gitea
+  repository: insecure.docker.registry.local:80/gitea/gitea
   tag: 1.15.3
   pullPolicy: IfNotPresent
 service:
@@ -55,6 +55,8 @@ gitea:
       SHOW_USER_EMAIL: false
       SEARCH_REPO_DESCRIPTION: false
     server:
+      PROTOCOL: http
+      # ROOT_URL: "https://gitea.local:10443/"
       LANDING_PAGE: login
       DOMAIN: gitea.local
       SSH_DOMAIN: gitea.local
@@ -89,7 +91,7 @@ gitea:
       SHOW_FOOTER_VERSION: false
 memcached:
   image:
-    registry: localhost:5000/docker.io
+    registry: insecure.docker.registry.local:80/docker.io
     repository: bitnami/memcached
     tag: 1.6.9-debian-10-r114
     pullPolicy: IfNotPresent
@@ -99,7 +101,7 @@ memcached:
     enabled: false
   metrics:
     image:
-      registry: localhost:5000/docker.io
+      registry: insecure.docker.registry.local:80/docker.io
       repository: bitnami/memcached-exporter
       tag: 0.8.0-debian-10-r105
       pullPolicy: IfNotPresent
@@ -111,7 +113,7 @@ postgresql:
       postgresqlPassword: gitea
       servicePort: 5432
   image:
-    registry: localhost:5000/docker.io
+    registry: insecure.docker.registry.local:80/docker.io
     repository: bitnami/postgresql
     tag: 11.11.0-debian-10-r62
     pullPolicy: IfNotPresent
@@ -120,13 +122,13 @@ postgresql:
     storageClass: standard
   volumePermissions:
     image:
-      registry: localhost:5000/docker.io
+      registry: insecure.docker.registry.local:80/docker.io
       repository: bitnami/bitnami-shell
       tag: "10"
       pullPolicy: IfNotPresent
   metrics:
     image:
-      registry: localhost:5000/docker.io
+      registry: insecure.docker.registry.local:80/docker.io
       repository: bitnami/postgres-exporter
       tag: 0.9.0-debian-10-r34
       pullPolicy: IfNotPresent

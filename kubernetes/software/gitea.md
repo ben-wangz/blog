@@ -49,7 +49,7 @@
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
-          load_image "localhost:5000" \
+          load_image "docker.registry.local:443" \
               "gitea/gitea:1.15.3" \
               "docker.io/bitnami/memcached:1.6.9-debian-10-r114" \
               "docker.io/bitnami/memcached-exporter:0.8.0-debian-10-r105" \
@@ -116,7 +116,7 @@
       git config --global user.email "you@example.com"
       git config --global user.name "Your Name"
       
-      mkdir test-repo && cd test-repo
+      mkdir -p test-repo && cd test-repo
       
       touch README.md
       git init
@@ -126,12 +126,13 @@
       git remote add origin ssh://git@gitea.local:1022/gitea_admin/test-repo.git
       git push -u origin main
       ```
-4. test email feature
+4. test email feature by creating a user and sending notification email to the user
 
 ## uninstallation
 
 1. uninstall `gitea`
     * ```shell
       helm -n application uninstall my-gitea \
-          && kubectl -n application delete pvc data-my-gitea-0 data-my-gitea-postgresql-0
+          && kubectl -n application delete pvc data-my-gitea-0 data-my-gitea-postgresql-0 \
+          && kubectl -n application delete secret gitea-admin-secret
       ```
