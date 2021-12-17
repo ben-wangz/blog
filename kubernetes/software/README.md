@@ -9,4 +9,3 @@
 * [gitea](gitea.md)
 * [confluence](confluence.md)
 * [dashboard](dashboard.md)
-* [harbor](harbor.md)
