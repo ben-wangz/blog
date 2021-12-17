@@ -10,10 +10,10 @@
 
 ## purpose
 
-* create a kubernetes cluster by kind
+* prepare a kind cluster with basic components
 * setup kubernetes dashboard
 * create a read only user
 
 ## installation
 
-1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
+1. [prepare a kind cluster with basic components](../basic/kind.cluster.md)
