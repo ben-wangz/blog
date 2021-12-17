@@ -127,3 +127,11 @@
       git push -u origin main
       ```
 4. test email feature
+
+## uninstallation
+
+1. uninstall `gitea`
+    * ```shell
+      helm -n application uninstall my-gitea \
+          && kubectl -n application delete pvc data-my-gitea-0 data-my-gitea-postgresql-0
+      ```
