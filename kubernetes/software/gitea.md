@@ -75,7 +75,8 @@
               my-gitea \
               https://resource.geekcity.tech/kubernetes/charts/https/dl.gitea.io/charts/gitea-4.1.1.tgz \
               --values gitea.values.yaml \
-              --atomic
+              --atomic \
+              --set gitea.config.mailer.PASSWD=$YOUR_MAILER_PASSWORD
           ```
 
 ## test
@@ -98,6 +99,15 @@
     * login as admin user
     * create repository named `test-repo`
     * add ssh public key
+        + ```shell
+          # in QEMU machine
+          ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa
+          ```
+        + in browser: `https://gitea.local:10443/user/settings/keys`
+            * find "Manage SSH Keys"
+            * click "Add Key"
+            * paste content of file `~/.ssh/id_rsa.pub`
+            * click "Add Key"
 3. visit gitea via ssh
     * ```shell
       # in QEMU machine

@@ -77,8 +77,8 @@ gitea:
       IS_TLS_ENABLED: true
       MAILER_TYPE: smtp
       HOST: smtpdm.aliyun.com:465
-      FROM: messenger@email.gitea.geekcity.tech
-      USER: messenger@email.gitea.geekcity.tech
+      FROM: messager@email.gitea.geekcity.tech
+      USER: messager@email.gitea.geekcity.tech
       PASSWD: change_password_to_your_own
     i18n:
       LANGS: en-US,zh-CN
