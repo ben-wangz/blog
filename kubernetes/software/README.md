@@ -10,3 +10,4 @@
 * [haproxy](haproxy.md)
 * [nexus-repository-manager](nexus.repository.manager.md)
 * [redis-cluster](redis-cluster.md)
+* [jupyterhub](jupyterhub.md)

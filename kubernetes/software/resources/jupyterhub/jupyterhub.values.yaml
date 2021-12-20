@@ -1,0 +1,219 @@
+hub:
+  image:
+    registry: insecure.docker.registry.local:80/docker.io
+    repository: bitnami/jupyterhub
+    tag: 1.5.0-debian-10-r34
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+  baseUrl: /
+  adminUser: user
+  password: ""
+  configuration: |
+    Chart:
+      Name: {{ .Chart.Name }}
+      Version: {{ .Chart.Version }}
+    Release:
+      Name: {{ .Release.Name }}
+      Namespace: {{ .Release.Namespace }}
+      Service: {{ .Release.Service }}
+    hub:
+      config:
+        JupyterHub:
+          admin_access: true
+          authenticator_class: dummy
+          cookie_secret_file: /tmp/jupyterhub_cookie_secret
+          DummyAuthenticator:
+          {{- if .Values.hub.password }}
+            password: {{ .Values.hub.password | quote }}
+          {{- else }}
+            password: {{ randAlphaNum 10 | quote }}
+          {{- end }}
+          Authenticator:
+            admin_users:
+              - {{ .Values.hub.adminUser }}
+      cookieSecret:
+      concurrentSpawnLimit: 64
+      consecutiveFailureLimit: 5
+      activeServerLimit:
+      db:
+        type: postgres
+        url: postgresql://{{ ternary .Values.postgresql.postgresqlUsername .Values.externalDatabase.user .Values.postgresql.enabled }}@{{ ternary (include "jupyterhub.postgresql.fullname" .) .Values.externalDatabase.host .Values.postgresql.enabled }}:{{ ternary "5432" .Values.externalDatabase.port .Values.postgresql.enabled }}/{{ ternary .Values.postgresql.postgresqlDatabase .Values.externalDatabase.database .Values.postgresql.enabled }}
+      services: {}
+      allowNamedServers: false
+      namedServerLimitPerUser:
+      {{- if .Values.hub.metrics.serviceMonitor.enabled }}
+      authenticatePrometheus: {{ .Values.hub.metrics.authenticatePrometheus }}
+      {{- end }}
+      redirectToServer:
+      shutdownOnLogout:
+    singleuser:
+      podNameTemplate: {{ include "common.names.fullname" . }}-jupyter-{username}
+      {{- if .Values.singleuser.tolerations }}
+      extraTolerations: {{- include "common.tplvalues.render" ( dict "value" .Values.singleuser.tolerations "context" $) | nindent 4 }}
+      {{- end }}
+      {{- if .Values.singleuser.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.singleuser.nodeSelector "context" $) | nindent 4 }}
+      {{- end }}
+      networkTools:
+        image:
+          name: {{ include "jupyterhub.hubconfiguration.imageEntry" ( dict "imageRoot" .Values.auxiliaryImage "global" $) }}
+          tag: {{ .Values.auxiliaryImage.tag }}
+          pullPolicy: {{ .Values.auxiliaryImage.pullPolicy }}
+          pullSecrets: {{- include "jupyterhub.imagePullSecrets.list" . | nindent 8 }}
+      cloudMetadata:
+        blockWithIptables: false
+      events: true
+      extraAnnotations:
+        {{- if .Values.commonAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+        {{- end }}
+        {{- if .Values.singleuser.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.singleuser.podAnnotations "context" $ ) | nindent 4 }}
+        {{- end }}
+      extraLabels:
+        hub.jupyter.org/network-access-hub: "true"
+        app.kubernetes.io/component: singleuser
+        {{- include "common.labels.standard" . | nindent 4 }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+        {{- end }}
+        {{- if .Values.singleuser.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+        {{- end }}
+      {{- if .Values.singleuser.extraEnvVars }}
+      extraEnv: {{- include "common.tplvalues.render" ( dict "value" .Values.singleuser.extraEnvVars "context" $ ) | nindent 4 }}
+      {{- end }}
+      {{- if .Values.singleuser.lifecycleHooks }}
+      lifecycleHooks: {{- include "common.tplvalues.render" ( dict "value" .Values.singleuser.lifecycleHooks "context" $ ) | nindent 4 }}
+      {{- end }}
+      {{- if .Values.singleuser.initContainers }}
+      initContainers: {{- include "common.tplvalues.render" ( dict "value" .Values.singleuser.initContainers "context" $ ) | nindent 4 }}
+      {{- end }}
+      {{- if .Values.singleuser.sidecars }}
+      extraContainers: {{- include "common.tplvalues.render" ( dict "value" .Values.singleuser.sidecars "context" $ ) | nindent 4 }}
+      {{- end }}
+      {{- if .Values.singleuser.containerSecurityContext.enabled }}
+      uid: {{ .Values.singleuser.containerSecurityContext.runAsUser }}
+      {{- end }}
+      {{- if .Values.singleuser.podSecurityContext.enabled }}
+      fsGid: {{ .Values.singleuser.podSecurityContext.fsGroup }}
+      {{- end }}
+      serviceAccountName: {{ template "jupyterhub.singleuserServiceAccountName" . }}
+      storage:
+        {{- if .Values.singleuser.persistence.enabled }}
+        type: dynamic
+        {{- else }}
+        type: none
+        {{- end }}
+        extraLabels:
+          app.kubernetes.io/component: singleuser
+          {{- include "common.labels.standard" . | nindent 6 }}
+        {{- if .Values.singleuser.extraVolumes }}
+        extraVolumes: {{- include "common.tplvalues.render" ( dict "value" .Values.singleuser.extraVolumes "context" $ ) | nindent 4 }}
+        {{- end }}
+        {{- if .Values.singleuser.extraVolumeMounts }}
+        extraVolumeMounts: {{- include "common.tplvalues.render" ( dict "value" .Values.singleuser.extraVolumeMounts "context" $ ) | nindent 4 }}
+        {{- end }}
+        capacity: {{ .Values.singleuser.persistence.size }}
+        homeMountPath: {{ .Values.singleuser.notebookDir }}
+        dynamic:
+          {{ include "jupyterhub.storage.class" (dict "persistence" .Values.singleuser.persistence "global" .Values.global) }}
+          pvcNameTemplate: {{ include "common.names.fullname" . }}-claim-{username}{servername}
+          volumeNameTemplate: {{ include "common.names.fullname" . }}-volume-{username}{servername}
+          storageAccessModes: {{- include "common.tplvalues.render" ( dict "value" .Values.singleuser.persistence.accessModes "context" $ ) | nindent 8 }}
+      image:
+        name: {{ include "jupyterhub.hubconfiguration.imageEntry" ( dict "imageRoot" .Values.singleuser.image "global" $) }}
+        tag: {{ .Values.singleuser.image.tag }}
+        pullPolicy: {{ .Values.singleuser.image.pullPolicy }}
+        pullSecrets: {{- include "jupyterhub.imagePullSecrets.list" . | nindent 8 }}
+      startTimeout: 300
+      {{- /* We need to replace the Kubernetes memory/cpu terminology (e.g. 10Gi, 10Mi) with one compatible with Python (10G, 10M) */}}
+      cpu:
+        limit: {{ regexReplaceAll "([A-Za-z])i" (default "" .Values.singleuser.resources.limits.cpu)  "${1}"}}
+        guarantee: {{ regexReplaceAll "([A-Za-z])i" (default "" .Values.singleuser.resources.requests.cpu) "${1}" }}
+      memory:
+        limit: {{ regexReplaceAll "([A-Za-z])i" (default "" .Values.singleuser.resources.limits.memory) "${1}" }}
+        guarantee: {{ regexReplaceAll "([A-Za-z])i" (default "" .Values.singleuser.resources.requests.memory) "${1}" }}
+      {{- if .Values.singleuser.command }}
+      cmd: {{- include "common.tplvalues.render" (dict "value" .Values.singleuser.command "context" $) | nindent 12 }}
+      {{- else }}
+      cmd: jupyterhub-singleuser
+      {{- end }}
+      defaultUrl:
+    cull:
+      enabled: true
+      users: false
+      removeNamedServers: false
+      timeout: 3600
+      every: 600
+      concurrency: 10
+      maxAge: 0
+  service:
+    type: ClusterIP
+proxy:
+  image:
+    registry: insecure.docker.registry.local:80/docker.io
+    repository: bitnami/configurable-http-proxy
+    tag: 4.5.0-debian-10-r146
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+  ingress:
+    enabled: false
+    path: /
+    pathType: ImplementationSpecific
+    hostname: jupyterhub.local
+    annotations: {}
+    tls: false
+    selfSigned: false
+  metrics:
+    serviceMonitor:
+      enabled: false
+      namespace: ""
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: ""
+      relabellings: []
+      honorLabels: false
+      additionalLabels: {}
+singleuser:
+  image:
+    registry: insecure.docker.registry.local:80/docker.io
+    repository: bitnami/jupyter-base-notebook
+    tag: 1.5.0-debian-10-r34
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+auxiliaryImage:
+  registry: insecure.docker.registry.local:80/docker.io
+  repository: bitnami/bitnami-shell
+  tag: 10-debian-10-r281
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+postgresql:
+  enabled: true
+  postgresqlUsername: bn_jupyterhub
+  postgresqlDatabase: bitnami_jupyterhub
+  persistence:
+    enabled: true
+    storageClass: "standard"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+  image:
+    registry: insecure.docker.registry.local:80/docker.io
+    repository: bitnami/postgresql
+    tag: 11.14.0-debian-10-r17
+    pullPolicy: IfNotPresent
+    pullSecrets: [ ]
+  volumePermissions:
+    image:
+      registry: insecure.docker.registry.local:80/docker.io
+      repository: bitnami/bitnami-shell
+      tag: 10-debian-10-r265
+      pullPolicy: IfNotPresent
+      pullSecrets: [ ]
+  metrics:
+    image:
+      registry: insecure.docker.registry.local:80/docker.io
+      repository: bitnami/postgres-exporter
+      tag: 0.10.0-debian-10-r133
+      pullPolicy: IfNotPresent
+      pullSecrets: [ ]

@@ -15,12 +15,6 @@
 
 ## installation
 
-* create a kubernetes cluster by kind
-* setup ingress-nginx
-* install `gitea`
-
-### do it
-
 1. [prepare a kind cluster with basic components](../basic/kind.cluster.md)
 2. download and load images to qemu machine(run command at the host of qemu machine)
     * run scripts
