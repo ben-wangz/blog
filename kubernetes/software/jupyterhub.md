@@ -69,6 +69,12 @@
     * ```shell
       curl --insecure --header 'Host: jupyterhub.local' https://localhost
       ```
+2. visit gitea via website
+    * configure hosts
+        + ```shell
+          echo $QEMU_HOST_IP jupyterhub.local >> /etc/hosts
+          ```
+    * visit `https://jupyterhub.local:10443/` with your browser
 
 ## uninstallation
 
@@ -77,9 +83,3 @@
       helm -n application uninstall my-jupyterhub \
           && kubectl -n application delete pvc data-my-jupyterhub-postgresql-0
       ```
-2. visit gitea via website
-    * configure hosts
-        + ```shell
-          echo $QEMU_HOST_IP jupyterhub.local >> /etc/hosts
-          ```
-    * visit `https://jupyterhub.local:10443/` with your browser
