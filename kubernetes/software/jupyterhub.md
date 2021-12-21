@@ -75,6 +75,12 @@
           echo $QEMU_HOST_IP jupyterhub.local >> /etc/hosts
           ```
     * visit `https://jupyterhub.local:10443/` with your browser
+    * login with
+        + default user: admin
+        + password extracted by command
+            * ```shell
+              kubectl get secret --namespace application my-jupyterhub-hub -o jsonpath="{.data['values\.yaml']}" | base64 --decode | awk -F: '/password/ {gsub(/[ \t]+/, "", $2);print $2}'
+              ```
 
 ## uninstallation
 
