@@ -87,5 +87,6 @@
 1. uninstall `jupyterhub`
     * ```shell
       helm -n application uninstall my-jupyterhub \
-          && kubectl -n application delete pvc data-my-jupyterhub-postgresql-0
+          && kubectl -n application delete pvc data-my-jupyterhub-postgresql-0 \
+          && kubectl -n application delete pvc my-jupyterhub-claim-admin
       ```
