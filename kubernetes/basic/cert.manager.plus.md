@@ -17,41 +17,64 @@
 * install nginx service and access it with https
 
 ## installation
+
 1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
 2. setup [ingress-nginx](ingress.nginx.md)
 3. setup [cert-manager](cert.manager.md)
-3. download and load images to qemu machine(run command at the host of qemu machine)
+4. download and load images to qemu machine(run command at the host of qemu machine)
     * run scripts
       in [download.and.load.function.sh](../resources/create.qemu.machine.for.kind/download.and.load.function.sh.md) to
       load function `download_and_load`
     * ```shell
-      TOPIC_DIRECTORY="cert.manager.basic"
+      TOPIC_DIRECTORY="cert.manager.plus.basic"
       BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
-          "quay.io_jetstack_cert-manager-controller_v1.5.4.dim" \
-          "quay.io_jetstack_cert-manager-webhook_v1.5.4.dim" \
-          "quay.io_jetstack_cert-manager-cainjector_v1.5.4.dim" \
-          "quay.io_jetstack_cert-manager-ctl_v1.5.4.dim" \
-          "quay.io_jetstack_cert-manager-acmesolver_v1.5.4.dim" \
-          "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim"
+          "ghcr.io_devmachine-fr_cert-manager-alidns-webhook_cert-manager-alidns-webhook_0.2.0.dim"
       ```
-4. install cert manager
-    * prepare [cert.manager.values.yaml](resources/cert.manager/cert.manager.values.yaml.md)
+5. install `alidns-webhook`
+    * prepare [alidns.webhook.values.yaml](resources/cert.manager.plus/alidns.webhook.values.yaml.md)
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
           load_image "localhost:5000" \
-              "quay.io/jetstack/cert-manager-controller:v1.5.4" \
-              "quay.io/jetstack/cert-manager-webhook:v1.5.4" \
-              "quay.io/jetstack/cert-manager-cainjector:v1.5.4" \
-              "quay.io/jetstack/cert-manager-ctl:v1.5.4" \
-              "quay.io/jetstack/cert-manager-acmesolver:v1.5.4"
+              "ghcr.io/devmachine-fr/cert-manager-alidns-webhook/cert-manager-alidns-webhook:0.2.0"
+          ```
+   * create `basic-components-plus` namespace if not exists
+      + ```shell
+          kubectl get namespace basic-components-plus > /dev/null 2>&1 || kubectl create namespace basic-components-plus
+          ```
+   * prepare `access-key-id` and `access-key-secret` to manage your domain
+        + ```shell
+          kubectl -n basic-components-plus create secret generic alidns-webhook-secrets \
+              --from-literal="access-token=$YOUR_ACCESS_KEY_ID" \
+              --from-literal="secret-key=$YOUR_ACCESS-KEY-SECRET"
           ```
     * ```shell
       helm install \
-          --create-namespace --namespace basic-components \
-          my-cert-manager \
-          https://resource.geekcity.tech/kubernetes/charts/https/charts.jetstack.io/cert-manager-v1.5.4.tgz \
-          --values cert.manager.values.yaml \
+          --create-namespace --namespace basic-components-plus \
+          my-alidns-webhook \
+          https://resource.geekcity.tech/kubernetes/charts/https/github.com/DEVmachine-fr/cert-manager-alidns-webhook/releases/download/alidns-webhook-0.6.0/alidns-webhook-0.6.0.tgz \
+          --values alidns.webhook.values.yaml \
           --atomic
       ```
+
+## test
+
+1. test with certificate
+    * create issuer
+        + prepare [alidns.webhook.staging.issuer.yaml](
+          resources/cert.manager.plus/alidns.webhook.staging.issuer.yaml.md)
+        + ```shell
+          kubectl -n basic-components-plus apply -f alidns.webhook.staging.issuer.yaml
+          ```
+    * create certificate
+        + prepare [test.certificate.yaml](resources/cert.manager.plus/test.certificate.yaml.md)
+        + ```shell
+          kubectl -n basic-components-plus apply -f test.certificate.yaml
+          ```
+    * certificate should be ready and tls secret should be created after a while
+        + ```shell
+          kubectl -n basic-components-plus get certificate -o wide
+          kubectl -n basic-components-plus get secret -o wide
+          ```
+2. test with nginx

@@ -3,7 +3,7 @@
 ## main usage
 
 * create certification of ssl automatically by cert-manager
-* use dns01 method
+* use http01 method
 
 ## conceptions
 
