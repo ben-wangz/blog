@@ -4,7 +4,7 @@
 
 <div class="menu">
    <div class="menu-item">
-        <a class="menu-item-title">USEFUL COMMANDS</a>
+        <a class="menu-item-title" href="/#/commands/README">USEFUL COMMANDS</a>
         <div class="menu-item-content">
             <img alt="tool-icon" class="menu-item-icon" src="html/images/tool-icon.png">
             <a class="menu-item-text" href="/#/commands/README">
@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="menu-item">
-        <a class="menu-item-title">QEMU</a>
+        <a class="menu-item-title" href="/#/qemu/README">QEMU</a>
         <div class="menu-item-content">
             <img alt="qemu-icon" class="menu-item-icon" src="html/images/qemu-icon.png">
             <a class="menu-item-text" href="/#/qemu/README">
@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="menu-item">
-        <a class="menu-item-title">LINUX</a>
+        <a class="menu-item-title" href="/#/linux/README">LINUX</a>
         <div class="menu-item-content">
             <img alt="linux-icon" class="menu-item-icon" src="html/images/linux-icon.png">
             <a class="menu-item-text" href="/#/linux/README">
@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="menu-item">
-        <a class="menu-item-title">DOCKER</a>
+        <a class="menu-item-title" href="/#/docker/README">DOCKER</a>
         <div class="menu-item-content">
             <img alt="docker-icon" class="menu-item-icon" src="html/images/docker-icon.png">
             <a class="menu-item-text" href="/#/docker/README">
@@ -42,7 +42,7 @@
         </div>
     </div>
     <div class="menu-item">
-        <a class="menu-item-title">KUBERNETES</a>
+        <a class="menu-item-title" href="/#/kubernetes/README">KUBERNETES</a>
         <div class="menu-item-content">
             <img alt="kubernetes-icon" class="menu-item-icon" src="html/images/k8s-icon.png">
             <a class="menu-item-text" href="/#/kubernetes/README">
