@@ -3,6 +3,7 @@
 ## main usage
 
 * create certification of ssl automatically by cert-manager
+* use dns01 method
 
 ## conceptions
 
@@ -15,7 +16,7 @@
 * setup cert-manager
 * install nginx service and access it with https
 
-## do it
+## installation
 
 1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
 2. setup [ingress-nginx](ingress.nginx.md)
