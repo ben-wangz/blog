@@ -50,7 +50,7 @@
               --from-literal="access-token=$YOUR_ACCESS_KEY_ID" \
               --from-literal="secret-key=$YOUR_ACCESS-KEY-SECRET"
           ```
-    * authorize permissions to your RAM account
+    * add permissions to your RAM account
         + ```json
           {
             "Version": "1",
