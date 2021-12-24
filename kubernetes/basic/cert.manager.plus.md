@@ -50,6 +50,29 @@
               --from-literal="access-token=$YOUR_ACCESS_KEY_ID" \
               --from-literal="secret-key=$YOUR_ACCESS-KEY-SECRET"
           ```
+    * authorize permissions to your RAM account
+        + ```json
+          {
+            "Version": "1",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "alidns:AddDomainRecord",
+                  "alidns:DeleteDomainRecord"
+                ],
+                "Resource": "acs:alidns:*:*:domain/geekcity.tech"
+              }, {
+                "Effect": "Allow",
+                "Action": [
+                  "alidns:DescribeDomains",
+                  "alidns:DescribeDomainRecords"
+                ],
+                "Resource": "acs:alidns:*:*:domain/*"
+              }
+            ]
+          }
+          ```
     * ```shell
       helm install \
           --create-namespace --namespace basic-components-plus \
