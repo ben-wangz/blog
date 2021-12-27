@@ -27,6 +27,7 @@
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
           "k8s.gcr.io_ingress-nginx_controller_v1.0.3.dim" \
           "k8s.gcr.io_ingress-nginx_kube-webhook-certgen_v1.0.dim" \
+          "k8s.gcr.io_defaultbackend-amd64_1.5.dim" \
           "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim"
       ```
 3. install ingress nginx
