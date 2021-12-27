@@ -63,8 +63,8 @@
               ```
     * configure ingress without tls
         + NOTE: ingress in helm chart is not compatible enough for us, we have to install ingress manually
-        +
-      prepare [insecure.docker.registry.ingress.yaml](resources/docker.registry/insecure.docker.registry.ingress.yaml.md)
+        + prepare [insecure.docker.registry.ingress.yaml](
+          resources/docker.registry/insecure.docker.registry.ingress.yaml.md)
         + apply ingress
             * ```shell
               kubectl -n basic-components apply -f insecure.docker.registry.ingress.yaml
