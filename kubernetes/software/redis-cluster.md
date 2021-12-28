@@ -53,24 +53,24 @@
       kubectl -n application apply -f redis.cluster.tool.yaml
       ```
 
-## test
+## test with redis-cluster-tool
 
-1. check connection
+1. connect to `redis-cluster`
     * ```shell
-      curl --insecure --header 'Host: redis-cluster.local' https://localhost
+      POD_NAME=$(kubectl get pod -n application \
+          -l "app.kubernetes.io/name=redis-cluster-tool" \
+          -o jsonpath="{.items[0].metadata.name}") \
+          && kubectl -n application exec -it $POD_NAME -- bash -c '\
+              echo "ping" | redis-cli -c -h my-redis-cluster.application -a $REDIS_PASSWORD' \
+          && kubectl -n application exec -it $POD_NAME -- bash -c '\
+              echo "set mykey somevalue" | redis-cli -c -h my-redis-cluster.application -a $REDIS_PASSWORD' \
+          && kubectl -n application exec -it $POD_NAME -- bash -c '\
+              echo "get mykey" | redis-cli -c -h my-redis-cluster.application -a $REDIS_PASSWORD' \
+          && kubectl -n application exec -it $POD_NAME -- bash -c '\
+              echo "del mykey" | redis-cli -c -h my-redis-cluster.application -a $REDIS_PASSWORD' \
+          && kubectl -n application exec -it $POD_NAME -- bash -c '\
+              echo "get mykey" | redis-cli -c -h my-redis-cluster.application -a $REDIS_PASSWORD'
       ```
-2. test with `redis-cluster-tool`
-    * find `POD_NAME`
-        + ```shell
-          POD_NAME=$(kubectl get pod -n application \
-              -l "app.kubernetes.io/name=redis-cluster-tool" \
-              -o jsonpath="{.items[0].metadata.name}")
-          ```
-    * add config for server
-        + ```shell
-          kubectl -n application exec -it $POD_NAME \
-              -- bash -c ''
-          ```
 
 ## uninstallation
 
@@ -81,5 +81,10 @@
 2. uninstall `redis-cluster`
     * ```shell
       helm -n application uninstall my-redis-cluster \
-          && kubectl -n application delete pvc my-redis-cluster
+          && kubectl -n application delete pvc redis-data-my-redis-cluster-0 \
+          && kubectl -n application delete pvc redis-data-my-redis-cluster-1 \
+          && kubectl -n application delete pvc redis-data-my-redis-cluster-2 \
+          && kubectl -n application delete pvc redis-data-my-redis-cluster-3 \
+          && kubectl -n application delete pvc redis-data-my-redis-cluster-4 \
+          && kubectl -n application delete pvc redis-data-my-redis-cluster-5
       ```
