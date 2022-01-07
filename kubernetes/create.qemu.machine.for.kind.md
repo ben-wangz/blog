@@ -41,8 +41,12 @@
 
 ### access the machine started with ssh
 
-1. default `root` password is `123456`
-2. configure ssh login without password
+1. (optional) generate ssh keys if not exists
+    * ```shell
+      ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa
+      ```
+2. default `root` password is `123456`
+3. configure ssh login without password
     * ```shell
       SSH_PUBLIC_KEY=$(cat /root/.ssh/id_rsa.pub) \
           && ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022 root@localhost \
