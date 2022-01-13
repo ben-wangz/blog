@@ -188,6 +188,8 @@ singleuser:
     tag: 1.5.0-debian-10-r34
     pullPolicy: IfNotPresent
     pullSecrets: [ ]
+  extraEnvVars:
+    - JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
 auxiliaryImage:
   registry: insecure.docker.registry.local:80/docker.io
   repository: bitnami/bitnami-shell
