@@ -139,7 +139,7 @@ hub:
       {{- else }}
       cmd: jupyterhub-singleuser
       {{- end }}
-      defaultUrl:
+      defaultUrl: "/lab"
     cull:
       enabled: true
       users: false
@@ -189,7 +189,7 @@ singleuser:
     pullPolicy: IfNotPresent
     pullSecrets: [ ]
   extraEnvVars:
-    - JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
+    JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
 auxiliaryImage:
   registry: insecure.docker.registry.local:80/docker.io
   repository: bitnami/bitnami-shell
