@@ -24,13 +24,14 @@
       TOPIC_DIRECTORY="jupyterhub.software"
       BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
-          "docker.io_bitnami_jupyterhub_1.5.0-debian-10-r34.dim" \
-          "docker.io_bitnami_configurable-http-proxy_4.5.0-debian-10-r146.dim" \
-          "docker.io_bitnami_jupyter-base-notebook_1.5.0-debian-10-r34.dim" \
-          "docker.io_bitnami_bitnami-shell_10-debian-10-r281.dim" \
-          "docker.io_bitnami_postgresql_11.14.0-debian-10-r17.dim" \
-          "docker.io_bitnami_bitnami-shell_10-debian-10-r265.dim" \
-          "docker.io_bitnami_postgres-exporter_0.10.0-debian-10-r133.dim"
+              "docker.io_jupyterhub_k8s-hub_1.2.0.dim" \
+              "docker.io_jupyterhub_configurable-http-proxy_4.5.0.dim" \
+              "docker.io_traefik_v2.4.11.dim" \
+              "docker.io_jupyterhub_k8s-secret-sync_1.2.0.dim" \
+              "docker.io_jupyterhub_k8s-singleuser-sample_1.2.0.dim" \
+              "docker.io_k8s.gcr.io_kube-scheduler_v1.19.13.dim" \
+              "docker.io_k8s.gcr.io_pause_3.5.dim" \
+              "docker.io_jupyterhub_k8s-image-awaiter_1.2.0.dim"
       ```
 3. configure self-signed issuer
     * `self-signed` issuer
@@ -45,13 +46,14 @@
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
           load_image "docker.registry.local:443" \
-              "docker.io/bitnami/jupyterhub:1.5.0-debian-10-r34" \
-              "docker.io/bitnami/configurable-http-proxy:4.5.0-debian-10-r146" \
-              "docker.io/jupyter/scipy-notebook:lab-3.2.6" \
-              "docker.io/bitnami/bitnami-shell:10-debian-10-r281" \
-              "docker.io/bitnami/postgresql:11.14.0-debian-10-r17" \
-              "docker.io/bitnami/bitnami-shell:10-debian-10-r265" \
-              "docker.io/bitnami/postgres-exporter:0.10.0-debian-10-r133"
+              "docker.io/jupyterhub/k8s-hub:1.2.0" \
+              "docker.io/jupyterhub/configurable-http-proxy:4.5.0" \
+              "docker.io/traefik:v2.4.11" \
+              "docker.io/jupyterhub/k8s-secret-sync:1.2.0" \
+              "docker.io/jupyterhub/k8s-singleuser-sample:1.2.0" \
+              "docker.io/k8s.gcr.io/kube-scheduler:v1.19.13" \
+              "docker.io/k8s.gcr.io/pause:3.5" \
+              "docker.io/jupyterhub/k8s-image-awaiter:1.2.0"
           ```
     * install by helm
         + ```shell

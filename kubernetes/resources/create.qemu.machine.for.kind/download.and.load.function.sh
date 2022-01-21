@@ -16,6 +16,6 @@ function download_and_load()
             curl -o $TMP_FILE -L ${BASE_URL}/$TOPIC_DIRECTORY/$IMAGE_FILE
             mv $TMP_FILE $IMAGE_FILE_AT_HOST
         fi
-        docker image load -i IMAGE_FILE_AT_HOST
+        docker image load -i $IMAGE_FILE_AT_HOST
     done
 }
