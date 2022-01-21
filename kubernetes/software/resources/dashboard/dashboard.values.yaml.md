@@ -1,0 +1,1 @@
+[dashboard.values.yaml](dashboard.values.yaml ':include')

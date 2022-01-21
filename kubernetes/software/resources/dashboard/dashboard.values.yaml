@@ -1,0 +1,35 @@
+image:
+  repository: insecure.docker.registry.local:80/kubernetesui/dashboard
+  tag: v2.4.0
+  pullPolicy: IfNotPresent
+  pullSecrets: [ ]
+service:
+  type: ClusterIP
+  externalPort: 443
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/issuer: self-signed-issuer
+  hosts:
+    - dashboard.local
+  tls:
+    - secretName: dashboard.local-tls
+      hosts:
+        - dashboard.local
+settings:
+  clusterName: "local"
+  itemsPerPage: 10
+  logsAutoRefreshTimeInterval: 10
+  resourceAutoRefreshTimeInterval: 60
+metricsScraper:
+  enabled: false
+  image:
+    repository: insecure.docker.registry.local:80/kubernetesui/metrics-scraper
+    tag: v1.0.7
+metrics-server:
+  enabled: false
+rbac:
+  create: true
+  clusterRoleMetrics: true
+  clusterReadOnlyRole: false

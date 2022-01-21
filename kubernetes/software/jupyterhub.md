@@ -92,6 +92,7 @@
       ```
 
 ## more configurations and manual
+
 1. https://zero-to-jupyterhub.readthedocs.io/en/latest/resources/reference.html
 2. https://zero-to-jupyterhub.readthedocs.io/en/latest/jupyterhub/customization.html
 3. https://jupyterhub.readthedocs.io/en/stable/reference/rest-api.html
