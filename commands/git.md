@@ -14,6 +14,12 @@ git --no-pager diff
 git remote prune origin
 ```
 
+### clone specific branch
+
+```shell
+git clone --single-branch --branch v2.4.0 https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner.git
+```
+
 ### get specific file from remote
 
 * from remote: git@github.com:ben-wangz/blog.git

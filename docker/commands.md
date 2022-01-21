@@ -23,3 +23,7 @@
     * ```shell
       docker image prune -a
       ```
+6. generate htpasswd file
+    * ```shell
+      docker run --rm -it xmartlabs/htpasswd:latest my-username my-password > htpasswd
+      ```

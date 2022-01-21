@@ -47,7 +47,7 @@
           load_image "docker.registry.local:443" \
               "docker.io/bitnami/jupyterhub:1.5.0-debian-10-r34" \
               "docker.io/bitnami/configurable-http-proxy:4.5.0-debian-10-r146" \
-              "docker.io/bitnami/jupyter-base-notebook:1.5.0-debian-10-r34" \
+              "docker.io/jupyter/scipy-notebook:lab-3.2.6" \
               "docker.io/bitnami/bitnami-shell:10-debian-10-r281" \
               "docker.io/bitnami/postgresql:11.14.0-debian-10-r17" \
               "docker.io/bitnami/bitnami-shell:10-debian-10-r265" \
@@ -58,7 +58,7 @@
           helm install \
               --create-namespace --namespace application \
               my-jupyterhub \
-              https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/jupyterhub-0.3.4.tgz \
+              https://resource.geekcity.tech/kubernetes/charts/https/jupyterhub.github.io/helm-chart/jupyterhub-1.2.0.tgz \
               --values jupyterhub.values.yaml \
               --atomic
           ```

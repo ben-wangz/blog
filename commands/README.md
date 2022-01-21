@@ -11,4 +11,3 @@
     * [vim](vim.md)
     * [mac](mac.md)
     * [VBoxManage](VBoxManage.md) will be retired
-    * [kubernetes](kubernetes.md)  will be retired

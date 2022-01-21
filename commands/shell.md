@@ -8,6 +8,7 @@ find /root/database/backup/db.sql.*.gz -mtime +3 -exec rm {} \;
 
 ```shell
 ssh -o "UserKnownHostsFile /dev/null" root@aliyun.geekcity.tech
+ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking=no" root@aliyun.geekcity.tech
 ```
 
 ### rsync file to remote
@@ -35,7 +36,7 @@ rsync -av --delete \
 ```shell
 yum install -y chrony \
     && systemctl enable chronyd \
-    && systemctl is-active chronyd \
+    && (systemctl is-active chronyd || systemctl start chronyd) \
     && chronyc sources \
     && chronyc tracking \
     && timedatectl set-timezone 'Asia/Shanghai'
@@ -84,7 +85,10 @@ hostnamectl set-hostname develop
 ### add remote key
 
 ```shell
-ssh -o "UserKnownHostsFile /dev/null" root@aliyun.geekcity.tech "mkdir -p /root/.ssh && chmod 700 /root/.ssh && echo '$SOME_PUBLIC_KEY' >> /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys"
+ssh -o "UserKnownHostsFile /dev/null" \
+    root@aliyun.geekcity.tech \
+    "mkdir -p /root/.ssh && chmod 700 /root/.ssh && echo '$SOME_PUBLIC_KEY' \
+    >> /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys"
 ```
 
 ### check service logs with journalctl

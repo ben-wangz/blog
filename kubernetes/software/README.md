@@ -1,6 +1,7 @@
 ### software
 
 * [dashboard](dashboard.md)
+* [chart-museum](chart.museum.md)
 * [docsify-nginx](docsify.nginx.md)
 * [resource-nginx](resource.nginx.md)
 * [maria-db](maria.db.md)

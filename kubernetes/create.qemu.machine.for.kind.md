@@ -5,6 +5,7 @@
 * start QEMU virtual machine with KVM(Kernel-based Virtual Machine) accelerator
 * the virtual machine is customized for kind
 * start basic kind to test it
+* you can use your own virtual machine instead of qemu machine
 
 ## pre-requirements
 
@@ -47,9 +48,11 @@
       ```
 2. default `root` password is `123456`
 3. configure ssh login without password
+    * modify host and port if not using qemu machine
     * ```shell
       SSH_PUBLIC_KEY=$(cat /root/.ssh/id_rsa.pub) \
-          && ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022 root@localhost \
+          && SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" \ 
+          && ssh $SSH_OPTIONS -p 10022 root@localhost \
               "mkdir -p .ssh \
                   && chmod 700 .ssh \
                   && echo '$SSH_PUBLIC_KEY' > .ssh/authorized_keys \
@@ -58,35 +61,34 @@
 
 ### create kind cluster
 
-1. prepare [all.in.one.8.repo](resources/create.qemu.machine.for.kind/all.in.one.8.repo.md)
-2. replace yum repositories
+1. login
+    * login to your own virtual machine if not using qemu machine
     * ```shell
-      REPO_CONTENT=$(cat all.in.one.8.repo) \
-          && ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022 root@localhost \
-              "rm -rf /etc/yum.repos.d/* && echo '$REPO_CONTENT' > /etc/yum.repos.d/all.in.one.8.repo"
+      SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" \
+          && ssh $SSH_OPTIONS -p 10022 root@localhost
       ```
-3. install docker
+2. prepare [all.in.one.8.repo](resources/create.qemu.machine.for.kind/all.in.one.8.repo.md)
+    * copy to `/root/all.in.one.8.repo.md`
+3. replace yum repositories
     * ```shell
-      ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022 root@localhost \
-          "dnf -y install tar yum-utils device-mapper-persistent-data lvm2 docker-ce \
-              && systemctl enable docker \
-              && systemctl start docker"
+      REPO_CONTENT=$(cat /root/all.in.one.8.repo) \
+          && rm -rf /etc/yum.repos.d/* && echo '$REPO_CONTENT' > /etc/yum.repos.d/all.in.one.8.repo
+      ```
+4. install docker
+    * ```shell
+      dnf -y install tar yum-utils device-mapper-persistent-data lvm2 docker-ce \
+          && systemctl enable docker \
+          && systemctl start docker
       ```
     * pre-configure docker-registry to support `insecure.docker.registry.local:80` which may be needed later
         + prepare [docker.daemon.json](resources/create.qemu.machine.for.kind/docker.daemon.json.md)
+            * copy to `/etc/docker/daemon.json`
         + ```shell
-          SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" \
-              && scp $SSH_OPTIONS -P 10022 docker.daemon.json root@localhost:/etc/docker/daemon.json \
-              && ssh $SSH_OPTIONS -p 10022 root@localhost "systemctl restart docker"
+          systemctl restart docker
           ```
-4. [download kubernetes binary tools](../kubernetes/download.kubernetes.binary.tools.md)
-    * copy to `/root/bin`
-        + ```shell
-          SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" \
-              && ssh $SSH_OPTIONS -p 10022 root@localhost "mkdir -p /root/bin" \
-              && scp $SSH_OPTIONS -P 10022 kubectl helm kind root@localhost:/root/bin
-          ```
-5. prepare docker images
+5. [download kubernetes binary tools](../kubernetes/download.kubernetes.binary.tools.md)
+    * download binaries into directory `/root/bin`
+6. prepare docker images
     * run scripts
       in [download.and.load.function.sh](resources/create.qemu.machine.for.kind/download.and.load.function.sh.md)
     * ```shell
@@ -96,25 +98,17 @@
           "docker.io_registry_2.7.1.dim" \
           "docker.io_kindest_node_v1.22.1.dim"
       ```
-6. create cluster with a local docker registry
+7. create cluster with a local docker registry
     * prepare [kind.cluster.yaml](resources/create.qemu.machine.for.kind/kind.cluster.yaml.md)
+        + copy to `/root/bin/conf`
     * prepare [kind.with.registry.sh](resources/create.qemu.machine.for.kind/kind.with.registry.sh.md)
+        + copy to `/root/bin/bin`
     * create cluster
         + ```shell
-          SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" \
-              && ssh $SSH_OPTIONS -p 10022 root@localhost "mkdir -p /root/bin /root/conf" \
-              && scp $SSH_OPTIONS -P 10022 kind.with.registry.sh root@localhost:/root/bin \
-              && scp $SSH_OPTIONS -P 10022 kind.cluster.yaml root@localhost:/root/conf \
-              && ssh $SSH_OPTIONS -p 10022 root@localhost \
-                  "bash /root/bin/kind.with.registry.sh /root/conf/kind.cluster.yaml /root/bin/kind /root/bin/kubectl"
+          bash /root/bin/kind.with.registry.sh /root/conf/kind.cluster.yaml /root/bin/kind /root/bin/kubectl
           ```
     * checking
         + ```shell
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022 root@localhost \
-              "/root/bin/kubectl -n kube-system wait --for=condition=ready pod --all \
-                  && /root/bin/kubectl get pod --all-namespaces"
+          /root/bin/kubectl -n kube-system wait --for=condition=ready pod --all \
+              && /root/bin/kubectl get pod --all-namespaces
           ```
-7. login with ssh and enjoy
-    * ```shell
-      ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022 root@localhost
-      ```

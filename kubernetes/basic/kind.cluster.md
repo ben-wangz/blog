@@ -25,8 +25,7 @@
 2. setup [ingress-nginx](ingress.nginx.md)
 3. setup [cert-manager](cert.manager.md)
 4. setup [docker-registry](docker.registry.md)
-5. setup [chart-museum](chart.museum.md)
-6. download and load images to qemu machine(run command at the host of qemu machine)
+5. download and load images to qemu machine(run command at the host of qemu machine)
     * run scripts
       in [download.and.load.function.sh](../resources/create.qemu.machine.for.kind/download.and.load.function.sh.md) to
       load function `download_and_load`
@@ -36,7 +35,7 @@
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
           "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim"
       ```
-7. configure docker client as tls of `docker.registry.local` is self-signed
+6. configure docker client as tls of `docker.registry.local` is self-signed
     * ```shell
       DOCKER_REGISTRY_URL="docker.registry.local:443" \
           && CERT_DIRECTORY_PATH="/etc/docker/certs.d/$DOCKER_REGISTRY_URL" \
@@ -45,7 +44,7 @@
           -o jsonpath="{.data.tls\\.crt}" \
           | base64 --decode > $CERT_DIRECTORY_PATH/ca.crt
       ```
-8. configure `/etc/hosts` for `docker-registry` and `chart-museum`
+7. configure `/etc/hosts` for `docker-registry` and `chart-museum`
     * ```shell
       echo 172.17.0.1 docker.registry.local >> /etc/hosts \
           && echo 172.17.0.1 insecure.docker.registry.local >> /etc/hosts \
@@ -99,21 +98,4 @@
               && docker image rm $DOCKER_REGISTRY_URL/$DOCKER_IMAGE \
               && docker pull $DOCKER_REGISTRY_URL/$DOCKER_IMAGE
       done
-      ```
-
-## test helm chart push and pull
-
-1. push
-    * ```shell
-      helm create mychart \
-          && helm package mychart \
-          && curl --insecure --data-binary "@mychart-0.1.0.tgz" https://chart.museum.local/api/charts
-      ```
-2. pull
-    * ```shell
-      rm -rf mychart mychart-0.1.0.tgz \
-          && helm pull mychart \
-          --version 0.1.0 \
-          --repo https://chart.museum.local \
-          --insecure-skip-tls-verify
       ```

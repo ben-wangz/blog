@@ -10,17 +10,13 @@
 
 ## purpose
 
-* create a kubernetes cluster by kind
-* setup ingress
-* setup cert-manager and self-signed issuer
+* prepare a kind cluster with basic components
 * setup chart-museum
 * test chart-museum
 
 ## installation
 
-1. [create qemu machine for kind](../create.qemu.machine.for.kind.md)
-2. setup [ingress-nginx](ingress.nginx.md)
-3. setup [cert-manager](cert.manager.md)
+1. [prepare a kind cluster with basic components](../basic/kind.cluster.md)
 4. download and load images to qemu machine(run command at the host of qemu machine)
     * run scripts
       in [download.and.load.function.sh](../resources/create.qemu.machine.for.kind/download.and.load.function.sh.md) to
@@ -34,12 +30,12 @@
       ```
 5. configure self-signed issuer
     * `self-signed` issuer
-        + prepare [self.signed.and.ca.issuer.yaml](resources/cert.manager/self.signed.and.ca.issuer.yaml.md)
+        + prepare [self.signed.and.ca.issuer.yaml](../basic/resources/cert.manager/self.signed.and.ca.issuer.yaml.md)
         + ```shell
-          kubectl -n basic-components apply -f self.signed.and.ca.issuer.yaml
+          kubectl -n application apply -f self.signed.and.ca.issuer.yaml
           ```
 6. setup chart-museum
-    * prepare [chart.museum.values.yaml](resources/chart.museum/chart.museum.values.yaml.md)
+    * prepare [chart.museum.values.yaml](../basic/resources/chart.museum/chart.museum.values.yaml.md)
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
@@ -50,7 +46,7 @@
     * install by helm
         + ```shell
           helm install \
-              --create-namespace --namespace basic-components \
+              --create-namespace --namespace application \
               my-chart-museum \
               https://resource.geekcity.tech/kubernetes/charts/https/chartmuseum.github.io/charts/chartmuseum-3.4.0.tgz \
               --values chart.museum.values.yaml \
