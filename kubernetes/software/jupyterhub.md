@@ -69,7 +69,7 @@
 
 1. check connection
     * ```shell
-      curl --insecure --header 'Host: jupyterhub.local' https://localhost
+      curl --insecure --header 'Host: jupyterhub.local' https://localhost/hub/login
       ```
 2. visit gitea via website
     * configure hosts
@@ -78,17 +78,20 @@
           ```
     * visit `https://jupyterhub.local:10443/` with your browser
     * login with
-        + default user: admin
-        + password extracted by command
-            * ```shell
-              kubectl get secret --namespace application my-jupyterhub-hub -o jsonpath="{.data['values\.yaml']}" | base64 --decode | awk -F: '/password/ {gsub(/[ \t]+/, "", $2);print $2}'
-              ```
+        + default user: `admin`
+        + password: `a-shared-secret-password`
 
 ## uninstallation
 
 1. uninstall `jupyterhub`
     * ```shell
-      helm -n application uninstall my-jupyterhub \
-          && kubectl -n application delete pvc data-my-jupyterhub-postgresql-0 \
-          && kubectl -n application delete pvc my-jupyterhub-claim-admin
+      helm -n application uninstall my-jupyterhub
+      # delete pvc created
+      #helm -n application get pvc
+      #helm -n application delete pvc ...
       ```
+
+## more configurations and manual
+1. https://zero-to-jupyterhub.readthedocs.io/en/latest/resources/reference.html
+2. https://zero-to-jupyterhub.readthedocs.io/en/latest/jupyterhub/customization.html
+3. https://jupyterhub.readthedocs.io/en/stable/reference/rest-api.html

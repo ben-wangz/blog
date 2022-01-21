@@ -2,11 +2,10 @@ hub:
   config:
     Authenticator:
       admin_users:
+        - admin
+      allowed_users:
         - user1
         - user2
-      allowed_users:
-        - user3
-        - user4
     DummyAuthenticator:
       password: a-shared-secret-password
     JupyterHub:
@@ -48,6 +47,9 @@ singleuser:
   image:
     name: insecure.docker.registry.local:80/docker.io/jupyterhub/k8s-singleuser-sample
     tag: "1.2.0"
+  cpu:
+    limit: 1
+    guarantee: .5
   memory:
     limit: 4G
     guarantee: 512M
