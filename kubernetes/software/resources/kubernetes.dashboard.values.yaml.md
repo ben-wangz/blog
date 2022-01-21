@@ -1,1 +1,0 @@
-[kubernetes.dashboard.values.yaml](kubernetes.dashboard.values.yaml ':include')
