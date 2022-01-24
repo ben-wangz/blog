@@ -22,3 +22,5 @@ classes:
       # storageClass:
       # reclaimPolicy: Delete # Available reclaim policies: Delete/Retain, defaults: Delete.
     # isDefaultClass: true # set as default class
+daemonset:
+  image: localhost:5000/docker.io/k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0
