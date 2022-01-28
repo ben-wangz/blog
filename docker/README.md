@@ -6,6 +6,7 @@
 * software with docker
     + [nfs](software/nfs.md)
     + [phpmyadmin](software/phpmyadmin.md)
+    + [pgadmin4](software/pgadmin4.md)
     + [nginx](software/nginx.md)
     + [haproxy](software/haproxy.md)
     + [mysqldump](software/mysqldump.md)

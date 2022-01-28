@@ -124,7 +124,9 @@
                   mkfs.ext4 /data/virtual-disks/$HOSTNAME-volume-$index
                   # TODO risk of mknod major/minor, this is just for testing
                   mknod -m 0660 /dev/loop80$index b 7 80$index
-                  losetup /dev/loop80$index /data/virtual-disks/$HOSTNAME-volume-$index
+                  # TODO losetup may fail at first time
+                  losetup /dev/loop80$index /data/virtual-disks/$HOSTNAME-volume-$index \
+                      || losetup /dev/loop80$index /data/virtual-disks/$HOSTNAME-volume-$index
                   mkdir -p /data/local-static-provisioner/$HOSTNAME-volume-$index
                   mount /data/virtual-disks/$HOSTNAME-volume-$index /data/local-static-provisioner/$HOSTNAME-volume-$index
               done
@@ -148,6 +150,7 @@
 5. bind pvc with created pv
     * prepare [pvc.test.with.job.yaml](resources/local.static.provisioner/pvc.test.with.job.yaml.md)
     * load images
+        + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
           load_image "localhost:5000" \
               "docker.io/busybox:1.33.1-uclibc"
@@ -167,6 +170,7 @@
 6. helm install maria-db whose storage is provided by the local-static-provisioner according to storage class specified
     * prepare [maria.db.values.yaml](resources/local.static.provisioner/maria.db.values.yaml.md)
     * helm install maria-db
+        + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
           load_image "localhost:5000" \
               "docker.io/bitnami/mariadb:10.5.12-debian-10-r0" \

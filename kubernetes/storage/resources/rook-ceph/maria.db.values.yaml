@@ -1,4 +1,0 @@
-primary:
-  persistence:
-    storageClass: rook-cephfs-01
-    size: 468Mi

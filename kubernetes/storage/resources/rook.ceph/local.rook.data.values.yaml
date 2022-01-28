@@ -10,3 +10,5 @@ classes:
       - "/scripts/shred.sh"
       - "2"
     storageClass: true
+daemonset:
+  image: localhost:5000/docker.io/k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0
