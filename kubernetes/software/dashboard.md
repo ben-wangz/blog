@@ -53,6 +53,10 @@
               --values dashboard.values.yaml \
               --atomic
           ```
+    * wait for all pods to be ready
+        + ```shell
+          kubectl -n application wait --for=condition=ready pod --all
+          ```
 
 ## test
 
@@ -61,11 +65,33 @@
       curl --insecure --header 'Host: dashboard.local' https://localhost
       ```
 2. create read only `user`
-3. visit gitea via website
+    * prepare [create.user.yaml](resources/dashboard/create.user.yaml.md)
+    * ```shell
+      kubectl apply -f create.user.yaml
+      ```
+3. extract user token
+    * ```shell
+      kubectl -n application get secret $( \
+          kubectl -n application get ServiceAccount dashboard-ro -o jsonpath="{.secrets[0].name}" \
+      ) -o jsonpath="{.data.token}" \
+          | base64 --decode \
+          && echo
+      ```
+4. visit via website
+    * add hosts info
+        + ```shell
+          echo "$IP dashboard.local" >> /etc/hosts
+          ```
+    * visit `https://dashboard.local`
+    * use the extracted token to login
 
 ## uninstallation
 
-1. uninstall `dashboard`
+1. delete rbac resources
+    * ```shell
+      kubectl delete -f create.user.yaml
+      ```
+2. uninstall `dashboard`
     * ```shell
       helm -n application uninstall my-dashboard
       ```
