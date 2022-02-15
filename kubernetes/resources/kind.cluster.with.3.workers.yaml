@@ -1,0 +1,26 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 32080
+        hostPort: 80
+        protocol: TCP
+      - containerPort: 32443
+        hostPort: 443
+        protocol: TCP
+      - containerPort: 32022
+        hostPort: 1022
+        protocol: TCP
+      - containerPort: 33080
+        hostPort: 1080
+        protocol: TCP
+  - role: worker
+  - role: worker
+  - role: worker
+containerdConfigPatches:
+  - |-
+    [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:5000"]
+      endpoint = ["http://kind-registry:5000"]
+    [plugins."io.containerd.grpc.v1.cri".registry.mirrors."insecure.docker.registry.local:80"]
+      endpoint = ["http://insecure.docker.registry.local:80"]

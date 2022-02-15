@@ -1,0 +1,1 @@
+[filebeat.values.yaml](filebeat.values.yaml ':include')

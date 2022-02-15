@@ -1,0 +1,1 @@
+[kibana.values.yaml](kibana.values.yaml ':include')

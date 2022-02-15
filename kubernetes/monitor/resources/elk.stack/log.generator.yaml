@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-generator-deployment
+  labels:
+    app: log-generator
+    release: my-log-generator
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: log-generator
+  template:
+    metadata:
+      labels:
+        app: log-generator
+    spec:
+      containers:
+        - name: log-generator
+          image: insecure.docker.registry.local:80/docker.io/febbweiss/java-log-generator:latest
