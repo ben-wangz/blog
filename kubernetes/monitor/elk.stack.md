@@ -134,20 +134,38 @@
           kubectl get namespace test > /dev/null 2>&1 || kubectl create namespace test \
               && kubectl -n test apply -f log.generator.yaml
           ```
-2. check connection
-    * ```shell
-      curl --insecure --header 'Host: elasticsearch.local' https://localhost
-      ```
-3. create read only `user`
-4. visit gitea via website
-5. filter with KQL
+2. visit kibana via website
+    * add hosts info
+        + ```shell
+          echo "$IP kibana.local" >> /etc/hosts
+          ```
+    * visit `https://kibana.local/app/management/kibana/objects`
+    * import [k8s-logs-dashboard.json](resources/elk.stack/k8s-logs-dashboard.ndjson.md)
+3. filter with KQL
     + ```KQL
       kubernetes.labels.app : log-generator and message : *com.github.vspiewak.loggenerator.SearchRequest*
       ```
 
 ## uninstallation
 
-1. uninstall `elasticsearch`
+1. delete `log-generator`
+    + ```shell
+      kubectl get namespace test > /dev/null 2>&1 || kubectl create namespace test \
+          && kubectl -n test apply -f log.generator.yaml
+     ```
+2. uninstall `kibana`
+    * ```shell
+      helm -n monitor uninstall my-kibana
+      ```
+3. uninstall `filebeat`
+    * ```shell
+      helm -n monitor uninstall my-filebeat
+      ```
+4. uninstall `elasticsearch`
     * ```shell
       helm -n monitor uninstall my-elasticsearch
+      for INDEX in "0" "1" "2"
+      do
+          helm -n monitor delete pvc elasticsearch-master-elasticsearch-master-$INDEX
+      done
       ```
