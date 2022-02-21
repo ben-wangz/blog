@@ -133,6 +133,17 @@ grafana:
     repository: insecure.docker.registry.local:80/docker.io/curlimages/curl
     tag: 7.73.0
     pullPolicy: IfNotPresent
+  persistence:
+    type: pvc
+    enabled: true
+    storageClassName: standard
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    ## If persistence is not enabled, this allows to mount the
+    ## local storage in-memory to improve performance
+    inMemory:
+      enabled: false
   initChownData:
     enabled: true
     image:

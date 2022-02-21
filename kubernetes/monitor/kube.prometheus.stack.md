@@ -20,8 +20,16 @@
     + [Prometheus Adapter for Kubernetes Metrics APIs](https://github.com/DirectXMan12/k8s-prometheus-adapter)
     + [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics)
     + [Grafana](https://grafana.com/)
+* what does `prometheus-operator` configuration actions when applying a `ServiceMonitor`
+    + image below is downloaded
+      from `https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/troubleshooting.md`
+    + ![configuration-actions-when-applying-a-service-monitor.png](
+      resources/kube.prometheus.stack/configuration-actions-when-applying-a-service-monitor.png)
 * more detailed usage documents for `prometheus-operator`:
-  [user-guides of prometheus-operator](https://github.com/prometheus-operator/prometheus-operator/tree/main/Documentation/user-guides)
+  [user-guides of prometheus-operator](
+  https://github.com/prometheus-operator/prometheus-operator/tree/main/Documentation/user-guides)
+* more detailed information for the dashboard(mysql_exporter) imported to grafana:
+  [mysqld-mixin from mysqld-exporter](https://github.com/prometheus/mysqld_exporter/tree/main/mysqld-mixin)
 
 ## purpose
 
@@ -66,7 +74,10 @@
           "docker.io_quay.io_prometheus-operator_prometheus-operator_v0.54.0.dim" \
           "docker.io_quay.io_prometheus-operator_prometheus-config-reloader_v0.54.0.dim" \
           "docker.io_quay.io_thanos_thanos_v0.24.0.dim" \
-          "docker.io_quay.io_prometheus_prometheus_v2.33.1.dim"
+          "docker.io_quay.io_prometheus_prometheus_v2.33.1.dim" \
+          "docker.io_bitnami_mariadb_10.5.12-debian-10-r0.dim" \
+          "docker.io_bitnami_bitnami-shell_10-debian-10-r153.dim" \
+          "docker.io_bitnami_mysqld-exporter_0.13.0-debian-10-r56.dim"
       ```
 3. configure self-signed issuer
     * `self-signed` issuer
@@ -124,39 +135,80 @@
           ```
     * check `Node Exporter/*` to figure out the status of nodes in k8s cluster
     * check `Kubernetes/*` to figure out the status of k8s cluster
-2. install `mariadb` with metric generating feature
-    * prepare [log.generator.yaml](resources/elk.stack/log.generator.yaml.md)
+2. install `mariadb` with metrics feature enabled
+    * prepare [mariadb.values.yaml](resources/kube.prometheus.stack/mariadb.values.yaml.md)
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
           load_image "docker.registry.local:443" \
-              "docker.io/febbweiss/java-log-generator:latest"
+              "docker.io/bitnami/mariadb:10.5.12-debian-10-r0" \
+              "docker.io/bitnami/bitnami-shell:10-debian-10-r153" \
+              "docker.io/bitnami/mysqld-exporter:0.13.0-debian-10-r56"
           ```
-    * apply to k8s cluster
+    * install `mariadb`
         + ```shell
-          kubectl get namespace test > /dev/null 2>&1 || kubectl create namespace test \
-              && kubectl -n test apply -f log.generator.yaml
+          helm install \
+              --create-namespace --namespace test \
+              mariadb-for-test \
+              https://resource.geekcity.tech/kubernetes/charts/https/charts.bitnami.com/bitnami/mariadb-9.4.2.tgz \
+              --values mariadb.values.yaml \
+              --atomic
           ```
-3. visit kibana via website
-    * add hosts info
+    * add `Prometheus` instance
+        + add service account for prometheus
+            * prepare [service.account.for.test.yaml](resources/kube.prometheus.stack/service.account.for.test.yaml.md)
+            * apply to k8s cluster
+                + ```shell
+                  kubectl -n test apply -f service.account.for.test.yaml
+                  ```
+        + prepare [prometheus.for.test.yaml](resources/kube.prometheus.stack/prometheus.for.test.yaml.md)
+        + apply to k8s cluster
+            * ```shell
+              kubectl -n test apply -f prometheus.for.test.yaml
+              ```
+        + wait for prometheus to be ready
+            * ```shell
+              kubectl -n test wait --for=condition=ready pod --all
+              ```
+        + add `$IP test-prometheus.local` to hosts
+        + visit `http://test-prometheus.local` to check prometheus service ready
+    * add `ServiceMonitor` instance
+        + prepare [service.monitor.for.test.yaml](resources/kube.prometheus.stack/service.monitor.for.test.yaml.md)
+        + apply to k8s cluster
+            * ```shell
+              kubectl -n test apply -f service.monitor.for.test.yaml
+              ```
+    * configure `test-prometheus` as a new datasource to grafana
+        + name = `test-prometheus`
+        + http.url = `http://prometheus-operated.test:9090`
+        + keep other configuration the same as defaults
+        + click `Save & Test`
+    * import dashboard to grafana
+        + prepare
+          [mysql.mixin.dashboard.grafana.json](resources/kube.prometheus.stack/mysql.mixin.dashboard.grafana.json.md)
+        + import `mysql.mixin.dashboard.grafana.json` to dashboard
+        + now you can check the dashboard named `General/MySQL Exporter Quickstart and Dashboard`
+            * select `test-prometheus` as `datasource`
+    * delete service account, `test-prometheus` and `ServiceMonitor`
         + ```shell
-          echo "$IP kibana.local" >> /etc/hosts
+          kubectl -n test delete -f service.monitor.for.test.yaml
+          kubectl -n test delete -f prometheus.for.test.yaml
+          kubectl -n test delete -f service.account.for.test.yaml
+          kubectl -n test delete pvc prometheus-test-prometheus-db-prometheus-test-prometheus-0
           ```
-    * visit `https://kibana.local/app/management/kibana/objects`
-    * import [k8s-logs-dashboard.json](resources/elk.stack/k8s-logs-dashboard.ndjson.md)
-4. filter with KQL
-    + ```KQL
-      kubernetes.labels.app : log-generator and message : *com.github.vspiewak.loggenerator.SearchRequest*
-      ```
+    * uninstall `mariadb-for-test`
+        + ```shell
+          helm -n test uninstall mariadb-for-test
+          kubectl -n test delete pvc data-mariadb-for-test-0
+          ```
 
 ## uninstallation
 
-1. delete `log-generator`
-    + ```shell
-      kubectl get namespace test > /dev/null 2>&1 || kubectl create namespace test \
-          && kubectl -n test apply -f log.generator.yaml
-     ```
-4. uninstall `kube-prometheus-stack`
+1. uninstall `kube-prometheus-stack`
     * ```shell
       helm -n monitor uninstall my-kube-prometheus-stack
+      kubectl -n monitor delete pvc alertmanager-my-kube-prometheus-stack-alertmanager-db-alertmanager-my-kube-prometheus-stack-alertmanager-0
+      kubectl -n monitor delete pvc prometheus-my-kube-prometheus-stack-prometheus-db-prometheus-my-kube-prometheus-stack-prometheus-0
+      # NOTE: my-kube-prometheus-stack-grafana will be deleted automatically after uninstallation of my-kube-prometheus-stack
+      #kubectl -n monitor delete pvc my-kube-prometheus-stack-grafana
       ```
