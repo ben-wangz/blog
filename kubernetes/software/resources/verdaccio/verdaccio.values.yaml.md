@@ -1,0 +1,1 @@
+[verdaccio.values.yaml](verdaccio.values.yaml ':include')
