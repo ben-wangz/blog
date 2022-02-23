@@ -80,12 +80,12 @@
 3. works as a npm registry which can publish package
     * account needed
     * upload and query
-    * check with web browser
-4. visit verdaccio via website
-    * configure hosts
-        + ```shell
-          echo $QEMU_HOST_IP verdaccio.local >> /etc/hosts
-          ```
+    * visit with web browser and check package published
+        + configure hosts
+            * ```shell
+              echo $QEMU_HOST_IP verdaccio.local >> /etc/hosts
+              ```
+        + visit: `https://verdaccio.local`
 
 ## uninstallation
 
