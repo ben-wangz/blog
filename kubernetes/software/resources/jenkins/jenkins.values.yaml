@@ -1,0 +1,269 @@
+controller:
+  componentName: "jenkins-controller"
+  image: "insecure.docker.registry.local:80/docker.io/jenkins/jenkins"
+  tag: "2.319.3-jdk11"
+  tagLabel: jdk11
+  imagePullPolicy: "IfNotPresent"
+  imagePullSecretName:
+  disableRememberMe: false
+  numExecutors: 0
+  executorMode: "NORMAL"
+  # This is ignored if enableRawHtmlMarkupFormatter is true
+  markupFormatter: plainText
+  customJenkinsLabels: [ ]
+  adminSecret: true
+  hostNetworking: false
+  adminUser: "admin"
+  admin:
+    existingSecret: "jenkins-admin-secret"
+    userKey: username
+    passwordKey: password
+  #initContainerEnv:
+  #  - name: JENKINS_UC
+  #    value: "https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json"
+  #  - name: JENKINS_UC_EXPERIMENTAL
+  #    value: "https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/experimental/update-center.json"
+  #  - name: JENKINS_PLUGIN_INFO
+  #    value: "https://updates.jenkins.io/plugin-versions.json"
+  #  - name: JENKINS_INCREMENTALS_REPO_MIRROR
+  #    value: "https://repo.jenkins-ci.org/incrementals"
+  #containerEnv:
+  #  - name: http_proxy
+  #    value: "http://192.168.64.1:3128"
+  # This values should not be changed unless you use your custom image of jenkins or any devired from. If you want to use
+  # Cloudbees Jenkins Distribution docker, you should set jenkinsHome: "/var/cloudbees-jenkins-distribution"
+  jenkinsHome: "/var/jenkins_home"
+  # This values should not be changed unless you use your custom image of jenkins or any devired from. If you want to use
+  # Cloudbees Jenkins Distribution docker, you should set jenkinsRef: "/usr/share/cloudbees-jenkins-distribution/ref"
+  jenkinsRef: "/usr/share/jenkins/ref"
+  # Path to the jenkins war file which is used by jenkins-plugin-cli.
+  jenkinsWar: "/usr/share/jenkins/jenkins.war"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "256Mi"
+    limits:
+      cpu: "2000m"
+      memory: "4096Mi"
+  jenkinsUrlProtocol: "http"
+  jenkinsUrl: "http://jenkins.local"
+  # jenkinsUriPrefix: "/jenkins"
+  serviceType: ClusterIP
+  serviceExternalTrafficPolicy:
+  healthProbes: true
+  agentListenerEnabled: true
+  agentListenerPort: 50000
+  disabledAgentProtocols:
+    - JNLP-connect
+    - JNLP2-connect
+  csrf:
+    defaultCrumbIssuer:
+      enabled: true
+      proxyCompatability: true
+  agentListenerServiceType: "ClusterIP"
+  # List of plugins to be install during Jenkins controller start
+  installPlugins:
+    - kubernetes:1.31.3
+    - workflow-aggregator:2.6
+    - git:4.10.2
+    - configuration-as-code:1.55.1
+  # Set to false to download the minimum required version of all dependencies.
+  installLatestPlugins: true
+  # Set to true to download latest dependencies of any plugin that is requested to have the latest version.
+  installLatestSpecifiedPlugins: false
+  # List of plugins to install in addition to those listed in controller.installPlugins
+  additionalPlugins: [ ]
+  # Enable to initialize the Jenkins controller only once on initial installation.
+  # Without this, whenever the controller gets restarted (Evicted, etc.) it will fetch plugin updates which has the potential to cause breakage.
+  # Note that for this to work, `persistence.enabled` needs to be set to `true`
+  initializeOnce: true
+  # Configures if plugins bundled with `controller.image` should be overwritten with the values of 'controller.installPlugins' on upgrade or redeployment.
+  overwritePluginsFromImage: true
+  # The keys become the name of a configuration yaml file on the controller in
+  # /var/jenkins_home/casc_configs (by default) and will be processed by the Configuration as Code Plugin.
+  # The lines after each | become the content of the configuration yaml file.
+  # Best reference is https://<jenkins_url>/configuration-as-code/reference.
+  JCasC:
+    defaultConfig: true
+    configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
+    # Ignored if securityRealm is defined in controller.JCasC.configScripts and
+    # ignored if controller.enableXmlConfig=true as controller.securityRealm takes precedence
+    securityRealm: |-
+      local:
+        allowsSignup: true
+        enableCaptcha: true
+        users:
+        - id: "${chart-admin-username}"
+          name: "Jenkins Admin"
+          password: "${chart-admin-password}"
+    # Ignored if authorizationStrategy is defined in controller.JCasC.configScripts
+    authorizationStrategy: |-
+      loggedInUsersCanDoAnything:
+        allowAnonymousRead: false
+  sidecars:
+    configAutoReload:
+      # If enabled: true, Jenkins Configuration as Code will be reloaded on-the-fly without a reboot.  If false or not-specified,
+      # jcasc changes will cause a reboot and will only be applied at the subsequent start-up.  Auto-reload uses the
+      # http://<jenkins_url>/reload-configuration-as-code endpoint to reapply config when changes to the configScripts are detected.
+      enabled: true
+      image: insecure.docker.registry.local:80/docker.io/kiwigrid/k8s-sidecar:1.15.0
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 100m
+          memory: 100Mi
+        requests:
+          cpu: 50m
+          memory: 50Mi
+      reqRetryConnect: 10
+      # env:
+      #   - name: REQ_TIMEOUT
+      #     value: "30"
+      # folder in the pod that should hold the collected dashboards:
+      folder: "/var/jenkins_home/casc_configs"
+      containerSecurityContext:
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+    # Allows you to inject additional/other sidecars
+    other: [ ]
+    ## The example below runs the client for https://smee.io as sidecar container next to Jenkins,
+    ## that allows to trigger build behind a secure firewall.
+    ## https://jenkins.io/blog/2019/01/07/webhook-firewalls/#triggering-builds-with-webhooks-behind-a-secure-firewall
+    ##
+    ## Note: To use it you should go to https://smee.io/new and update the url to the generete one.
+    # - name: smee
+    #   image: docker.io/twalter/smee-client:1.0.2
+    #   args: ["--port", "{{ .Values.controller.servicePort }}", "--path", "/github-webhook/", "--url", "https://smee.io/new"]
+    #   resources:
+    #     limits:
+    #       cpu: 50m
+    #       memory: 128Mi
+    #     requests:
+    #       cpu: 10m
+    #       memory: 32Mi
+  ingress:
+    enabled: true
+    #paths:
+    #  - /jenkins
+    apiVersion: "networking.k8s.io/v1"
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 10m
+      cert-manager.io/issuer: self-signed-issuer
+    ingressClassName: nginx
+    # path: "/jenkins"
+    hostName: jenkins.local
+    tls:
+      - secretName: jenkins.local-tls
+        hosts:
+          - jenkins.local
+  secondaryingress:
+    enabled: false
+  prometheus:
+    enabled: false
+  # Can be used to disable rendering controller test resources when using helm template
+  testEnabled: true
+agent:
+  enabled: true
+  defaultsProviderTemplate: ""
+  # URL for connecting to the Jenkins contoller
+  jenkinsUrl:
+  # connect to the specified host and port, instead of connecting directly to the Jenkins controller
+  jenkinsTunnel:
+  kubernetesConnectTimeout: 5
+  kubernetesReadTimeout: 15
+  maxRequestsPerHostStr: "32"
+  namespace:
+  image: "insecure.docker.registry.local:80/docker.io/jenkins/inbound-agent"
+  tag: "4.11.2-4"
+  workingDir: "/home/jenkins/agent"
+  nodeUsageMode: "NORMAL"
+  customJenkinsLabels: [ "default-agent" ]
+  # name of the secret to be used for image pulling
+  imagePullSecretName:
+  componentName: "jenkins-agent"
+  websocket: false
+  privileged: false
+  resources:
+    requests:
+      cpu: "256m"
+      memory: "256Mi"
+    limits:
+      cpu: "512m"
+      memory: "512Mi"
+  alwaysPullImage: false
+  showRawYaml: true
+  # https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/main/java/org/csanchez/jenkins/plugins/kubernetes/volumes
+  volumes: [ ]
+  # https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/main/java/org/csanchez/jenkins/plugins/kubernetes/volumes/workspace
+  workspaceVolume: { }
+  # Pod-wide environment, these vars are visible to any container in the agent pod
+  envVars: [ ]
+  # - name: PATH
+  #   value: /usr/local/bin
+  # Executed command when side container gets started
+  command:
+  args: "${computer.jnlpmac} ${computer.name}"
+  # Side container name
+  sideContainerName: "jnlp"
+  # Doesn't allocate pseudo TTY by default
+  TTYEnabled: false
+  # Max number of spawned agent
+  containerCap: 10
+  podName: "default-agent"
+  # Allows the Pod to remain active for reuse until the configured number of
+  # minutes has passed since the last step was executed on it.
+  idleMinutes: 15
+  # Raw yaml template for the Pod. For example this allows usage of toleration for agent pods.
+  # https://github.com/jenkinsci/kubernetes-plugin#using-yaml-to-define-pod-templates
+  # https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  yamlTemplate: ""
+  # yamlTemplate: |-
+  #   apiVersion: v1
+  #   kind: Pod
+  #   spec:
+  #     tolerations:
+  #     - key: "key"
+  #       operator: "Equal"
+  #       value: "value"
+  # Defines how the raw yaml field gets merged with yaml definitions from inherited pod templates: merge or override
+  yamlMergeStrategy: "override"
+  # Timeout in seconds for an agent to be online
+  connectTimeout: 120
+  podTemplates: {}
+# Here you can add additional agents
+# They inherit all values from `agent` so you only need to specify values which differ
+additionalAgents:
+  maven:
+    podName: maven-agent
+    customJenkinsLabels:
+      - maven-agent
+    # An example of overriding the jnlp container
+    # sideContainerName: jnlp
+    image: insecure.docker.registry.local:80/docker.io/jenkins/jnlp-agent-maven
+    tag: jdk11
+    resources:
+      requests:
+        cpu: "512m"
+        memory: "512Mi"
+      limits:
+        cpu: "512m"
+        memory: "512Mi"
+persistence:
+  enabled: true
+  storageClass: standard
+  accessMode: "ReadWriteOnce"
+  size: "8Gi"
+rbac:
+  create: true
+  readSecrets: false
+serviceAccountAgent:
+  create: false
+backup:
+  enabled: false
+  image:
+    repository: "insecure.docker.registry.local:80/docker.io/maorfr/kube-tasks"
+    tag: "0.2.0"
+checkDeprecation: true

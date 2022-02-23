@@ -44,7 +44,7 @@
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
           load_image "docker.registry.local:443" \
-              "gitea/gitea:1.15.3" \
+              "docker.io/gitea/gitea:1.15.3" \
               "docker.io/bitnami/memcached:1.6.9-debian-10-r114" \
               "docker.io/bitnami/memcached-exporter:0.8.0-debian-10-r105" \
               "docker.io/bitnami/postgresql:11.11.0-debian-10-r62" \

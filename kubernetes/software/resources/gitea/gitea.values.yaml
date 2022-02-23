@@ -1,5 +1,5 @@
 image:
-  repository: insecure.docker.registry.local:80/gitea/gitea
+  repository: insecure.docker.registry.local:80/docker.io/gitea/gitea
   tag: 1.15.3
   pullPolicy: IfNotPresent
 service:

@@ -13,3 +13,4 @@
 * [redis-cluster](redis-cluster.md)
 * [jupyterhub](jupyterhub.md)
 * [tidb](tidb.md)
+* [jenkins](jenkins.md)
