@@ -1,0 +1,1 @@
+[npm.registry.test.sh](npm.registry.test.sh ':include')

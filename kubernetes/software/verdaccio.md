@@ -59,27 +59,31 @@
     * ```shell
       curl --insecure --header 'Host: verdaccio.local' https://localhost
       ```
-2. works as a npm proxy
+2. works as a npm proxy and private registry that can publish packages
     * nothing in storage before actions
         + ```shell
           kubectl -n application exec -it  deployment/my-verdaccio -- ls -l /verdaccio/storage/data
           ```
+    * prepare [npm.registry.test.sh](resources/verdaccio/npm.registry.test.sh.md)
+    * prepare [npm.login.expect](resources/verdaccio/npm.login.expect.md)
     * run npm install
         + ```shell
           docker run --rm \
-              -v $(pwd)/my-project:/my-project \
               --add-host verdaccio.local:172.17.0.1 \
-              --workdir /my-project \
+              -e NPM_ADMIN_USERNAME=admin \
+              -e NPM_ADMIN_PASSWORD=your-admin-password \
+              -e NPM_LOGIN_EMAIL=your-email@some.domain \
+              -e NPM_REGISTRY=https://verdaccio.local \
+              -v $(pwd)/npm.registry.test.sh:/app/npm.registry.test.sh:ro \
+              -v $(pwd)/npm.login.expect:/app/npm.login.expect:ro \
+              --workdir /app \
               -it docker.io/node:17.5.0-alpine3.15 \
-              npm install --loglevel verbose
+              sh /app/npm.registry.test.sh
           ```
-    * packages in storage before actions
+    * dependency packages in storage before actions
         + ```shell
-          kubectl -n application exec -it  deployment/my-verdaccio -- ls -l /verdaccio/storage/data
+          kubectl -n application exec -it deployment/my-verdaccio -- ls -l /verdaccio/storage/data
           ```
-3. works as a npm registry which can publish package
-    * account needed
-    * upload and query
     * visit with web browser and check package published
         + configure hosts
             * ```shell
