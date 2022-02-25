@@ -117,6 +117,8 @@
         + ```shell
           kubectl -n tekton-pipelines apply -f tekton.ingress.yaml
           ```
+    * TODO ingress of tekton-pipelines-webhook.tekton-pipelines
+    * TODO ingress of tekton-triggers-webhook.tekton-pipelines
     * wait for all pods to be ready
         + ```shell
           # NOTE: wait command will be blocked by pods named `tekton-resource-pruner-...` which scheduled by jobs
@@ -163,6 +165,12 @@
         + ```shell
           kubectl -n tekton-pipelines create -f tekton.pipeline.run.yaml
           ```
+5. test `webhook`
+    * TODO
+    * run task
+    * run pipeline
+    * fetch logs of task
+    * fetch logs of pipeline
 
 ## uninstallation
 
@@ -171,3 +179,9 @@
       kubectl -n tekton-operator delete -f tekton.config.yaml
       kubectl -n tekton-operator delete -f tekton_operator_v0.54.0_release.yaml
       ```
+
+## TODO waiting for updates
+
+1. use images from private registry
+2. persist volume
+3. native ingress
