@@ -21,7 +21,7 @@ spec:
       command:
         - echo
       args:
-        - "building step 2..."
+        - "building step 3..."
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Task
