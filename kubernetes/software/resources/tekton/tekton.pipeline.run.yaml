@@ -1,0 +1,7 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: build-publish-pipeline-run-
+spec:
+  pipelineRef:
+    name: build-publish-pipeline

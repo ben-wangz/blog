@@ -1,0 +1,1 @@
+[tekton.publish.task.run.yaml](tekton.publish.task.run.yaml ':include')

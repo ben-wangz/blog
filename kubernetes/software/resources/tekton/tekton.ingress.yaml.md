@@ -1,0 +1,1 @@
+[tekton.ingress.yaml](tekton.ingress.yaml ':include')

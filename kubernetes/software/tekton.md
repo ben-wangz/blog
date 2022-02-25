@@ -26,75 +26,129 @@
       TOPIC_DIRECTORY="tekton.software"
       BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
-          "docker.io_tekton_tekton_2.319.3-jdk11.dim" \
-          "docker.io_kiwigrid_k8s-sidecar_1.15.0.dim" \
-          "docker.io_tekton_inbound-agent_4.11.2-4.dim" \
-          "docker.io_maorfr_kube-tasks_0.2.0.dim"
+          "docker.io_gcr.io_tekton-releases_github.com_tektoncd_operator_cmd_kubernetes_proxy-webhook_v0.54.0.dim" \
+          "docker.io_gcr.io_tekton-releases_dogfooding_tkn_latest-025de2.dim" \
+          "docker.io_gcr.io_tekton-releases_github.com_tektoncd_operator_cmd_kubernetes_operator_v0.54.0.dim" \
+          "docker.io_gcr.io_tekton-releases_github.com_tektoncd_operator_cmd_kubernetes_webhook_v0.54.0.dim" \
+          "docker.io_busybox_1.33.1-uclibc.dim"
       ```
 3. configure self-signed issuer
     * `self-signed` issuer
         + prepare [self.signed.and.ca.issuer.yaml](../basic/resources/cert.manager/self.signed.and.ca.issuer.yaml.md)
         + ```shell
-          kubectl get namespace application > /dev/null 2>&1 || kubectl create namespace application \
-              && kubectl -n application apply -f self.signed.and.ca.issuer.yaml
+          kubectl get namespace tekton-operator > /dev/null 2>&1 || kubectl create namespace tekton-operator \
+              && kubectl -n tekton-operator apply -f self.signed.and.ca.issuer.yaml
           ```
-4. install tekton
-    * prepare [tekton.values.yaml](resources/tekton/tekton.values.yaml.md)
-    * prepare images
-        + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
+4. prepare images
+    * NOTE: `tekton-operator-v0.54.0` not support custom registry for components according
+      to [issue #625](https://github.com/tektoncd/operator/issues/625)
+    * run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
+    * ```shell
+      load_image "docker.registry.local:443" \
+          "docker.io/gcr.io/tekton-releases/github.com/tektoncd/operator/cmd/kubernetes/proxy-webhook:v0.54.0" \
+          "docker.io/gcr.io/tekton-releases/dogfooding/tkn:latest-025de2" \
+          "docker.io/gcr.io/tekton-releases/github.com/tektoncd/operator/cmd/kubernetes/operator:v0.54.0" \
+          "docker.io/gcr.io/tekton-releases/github.com/tektoncd/operator/cmd/kubernetes/webhook:v0.54.0"
+      ```
+    * load images at every node in cluster
         + ```shell
-          load_image "docker.registry.local:443" \
-              "docker.io/tekton/tekton:2.319.3-jdk11" \
-              "docker.io/kiwigrid/k8s-sidecar:1.15.0" \
-              "docker.io/tekton/inbound-agent:4.11.2-4" \
-              "docker.io/maorfr/kube-tasks:0.2.0"
+          DOCKER_IMAGE_PATH=/root/docker-images/tekton.software/all-nodes && mkdir -p $DOCKER_IMAGE_PATH
+          BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64/tekton.software/all-nodes"
+          for IMAGE in "docker.io_gcr.io_tekton-releases_github.com_tektoncd_dashboard_cmd_dashboard_v0.23.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_pullrequest-init_v0.32.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_controller_v0.32.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_webhook_v0.32.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_entrypoint_v0.32.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_triggers_cmd_controller_v0.18.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_git-init_v0.32.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_triggers_cmd_eventlistenersink_v0.18.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_imagedigestexporter_v0.32.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_triggers_cmd_interceptors_v0.18.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_kubeconfigwriter_v0.32.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_triggers_cmd_webhook_v0.18.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_nop_v0.32.0.dim"
+          do
+              IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE
+              if [ ! -f $IMAGE_FILE ]; then
+                  TMP_FILE=$IMAGE_FILE.tmp \
+                      && curl -o "$TMP_FILE" -L "$BASE_URL/$IMAGE" \
+                      && mv $TMP_FILE $IMAGE_FILE
+              fi
+              docker image load -i $IMAGE_FILE
+          done
           ```
-    * create `tekton-admin-secret`
+5. install `tekton-operator`
+    * prepare [tekton_operator_v0.54.0_release.yaml](resources/tekton/tekton_operator_v0.54.0_release.yaml.md)
+    * install
         + ```shell
-          # uses the "Array" declaration
-          # referencing the variable again with as $PASSWORD an index array is the same as ${PASSWORD[0]}
-          PASSWORD=($((echo -n $RANDOM | md5sum 2>/dev/null) || (echo -n $RANDOM | md5 2>/dev/null)))
-          kubectl -n application \
-              create secret generic tekton-admin-secret \
-              --from-literal=username=admin \
-              --from-literal=password=$PASSWORD
+          kubectl -n tekton-operator apply -f tekton_operator_v0.54.0_release.yaml
           ```
-    * install by helm
+    * wait for pods to be ready
         + ```shell
-          # NOTE: tekton will download plugins from remote for a long time
-          helm install \
-              --create-namespace --namespace application \
-              my-tekton \
-              https://resource.geekcity.tech/kubernetes/charts/https/charts.tekton.io/tekton-3.11.4.tgz \
-              --values tekton.values.yaml \
-              --atomic \
-              --timeout 10m
+          kubectl -n tekton-operator wait --for=condition=ready pod --all
+          ```
+6. install components of `tekton`
+    * prepare [tekton.config.yaml](resources/tekton/tekton.config.yaml.md)
+    * install
+        + ```shell
+          kubectl -n tekton-operator apply -f tekton.config.yaml
+          ```
+    * prepare [tekton.ingress.yaml](resources/tekton/tekton.ingress.yaml.md)
+    * apply ingress for `tekton-dashboard`
+        + ```shell
+          kubectl -n tekton-pipelines apply -f tekton.ingress.yaml
+          ```
+    * wait for all pods to be ready
+        + ```shell
+          # NOTE: wait command will be blocked by pods named `tekton-resource-pruner-...` which scheduled by jobs
+          kubectl -n tekton-pipelines get pod
           ```
 
 ## test
 
-1. check connection
+1. check connection of `tekton-dashboard`
     * ```shell
-      curl --insecure --header 'Host: tekton.local' https://localhost
+      curl --insecure --header 'Host: tekton-dashboard.local' https://localhost
       ```
-2. visit tekton via website
-    * configure hosts
+2. visit `https://tekton-dashboard.local`
+3. test `task`
+    * prepare [tekton.task.yaml](resources/tekton/tekton.task.yaml.md)
+    * prepare images
+        + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
-          echo $QEMU_HOST_IP tekton.local >> /etc/hosts
+          load_image "docker.registry.local:443" \
+              "docker.io/busybox:1.33.1-uclibc"
           ```
-    * visit `https://tekton.local:10443/` with your browser
-        + extract username and password of admin user
-            * ```shell
-              kubectl -n application get secret tekton-admin-secret -o jsonpath="{.data.username}" | base64 --decode && echo
-              kubectl -n application get secret tekton-admin-secret -o jsonpath="{.data.password}" | base64 --decode && echo
-              ```
-        + login with username and password extracted
+    * apply task(s)
+        + ```shell
+          kubectl -n tekton-pipelines apply -f tekton.task.yaml
+          ```
+    * prepare [tekton.build.task.run.yaml](resources/tekton/tekton.build.task.run.yaml.md)
+    * run build task
+        + ```shell
+          kubectl -n tekton-pipelines create -f tekton.build.task.run.yaml
+          ```
+    * prepare [tekton.publish.task.run.yaml](resources/tekton/tekton.publish.task.run.yaml.md)
+    * run publish task
+        + ```shell
+          kubectl -n tekton-pipelines create -f tekton.publish.task.run.yaml
+          ```
+4. test `pipeline`
+    * prepare [tekton.pipeline.yaml](resources/tekton/tekton.pipeline.yaml.md)
+    * apply pipeline
+        + ```shell
+          kubectl -n tekton-pipelines apply -f tekton.pipeline.yaml
+          ```
+    * prepare [tekton.pipeline.run.yaml](resources/tekton/tekton.pipeline.run.yaml.md)
+    * run publish task
+        + ```shell
+          kubectl -n tekton-pipelines create -f tekton.pipeline.run.yaml
+          ```
 
 ## uninstallation
 
 1. uninstall `tekton`
     * ```shell
-      helm -n application uninstall my-tekton
-      # NOTE: pvc will be deleted automatically
-      #kubectl -n application delete pvc my-tekton
+      kubectl -n tekton-operator delete -f tekton.config.yaml
+      kubectl -n tekton-operator delete -f tekton_operator_v0.54.0_release.yaml
       ```

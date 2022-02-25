@@ -877,9 +877,9 @@ spec:
             - name: OPERATOR_NAME
               value: tekton-operator
             - name: IMAGE_PIPELINES_PROXY
-              value: gcr.io/tekton-releases/github.com/tektoncd/operator/cmd/kubernetes/proxy-webhook:v0.54.0@sha256:7252143cc6daa38dcfa6287ed38b619c10ddc8befa93516a338cf9b68a4847ff
+              value: insecure.docker.registry.local:80/docker.io/gcr.io/tekton-releases/github.com/tektoncd/operator/cmd/kubernetes/proxy-webhook:v0.54.0
             - name: IMAGE_JOB_PRUNER_TKN
-              value: gcr.io/tekton-releases/dogfooding/tkn@sha256:025de221fb059ca24a3b2d988889ea34bce48dc76c0cf0d6b4499edb8c21325f
+              value: insecure.docker.registry.local:80/docker.io/gcr.io/tekton-releases/dogfooding/tkn:latest-025de2
             - name: METRICS_DOMAIN
               value: tekton.dev/operator
             - name: VERSION
@@ -896,7 +896,7 @@ spec:
                 configMapKeyRef:
                   key: DEFAULT_TARGET_NAMESPACE
                   name: tekton-config-defaults
-          image: gcr.io/tekton-releases/github.com/tektoncd/operator/cmd/kubernetes/operator:v0.54.0@sha256:d1f0463b35135852308ea815c2ae54c1734b876d90288ce35828aeeff9899f9d
+          image: insecure.docker.registry.local:80/docker.io/gcr.io/tekton-releases/github.com/tektoncd/operator/cmd/kubernetes/operator:v0.54.0
           imagePullPolicy: Always
           name: tekton-operator
       serviceAccountName: tekton-operator
@@ -934,7 +934,7 @@ spec:
               value: tekton-operator-webhook-certs
             - name: METRICS_DOMAIN
               value: tekton.dev/operator
-          image: gcr.io/tekton-releases/github.com/tektoncd/operator/cmd/kubernetes/webhook:v0.54.0@sha256:1f3cb5a643c0c6144361baa15dbcfd76b86c49fd083e0f38c6546e6e33736469
+          image: insecure.docker.registry.local:80/docker.io/gcr.io/tekton-releases/github.com/tektoncd/operator/cmd/kubernetes/webhook:v0.54.0
           name: tekton-operator-webhook
           ports:
             - containerPort: 8443

@@ -1,0 +1,14 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: build-publish-pipeline
+spec:
+  tasks:
+    - name: build-task
+      taskRef:
+        name: build-task
+    - name: publish-task
+      runAfter:
+        - build-task
+      taskRef:
+        name: publish-task

@@ -1,0 +1,1 @@
+[tekton.pipeline.yaml](tekton.pipeline.yaml ':include')

@@ -1,0 +1,1 @@
+[tekton.task.yaml](tekton.task.yaml ':include')
