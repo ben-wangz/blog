@@ -1,0 +1,1 @@
+[insecure.nexus.repository.manager.ingress.yaml](insecure.nexus.repository.manager.ingress.yaml ':include')

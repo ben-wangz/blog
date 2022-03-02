@@ -1,0 +1,72 @@
+image:
+  repository: insecure.docker.registry.local:80/docker.io/sonatype/nexus3
+  tag: 3.37.3
+  pullPolicy: IfNotPresent
+imagePullSecrets: [ ]
+nexus:
+  docker:
+    enabled: false
+  env:
+    - name: INSTALL4J_ADD_VM_PARAMS
+      value: "-Xms1200M -Xmx1200M -XX:MaxDirectMemorySize=2G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+    - name: NEXUS_SECURITY_RANDOMPASSWORD
+      value: "true"
+  properties:
+    override: false
+    data:
+      nexus.scripts.allowCreation: true
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      # 4000m or more in production
+      cpu: 1000m
+      memory: 4800Mi
+  # The ports should only be changed if the nexus image uses a different port
+  nexusPort: 8081
+deployment:
+  annotations: { }
+  initContainers:
+  #   - name: fmp-volume-permission
+  #   image: busybox
+  #   imagePullPolicy: IfNotPresent
+  #   command: ['chown','-R', '200', '/nexus-data']
+  #   volumeMounts:
+  #     - name: nexus-data
+  #       mountPath: /nexus-data
+  # Uncomment and modify this to run a command after starting the nexus container.
+  postStart:
+    command:    # '["/bin/sh", "-c", "ls"]'
+  preStart:
+    command:    # '["/bin/rm", "-f", "/path/to/lockfile"]'
+  additionalContainers:
+  additionalVolumes:
+  additionalVolumeMounts:
+ingress:
+  enabled: true
+  ingressClassName: "nginx"
+  annotations:
+    cert-manager.io/issuer: self-signed-issuer
+    nginx.ingress.kubernetes.io/proxy-body-size: 200m
+    nginx.org/client-max-body-size: 200m
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+  hostPath: /
+  hostRepo: nexus-repository-manager.local
+  tls:
+    - secretName: nexus-repository-manager.local-tls
+      hosts:
+        - nexus-repository-manager.local
+service:
+  name: nexus3
+  enabled: true
+  type: ClusterIP
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  storageClass: "standard"
+  storageSize: 8Gi
+serviceAccount:
+  create: true

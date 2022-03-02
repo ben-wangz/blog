@@ -25,5 +25,5 @@
       ```
 6. generate htpasswd file
     * ```shell
-      docker run --rm -it xmartlabs/htpasswd:latest my-username my-password > htpasswd
+      docker run --rm wangz2019/jiuying-htpasswd:1.2.0 my-username my-password > htpasswd
       ```

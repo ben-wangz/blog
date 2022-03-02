@@ -1,1 +1,1 @@
-[maria.db.tool.yaml](minio.tool.yaml ':include')
+[minio.tool.yaml](minio.tool.yaml ':include')

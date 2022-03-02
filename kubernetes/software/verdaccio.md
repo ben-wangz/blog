@@ -80,7 +80,7 @@
               -it docker.io/node:17.5.0-alpine3.15 \
               sh /app/npm.registry.test.sh
           ```
-    * dependency packages in storage before actions
+    * dependency packages in storage after actions
         + ```shell
           kubectl -n application exec -it deployment/my-verdaccio -- ls -l /verdaccio/storage/data
           ```

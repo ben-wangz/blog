@@ -16,4 +16,4 @@
 * [jenkins](jenkins.md)
 * [tekton](tekton.md)
 * [verdaccio](verdaccio.md)
-* [nexus-3](nexus-3.md)
+* [nexus-repository-manager](nexus-repository-manager.md)
