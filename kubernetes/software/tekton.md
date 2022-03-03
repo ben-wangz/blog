@@ -54,19 +54,19 @@
         + ```shell
           DOCKER_IMAGE_PATH=/root/docker-images/tekton.software/all-nodes && mkdir -p $DOCKER_IMAGE_PATH
           BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64/tekton.software/all-nodes"
-          for IMAGE in "docker.io_gcr.io_tekton-releases_github.com_tektoncd_dashboard_cmd_dashboard_v0.23.0.dim" \
+          for IMAGE in "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_entrypoint_v0.32.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_dashboard_cmd_dashboard_v0.23.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_kubeconfigwriter_v0.32.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_git-init_v0.32.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_nop_v0.32.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_imagedigestexporter_v0.32.0.dim" \
               "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_pullrequest-init_v0.32.0.dim" \
               "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_controller_v0.32.0.dim" \
-              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_webhook_v0.32.0.dim" \
-              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_entrypoint_v0.32.0.dim" \
               "docker.io_gcr.io_tekton-releases_github.com_tektoncd_triggers_cmd_controller_v0.18.0.dim" \
-              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_git-init_v0.32.0.dim" \
-              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_triggers_cmd_eventlistenersink_v0.18.0.dim" \
-              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_imagedigestexporter_v0.32.0.dim" \
-              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_triggers_cmd_interceptors_v0.18.0.dim" \
-              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_kubeconfigwriter_v0.32.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_webhook_v0.32.0.dim" \
               "docker.io_gcr.io_tekton-releases_github.com_tektoncd_triggers_cmd_webhook_v0.18.0.dim" \
-              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_pipeline_cmd_nop_v0.32.0.dim"
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_triggers_cmd_eventlistenersink_v0.18.0.dim" \
+              "docker.io_gcr.io_tekton-releases_github.com_tektoncd_triggers_cmd_interceptors_v0.18.0.dim"
           do
               IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE
               if [ ! -f $IMAGE_FILE ]; then
@@ -79,19 +79,19 @@
           ```
     * load them into all nodes of kind cluster if kind environment specified
         + ```shell
-          for IMAGE in "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.32.0@sha256:7f50901900925357460e6c6c985580f0b69c0d316ade75965228adb8b081614e" \
-              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/dashboard/cmd/dashboard:v0.23.0@sha256:4f70cd5f10bb6c8594b7810cf1fd8a8950d535ef0bb95e2c5f214a620646d720" \
-              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/kubeconfigwriter:v0.32.0@sha256:32fec74288f52ede279f091d8bac91d48ff6538fa3290251339b0075c59d0947" \
-              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.32.0@sha256:fe3310b87b9fad4b5139ac93f0e570c25fb97dcb64a876a5b8eebbc877fc12e8" \
-              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/nop:v0.32.0@sha256:a8ffddd75b7a7078d5c07d09259d7c5db04614b4c5ba5c43e99b0632034f2479" \
-              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/imagedigestexporter:v0.32.0@sha256:2b39f19517523df8a00a366a0d3adb815ca2623fc9c51f05dd290773d5d308c7" \
-              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/pullrequest-init:v0.32.0@sha256:632b5086dba4d7f30f5b1e77f9e5e551b06c9e897cf2afc93e100b26f9c32e39" \
-              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/controller:v0.32.0@sha256:0e4f92e95c9ae8140ddfc8751bb54cf54e1b00d27aa542c11d5ad8663c5067ae" \
-              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/webhook:v0.32.0@sha256:f0e31a5b1218bef6ad6323c05b4ed54412555accf542ac8a9dd0221629f33189" \
-              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/eventlistenersink:v0.18.0@sha256:9453f8184a476433f9223172f75790efeedb0780172ba9bcaa564d6987d85c2b" \
-              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/controller:v0.18.0@sha256:c9bac56feb04c16a1b483a7fe50a723022c0f1dfe920d6704ca7566de8d473cf" \
-              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/interceptors:v0.18.0@sha256:ca8025d2471deb7f51826227b89634413c465c66e785565c8e4db02b8f2c00e9" \
-              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/webhook:v0.18.0@sha256:ccd1613eb4b64ff732e092619e9fb4594aa617d2b93dbd46ff091be394bfb0d7"
+          for IMAGE in "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.32.0" \
+              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/dashboard/cmd/dashboard:v0.23.0" \
+              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/kubeconfigwriter:v0.32.0" \
+              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.32.0" \
+              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/nop:v0.32.0" \
+              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/imagedigestexporter:v0.32.0" \
+              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/pullrequest-init:v0.32.0" \
+              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/controller:v0.32.0" \
+              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/controller:v0.18.0" \
+              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/webhook:v0.32.0" \
+              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/webhook:v0.18.0" \
+              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/eventlistenersink:v0.18.0" \
+              "docker.io/gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/interceptors:v0.18.0"
           do
               kind load docker-image $IMAGE
           done
