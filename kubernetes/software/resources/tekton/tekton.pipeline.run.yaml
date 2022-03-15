@@ -1,7 +1,27 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  generateName: build-publish-pipeline-run-
+  name: pipelinerun-demo
 spec:
   pipelineRef:
-    name: build-publish-pipeline
+    name: pipeline-demo
+  workspaces:
+    - name: git-source
+      volumeClaimTemplate:
+        spec:
+          storageClassName: standard
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    - name: git-ssh-keys
+      secret:
+        secretName: git-ssh-key-secret
+        items:
+          - key: id_rsa
+            path: id_rsa
+            mode: 0600
+          - key: id_rsa.pub
+            path: id_rsa.pub
+            mode: 0600

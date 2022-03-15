@@ -8,12 +8,44 @@
 
 ## conceptions
 
-* none
+* tekton decoupled architecture, from https://technologists.dev/posts/tekton-jx-pipelines/
+    + ![tekton.decoupled.architecture.png](resources/tekton/tekton.decoupled.architecture.png)
+* in this example(test)
+    + pipeline
+        * Basic building blocks (tasks and pipelines) of a CI/CD workflow
+        * consists of
+            + resources
+                * objects that are going to be used as `inputs`/`outputs` of a `task`
+            + results
+                * a `task` can generate a result by adding files to `/tekton/results`
+            + params
+                * can be replaced by the values of params in the `taskRun`
+            + workspaces
+            + tasks
+                * a task consists of
+                    + `name` and `taskRef`
+                    + dependencies(defined by `runAfter`)
+                    + `params`
+                    + `workspaces`
+                    + `resources`: `inputs` and `outputs`
+        * `$` can be used to address some definitions
+            + `$(tasks.pipeline-git-source.results.dockerfile-path)` represents the `dockerfile-path` in the `result`
+              of `task` named `pipeline-git-source`
+    + trigger
+        * Event triggers for a CI/CD workflow
 
 ## purpose
 
 * prepare a kind cluster with basic components
 * install `tekton`
+* test `tekton`
+    + test `task` and `taskRun`
+    + test `pipeline` and `pipelineRun`
+        * git clone
+        * build docker image
+        * push docker image
+    + achieving `trigger` a `pipeline` with git push operation(cooperate with `gitea`)
+    + optional, test with webhook
 
 ## installation
 
@@ -30,7 +62,10 @@
           "docker.io_gcr.io_tekton-releases_dogfooding_tkn_latest-025de2.dim" \
           "docker.io_gcr.io_tekton-releases_github.com_tektoncd_operator_cmd_kubernetes_operator_v0.54.0.dim" \
           "docker.io_gcr.io_tekton-releases_github.com_tektoncd_operator_cmd_kubernetes_webhook_v0.54.0.dim" \
-          "docker.io_busybox_1.33.1-uclibc.dim"
+          "docker.io_busybox_1.33.1-uclibc.dim" \
+          "docker.io_bitnami_git_2.35.1-debian-10-r44.dim" \
+          "docker.io_docker_20.10.13-dind-alpine3.15.dim" \
+          "docker.io_alpine_3.15.0.dim"
       ```
 3. configure self-signed issuer
     * `self-signed` issuer
@@ -133,7 +168,7 @@
       ```
 2. visit `https://tekton-dashboard.local`
 3. test `task`
-    * prepare [tekton.task.yaml](resources/tekton/tekton.task.yaml.md)
+    * prepare [tekton.build.task.yaml](resources/tekton/tekton.build.task.yaml.md)
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
         + ```shell
@@ -142,20 +177,35 @@
           ```
     * apply task(s)
         + ```shell
-          kubectl -n tekton-pipelines apply -f tekton.task.yaml
+          kubectl -n tekton-pipelines apply -f tekton.build.task.yaml
           ```
     * prepare [tekton.build.task.run.yaml](resources/tekton/tekton.build.task.run.yaml.md)
     * run build task
         + ```shell
           kubectl -n tekton-pipelines create -f tekton.build.task.run.yaml
           ```
-    * prepare [tekton.publish.task.run.yaml](resources/tekton/tekton.publish.task.run.yaml.md)
-    * run publish task
-        + ```shell
-          kubectl -n tekton-pipelines create -f tekton.publish.task.run.yaml
-          ```
+    * check `taskRun` by visiting `https://tekton-dashboard.local`
 4. test `pipeline`
     * prepare [tekton.pipeline.yaml](resources/tekton/tekton.pipeline.yaml.md)
+    * prepare images
+        + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
+        + ```shell
+          load_image "docker.registry.local:443" \
+              "docker.io/bitnami/git:2.35.1-debian-10-r44" \
+              "docker.io/docker:20.10.13-dind-alpine3.15" \
+              "docker.io/alpine:3.15.0"
+          ```
+    * prepare ssh-key-secret
+        + create `rsa keys` by `ssh-keygen` if not generated before
+            * ```shell
+              mkdir -p ssh-keys/ \
+                  && ssh-keygen -t rsa -b 4096 -N "" -f ssh-keys/id_rsa
+              ```
+        + generate `git-ssh-key-secret`
+            * ```shell
+              kubectl -n tekton-pipelines create secret generic git-ssh-key-secret --from-file=ssh-keys/
+              ```
+    * add `ssh-keys/id_rsa.pub` to git repo server as deploy key
     * apply pipeline
         + ```shell
           kubectl -n tekton-pipelines apply -f tekton.pipeline.yaml
