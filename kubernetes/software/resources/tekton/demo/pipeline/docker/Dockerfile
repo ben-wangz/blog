@@ -1,4 +1,5 @@
-FROM docker.io/alpine:3.15.0
+ARG REGISTRY=docker.io
+FROM $REGISTRY/alpine:3.15.0
 ARG ALPINE_REPO=mirrors.aliyun.com
 
 RUN set -x \

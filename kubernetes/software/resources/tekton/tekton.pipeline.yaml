@@ -19,6 +19,10 @@ spec:
       description: clean out the contents of the repo's destination directory (if it already exists)
       type: string
       default: "false"
+    - name: image-registry
+      type: string
+      default: docker.io
+      description: image-registry
   workspaces:
     - name: code
       description: path for git clone
@@ -31,7 +35,7 @@ spec:
       description: commit id of git repo cloned
   steps:
     - name: git-clone
-      image: insecure.docker.registry.local:80/docker.io/bitnami/git:2.35.1-debian-10-r44
+      image: $(params.image-registry)/bitnami/git:2.35.1-debian-10-r44
       env:
         - name: TZ
           value: "Asia/Shanghai"
@@ -54,26 +58,30 @@ spec:
 
         set -x
         set -e
-        CHECKOUT_PATH="${CODE_PATH}"
         cleandir() {
-          if [[ -d "$CHECKOUT_PATH" ]] ; then
-            rm -rf "$CHECKOUT_PATH"/*
-            rm -rf "$CHECKOUT_PATH"/.[!.]*
-            rm -rf "$CHECKOUT_PATH"/..?*
+          if [[ -d "$CODE_PATH" ]] ; then
+            rm -rf "$CODE_PATH"/*
+            rm -rf "$CODE_PATH"/.[!.]*
+            rm -rf "$CODE_PATH"/..?*
           fi
         }
         if [[ "${PARAM_DELETE_EXISTING}" == "true" ]] ; then
           cleandir
         fi
         export GIT_SSH_COMMAND="ssh -i $SSH_KEYS_PATH/id_rsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
-        git clone --single-branch --branch $PARAM_REVISION $PARAM_URL $CHECKOUT_PATH
-        cd $CHECKOUT_PATH && (git rev-parse --short HEAD | tee $GIT_COMMIT_ID_PATHS)
+        git clone --single-branch --branch $PARAM_REVISION $PARAM_URL $CODE_PATH
+        cd $CODE_PATH && (git rev-parse --short HEAD | tee $GIT_COMMIT_ID_PATHS)
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: release-docker-image
 spec:
+  params:
+    - name: image-registry
+      type: string
+      default: docker.io
+      description: image registry
   workspaces:
     - name: code
       description: path for git clone
@@ -84,10 +92,16 @@ spec:
     - name: dind-socket
       emptyDir: { }
   sidecars:
-    - image: docker.io/docker:20.10.13-dind-alpine3.15
+    - image: $(params.image-registry)/docker:20.10.13-dind-alpine3.15
       name: dockerd
+      #args:
+      #  - --insecure-registry=insecure.docker.registry.local
       securityContext:
         privileged: true
+      #hostAliases:
+      #  - ip: "192.168.123.7"
+      #    hostnames:
+      #      - "insecure.docker.registry.local"
       volumeMounts:
         - mountPath: /var/lib/docker
           name: dind-storage
@@ -97,7 +111,7 @@ spec:
           mountPath: $(workspaces.code.path)
   steps:
     - name: build-and-push
-      image: insecure.docker.registry.local:80/docker.io/docker:20.10.13-dind-alpine3.15
+      image: $(params.image-registry)/docker:20.10.13-dind-alpine3.15
       volumeMounts:
         - mountPath: /var/run/
           name: dind-socket
@@ -106,8 +120,15 @@ spec:
           value: "Asia/Shanghai"
         - name: CODE_PATH
           value: $(workspaces.code.path)
+        - name: DOCKER_REGISTRY
+          value: $(params.image-registry)
       script: |
-        sleep 10m
+        DOCKER_RESOURCE_PATH=$CODE_PATH/kubernetes/software/resources/tekton/demo/pipeline/docker
+        IMAGE_ID=$DOCKER_REGISTRY/tekton-pipeline-test:v1.0
+        docker build $DOCKER_RESOURCE_PATH -f $DOCKER_RESOURCE_PATH/Dockerfile -t $IMAGE_ID
+        # TODO default docker registry cannot be reached:
+        #     lookup insecure.docker.registry.local on 10.96.0.10:53: no such host
+        #docker push $IMAGE_ID
 
 ---
 apiVersion: tekton.dev/v1beta1
@@ -117,7 +138,8 @@ metadata:
 spec:
   params:
     - name: image-registry
-      default: insecure.docker.registry.local:80
+      type: string
+      default: insecure.docker.registry.local:80/docker.io
   workspaces:
     - name: git-source
     - name: git-ssh-keys
@@ -130,6 +152,8 @@ spec:
           value: git@github.com:ben-wangz/blog.git
         - name: revision
           value: main
+        - name: image-registry
+          value: $(params.image-registry)
       workspaces:
         - name: code
           workspace: git-source
@@ -140,6 +164,9 @@ spec:
         - fetch-from-git
       taskRef:
         name: release-docker-image
+      params:
+        - name: image-registry
+          value: $(params.image-registry)
       workspaces:
         - name: code
           workspace: git-source
