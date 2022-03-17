@@ -235,3 +235,5 @@
 1. use images from private registry
 2. persist volume
 3. native ingress
+4. tekton `sidecars` do not support `hostAliases`
+5. dashboard do not support definition of `podTemplate` in creating a `pipelineRun`
