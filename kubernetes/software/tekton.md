@@ -77,6 +77,8 @@
 4. prepare images
     * NOTE: `tekton-operator-v0.54.0` not support custom registry for components according
       to [issue #625](https://github.com/tektoncd/operator/issues/625)
+        + for this reason, we need network to pull images
+        + to avoid large amount of data downloading, we have already loaded images (layers) into every node
     * run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
     * ```shell
       load_image "docker.registry.local:443" \
@@ -167,7 +169,11 @@
       curl --insecure --header 'Host: tekton-dashboard.local' https://localhost
       ```
 2. visit `https://tekton-dashboard.local`
-3. test `task`
+3. prepare `test` namespace
+    * ```shell
+      kubectl get namespace test > /dev/null 2>&1 || kubectl create namespace test
+      ```
+4. test `task`
     * prepare [tekton.build.task.yaml](resources/tekton/tekton.build.task.yaml.md)
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
@@ -177,15 +183,15 @@
           ```
     * apply task(s)
         + ```shell
-          kubectl -n tekton-pipelines apply -f tekton.build.task.yaml
+          kubectl -n test apply -f tekton.build.task.yaml
           ```
     * prepare [tekton.build.task.run.yaml](resources/tekton/tekton.build.task.run.yaml.md)
     * run build task
         + ```shell
-          kubectl -n tekton-pipelines create -f tekton.build.task.run.yaml
+          kubectl -n test create -f tekton.build.task.run.yaml
           ```
     * check `taskRun` by visiting `https://tekton-dashboard.local`
-4. test `pipeline`
+5. test `pipeline`
     * prepare [tekton.pipeline.yaml](resources/tekton/tekton.pipeline.yaml.md)
     * prepare images
         + run scripts in [load.image.function.sh](../resources/load.image.function.sh.md) to load function `load_image`
@@ -203,19 +209,22 @@
               ```
         + generate `git-ssh-key-secret`
             * ```shell
-              kubectl -n tekton-pipelines create secret generic git-ssh-key-secret --from-file=ssh-keys/
+              kubectl -n test create secret generic git-ssh-key-secret --from-file=ssh-keys/
               ```
     * add `ssh-keys/id_rsa.pub` to git repo server as deploy key
     * apply pipeline
         + ```shell
-          kubectl -n tekton-pipelines apply -f tekton.pipeline.yaml
+          kubectl -n test apply -f tekton.pipeline.yaml
           ```
     * prepare [tekton.pipeline.run.yaml](resources/tekton/tekton.pipeline.run.yaml.md)
     * run publish task
         + ```shell
-          kubectl -n tekton-pipelines create -f tekton.pipeline.run.yaml
+          kubectl -n test create -f tekton.pipeline.run.yaml
           ```
-5. test `webhook`
+        + additional resources
+            * [resources/tekton/demo/pipeline/docker/Dockerfile](resources/tekton/demo/pipeline/docker/Dockerfile.md)
+    * check `taskRun` by visiting `https://tekton-dashboard.local`
+6. test `webhook`
     * TODO
     * run task
     * run pipeline
