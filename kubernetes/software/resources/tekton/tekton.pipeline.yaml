@@ -94,14 +94,10 @@ spec:
   sidecars:
     - image: $(params.image-registry)/docker:20.10.13-dind-alpine3.15
       name: dockerd
-      #args:
-      #  - --insecure-registry=insecure.docker.registry.local
+      args:
+        - --insecure-registry=insecure.docker.registry.local
       securityContext:
         privileged: true
-      #hostAliases:
-      #  - ip: "192.168.123.7"
-      #    hostnames:
-      #      - "insecure.docker.registry.local"
       volumeMounts:
         - mountPath: /var/lib/docker
           name: dind-storage
@@ -126,9 +122,7 @@ spec:
         DOCKER_RESOURCE_PATH=$CODE_PATH/kubernetes/software/resources/tekton/demo/pipeline/docker
         IMAGE_ID=$DOCKER_REGISTRY/tekton-pipeline-test:v1.0
         docker build $DOCKER_RESOURCE_PATH -f $DOCKER_RESOURCE_PATH/Dockerfile -t $IMAGE_ID
-        # TODO default docker registry cannot be reached:
-        #     lookup insecure.docker.registry.local on 10.96.0.10:53: no such host
-        #docker push $IMAGE_ID
+        docker push $IMAGE_ID
 
 ---
 apiVersion: tekton.dev/v1beta1

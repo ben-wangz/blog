@@ -5,6 +5,12 @@ metadata:
 spec:
   pipelineRef:
     name: pipeline-demo
+  podTemplate:
+    hostAliases:
+      # NOTE: change IP with your own
+      - ip: "192.168.123.7"
+        hostnames:
+          - "insecure.docker.registry.local"
   workspaces:
     - name: git-source
       volumeClaimTemplate:

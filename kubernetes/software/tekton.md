@@ -217,6 +217,7 @@
           kubectl -n test apply -f tekton.pipeline.yaml
           ```
     * prepare [tekton.pipeline.run.yaml](resources/tekton/tekton.pipeline.run.yaml.md)
+        + NOTE: `spec.podTemplate.hostAliases.[0].ip` needs to be changed
     * run publish task
         + ```shell
           kubectl -n test create -f tekton.pipeline.run.yaml
