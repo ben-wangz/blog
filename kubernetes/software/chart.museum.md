@@ -1,4 +1,4 @@
-# docker registry
+# chart museum
 
 ## main usage
 
