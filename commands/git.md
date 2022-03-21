@@ -31,3 +31,13 @@ git clone --single-branch --branch v2.4.0 https://github.com/kubernetes-sigs/sig
 * ```shell
   git archive --remote=git@github.com:ben-wangz/blog.git master:docs/commands build.gradle -o git.md.tar.gz
   ```
+
+### add remote
+
+```shell
+git remote -v
+```
+
+```shell
+git remote add ben git@github.com:ben-wangz/blog.git
+```
