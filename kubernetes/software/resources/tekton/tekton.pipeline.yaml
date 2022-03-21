@@ -121,6 +121,10 @@ spec:
       script: |
         DOCKER_RESOURCE_PATH=$CODE_PATH/kubernetes/software/resources/tekton/demo/pipeline/docker
         IMAGE_ID=$DOCKER_REGISTRY/tekton-pipeline-test:v1.0
+        for i in $(seq 1 100)
+        do
+            docker info && break || sleep 3
+        done
         docker build $DOCKER_RESOURCE_PATH -f $DOCKER_RESOURCE_PATH/Dockerfile -t $IMAGE_ID
         docker push $IMAGE_ID
 
