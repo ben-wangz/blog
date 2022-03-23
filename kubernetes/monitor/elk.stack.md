@@ -140,7 +140,7 @@
           echo "$IP kibana.local" >> /etc/hosts
           ```
     * visit `https://kibana.local/app/management/kibana/objects`
-    * import [k8s-logs-dashboard.json](resources/elk.stack/k8s-logs-dashboard.ndjson.md)
+    * import [k8s-logs-dashboard.ndjson](resources/elk.stack/k8s-logs-dashboard.ndjson.md)
 3. filter with KQL
     + ```KQL
       kubernetes.labels.app : log-generator and message : *com.github.vspiewak.loggenerator.SearchRequest*
@@ -150,9 +150,8 @@
 
 1. delete `log-generator`
     + ```shell
-      kubectl get namespace test > /dev/null 2>&1 || kubectl create namespace test \
-          && kubectl -n test apply -f log.generator.yaml
-     ```
+      kubectl -n test delete -f log.generator.yaml
+      ```
 2. uninstall `kibana`
     * ```shell
       helm -n monitor uninstall my-kibana
