@@ -102,7 +102,7 @@
     * prepare [kind.cluster.yaml](resources/create.qemu.machine.for.kind/kind.cluster.yaml.md)
         + copy to `/root/bin/conf`
     * prepare [kind.with.registry.sh](resources/create.qemu.machine.for.kind/kind.with.registry.sh.md)
-        + copy to `/root/bin/bin`
+        + copy to `/root/bin`
     * create cluster
         + ```shell
           bash /root/bin/kind.with.registry.sh /root/conf/kind.cluster.yaml /root/bin/kind /root/bin/kubectl

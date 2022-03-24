@@ -33,7 +33,8 @@
       TOPIC_DIRECTORY="kind.cluster.basic"
       BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
-          "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim"
+          "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim" \
+          "docker.io_registry_2.7.1.dim"
       ```
 6. configure docker client as tls of `docker.registry.local` is self-signed
     * ```shell
