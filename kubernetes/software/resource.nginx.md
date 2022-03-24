@@ -25,7 +25,6 @@
       BASE_URL="https://resource.geekcity.tech/kubernetes/docker-images/x86_64"
       download_and_load $TOPIC_DIRECTORY $BASE_URL \
           "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim" \
-          "docker.io_bitnami_git_2.33.0-debian-10-r53.dim" \
           "docker.io_busybox_1.33.1-uclibc.dim"
       ```
 3. create pvc named `resource-nginx-pvc`
@@ -40,7 +39,6 @@
         + ```shell
           load_image "docker.registry.local:443" \
               "docker.io/bitnami/nginx:1.21.3-debian-10-r29" \
-              "docker.io/bitnami/git:2.33.0-debian-10-r53" \
               "docker.io/busybox:1.33.1-uclibc"
           ```
     * install by helm
