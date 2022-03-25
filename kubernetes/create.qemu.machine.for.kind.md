@@ -100,7 +100,7 @@
       ```
 7. create cluster with a local docker registry
     * prepare [kind.cluster.yaml](resources/create.qemu.machine.for.kind/kind.cluster.yaml.md)
-        + copy to `/root/bin/conf`
+        + copy to `/root/conf`
     * prepare [kind.with.registry.sh](resources/create.qemu.machine.for.kind/kind.with.registry.sh.md)
         + copy to `/root/bin`
     * create cluster
