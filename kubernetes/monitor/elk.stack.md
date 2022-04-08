@@ -165,6 +165,6 @@
       helm -n monitor uninstall my-elasticsearch
       for INDEX in "0" "1" "2"
       do
-          helm -n monitor delete pvc elasticsearch-master-elasticsearch-master-$INDEX
+          kubectl -n monitor delete pvc elasticsearch-master-elasticsearch-master-$INDEX
       done
       ```
