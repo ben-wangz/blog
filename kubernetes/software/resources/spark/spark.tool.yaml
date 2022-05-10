@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark-tool
+  labels:
+    app.kubernetes.io/name: spark-tool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: spark-tool
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: spark-tool
+    spec:
+      containers:
+        - name: spark-tool
+          image: insecure.docker.registry.local:80/docker.io/bitnami/spark:3.2.1-debian-10-r78
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+          command:
+            - tail
+          args:
+            - -f
+            - /etc/hosts
