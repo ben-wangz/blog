@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cassandra-tool
+  labels:
+    app.kubernetes.io/name: cassandra-tool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cassandra-tool
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cassandra-tool
+    spec:
+      containers:
+        - name: cassandra-tool
+          image: insecure.docker.registry.local:80/docker.io/bitnami/cassandra:3.11.11-debian-10-r4
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: CASSANDRA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: cassandra-password
+                  name: my-cassandra
+            - name: TZ
+              value: Asia/Shanghai
+          command:
+            - tail
+            - -f
+            - /etc/hosts

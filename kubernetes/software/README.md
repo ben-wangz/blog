@@ -17,3 +17,4 @@
 * [tekton](tekton.md)
 * [verdaccio](verdaccio.md)
 * [spark](spark.md)
+* [cassandra](cassandra.md)

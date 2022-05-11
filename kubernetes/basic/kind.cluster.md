@@ -41,6 +41,7 @@
       DOCKER_REGISTRY_URL="docker.registry.local:443" \
           && CERT_DIRECTORY_PATH="/etc/docker/certs.d/$DOCKER_REGISTRY_URL" \
           && mkdir -p $CERT_DIRECTORY_PATH \
+          && kubectl -n basic-components wait --for=condition=ready certificate docker.registry.local-tls \
           && kubectl -n basic-components get secret docker.registry.local-tls \
           -o jsonpath="{.data.tls\\.crt}" \
           | base64 --decode > $CERT_DIRECTORY_PATH/ca.crt
