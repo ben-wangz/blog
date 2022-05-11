@@ -1,0 +1,84 @@
+image:
+  registry: insecure.docker.registry.local:80/docker.io
+  repository: bitnami/zookeeper
+  tag: 3.8.0-debian-10-r37
+  pullPolicy: IfNotPresent
+  pullSecrets: [ ]
+  debug: false
+auth:
+  enabled: false
+logLevel: ERROR
+replicaCount: 3
+containerPorts:
+  client: 2181
+  tls: 3181
+  follower: 2888
+  election: 3888
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+  probeCommandTimeout: 2
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+  probeCommandTimeout: 2
+startupProbe:
+  enabled: false
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 1
+  failureThreshold: 15
+  successThreshold: 1
+resources:
+  limits:
+    memory: 1024Mi
+    cpu: 1000m
+  requests:
+    memory: 256Mi
+    cpu: 250m
+service:
+  type: ClusterIP
+  ports:
+    client: 2181
+    tls: 3181
+    follower: 2888
+    election: 3888
+persistence:
+  enabled: true
+  storageClass: "standard"
+  accessModes:
+    - ReadWriteOnce
+  size: 2Gi
+  dataLogDir:
+    size: 2Gi
+volumePermissions:
+  enabled: true
+  image:
+    registry: insecure.docker.registry.local:80/docker.io
+    repository: bitnami/bitnami-shell
+    tag: 10-debian-10-r403
+    pullPolicy: IfNotPresent
+    pullSecrets: [ ]
+  resources:
+    limits: { }
+    requests: { }
+  containerSecurityContext:
+    runAsUser: 0
+metrics:
+  enabled: false
+tls:
+  client:
+    enabled: false
+  quorum:
+    enabled: false
+  resources:
+    limits: { }
+    requests: { }
