@@ -57,11 +57,7 @@
 
 ## test with cassandra-tool
 
-1. extract password
-    * ```shell
-      CASSANDRA_PASSWORD=$(kubectl -n application exec -it deployment/cassandra-tool -- bash -c 'echo -n $CASSANDRA_PASSWORD')
-      ```
-2. connect to `cassandra`
+1. connect to `cassandra`
     * ```shell
       cat > test.cql <<EOF
       SHOW HOST;
@@ -93,7 +89,7 @@
           -o jsonpath="{.items[0].metadata.name}") \
           && kubectl -n application cp test.cql $POD_NAME:/tmp/test.cql \
           && kubectl -n application exec -it deployment/cassandra-tool -- \
-              cqlsh -u cassandra -p $CASSANDRA_PASSWORD my-cassandra.application 9042 -f /tmp/test.cql
+              bash -c 'cqlsh -u cassandra -p $CASSANDRA_PASSWORD my-cassandra.application 9042 -f /tmp/test.cql'
       ```
 
 ## uninstallation
