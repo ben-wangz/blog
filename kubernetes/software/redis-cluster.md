@@ -57,18 +57,15 @@
 
 1. connect to `redis-cluster`
     * ```shell
-      POD_NAME=$(kubectl get pod -n application \
-          -l "app.kubernetes.io/name=redis-cluster-tool" \
-          -o jsonpath="{.items[0].metadata.name}") \
-          && kubectl -n application exec -it $POD_NAME -- bash -c '\
-              echo "ping" | redis-cli -c -h my-redis-cluster.application -a $REDIS_PASSWORD' \
-          && kubectl -n application exec -it $POD_NAME -- bash -c '\
+      kubectl -n application exec -it deployment/redis-cluster-tool -- bash -c '\
+          echo "ping" | redis-cli -c -h my-redis-cluster.application -a $REDIS_PASSWORD' \
+          && kubectl -n application exec -it deployment/redis-cluster-tool -- bash -c '\
               echo "set mykey somevalue" | redis-cli -c -h my-redis-cluster.application -a $REDIS_PASSWORD' \
-          && kubectl -n application exec -it $POD_NAME -- bash -c '\
+          && kubectl -n application exec -it deployment/redis-cluster-tool -- bash -c '\
               echo "get mykey" | redis-cli -c -h my-redis-cluster.application -a $REDIS_PASSWORD' \
-          && kubectl -n application exec -it $POD_NAME -- bash -c '\
+          && kubectl -n application exec -it deployment/redis-cluster-tool -- bash -c '\
               echo "del mykey" | redis-cli -c -h my-redis-cluster.application -a $REDIS_PASSWORD' \
-          && kubectl -n application exec -it $POD_NAME -- bash -c '\
+          && kubectl -n application exec -it deployment/redis-cluster-tool -- bash -c '\
               echo "get mykey" | redis-cli -c -h my-redis-cluster.application -a $REDIS_PASSWORD'
       ```
 

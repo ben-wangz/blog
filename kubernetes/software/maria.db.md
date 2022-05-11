@@ -59,13 +59,10 @@
 
 1. connect to database
     * ```shell
-      POD_NAME=$(kubectl get pod -n application \
-          -l "app.kubernetes.io/name=maria-db-tool" \
-          -o jsonpath="{.items[0].metadata.name}") \
-          && kubectl -n application exec -it $POD_NAME \
-              -- bash -c '\
-                  echo "show databases; show variables like \"slow_query%\"" \
-                      | mysql -h my-maria-db-mariadb.application -uroot -p$MARIADB_ROOT_PASSWORD my_database'
+      kubectl -n application exec -it deployment/maria-db-tool \
+          -- bash -c '\
+              echo "show databases; show variables like \"slow_query%\"" \
+                  | mysql -h my-maria-db-mariadb.application -uroot -p$MARIADB_ROOT_PASSWORD my_database'
       ```
 
 ## uninstallation

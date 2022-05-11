@@ -60,50 +60,44 @@
       curl --insecure --header 'Host: web.minio.local' https://localhost
       ```
 2. test with `minio-tool`
-    * find `POD_NAME`
-        + ```shell
-          POD_NAME=$(kubectl get pod -n application \
-              -l "app.kubernetes.io/name=minio-tool" \
-              -o jsonpath="{.items[0].metadata.name}")
-          ```
     * add config for server
         + ```shell
-          kubectl -n application exec -it $POD_NAME \
+          kubectl -n application exec -it deployment/minio-tool \
               -- bash -c 'mc config host add minio http://$MINIO_SERVER_HOST:$MINIO_SERVER_PORT $MINIO_SERVER_ACCESS_KEY $MINIO_SERVER_SECRET_KEY'
           ```
     * list buckets
         + ```shell
-          kubectl -n application exec -it $POD_NAME \
+          kubectl -n application exec -it deployment/minio-tool \
               -- bash -c 'mc ls minio'
           ```
     * create bucket
         + ```shell
-          kubectl -n application exec -it $POD_NAME \
+          kubectl -n application exec -it deployment/minio-tool \
               -- bash -c 'mc mb minio/bucket-from-client-a && mc mb minio/bucket-from-client-b'
           ```
     * delete bucket
         + ```shell
-          kubectl -n application exec -it $POD_NAME \
+          kubectl -n application exec -it deployment/minio-tool \
               -- bash -c 'mc rb minio/bucket-from-client-a'
           ```
     * list file in bucket
         + ```shell
-          kubectl -n application exec -it $POD_NAME \
+          kubectl -n application exec -it deployment/minio-tool \
               -- bash -c 'mc ls minio/bucket-from-client-b'
           ```
     * add file to bucket
         + ```shell
-          kubectl -n application exec -it $POD_NAME \
+          kubectl -n application exec -it deployment/minio-tool \
               -- bash -c 'mc cp /etc/hosts minio/bucket-from-client-b/hosts && mc cp /etc/hosts minio/bucket-from-client-b/hosts-copy'
           ```
     * delete file from bucket
         + ```shell
-          kubectl -n application exec -it $POD_NAME \
+          kubectl -n application exec -it deployment/minio-tool \
               -- bash -c 'mc rm minio/bucket-from-client-b/hosts'
           ```
     * cat file content
         + ```shell
-          kubectl -n application exec -it $POD_NAME \
+          kubectl -n application exec -it deployment/minio-tool \
               -- bash -c 'mc cat minio/bucket-from-client-b/hosts-copy'
           ```
 3. test with broswer
