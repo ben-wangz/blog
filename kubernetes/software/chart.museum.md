@@ -32,7 +32,8 @@
     * `self-signed` issuer
         + prepare [self.signed.and.ca.issuer.yaml](../basic/resources/cert.manager/self.signed.and.ca.issuer.yaml.md)
         + ```shell
-          kubectl -n application apply -f self.signed.and.ca.issuer.yaml
+          kubectl get namespace application > /dev/null 2>&1 || kubectl create namespace application \
+              && kubectl -n application apply -f self.signed.and.ca.issuer.yaml
           ```
 6. setup chart-museum
     * prepare [chart.museum.values.yaml](resources/chart.museum/chart.museum.values.yaml.md)
