@@ -19,3 +19,4 @@
 * [spark](spark.md)
 * [cassandra](cassandra.md)
 * [zookeeper](zookeeper.md)
+* [devpi](devpi.md)
