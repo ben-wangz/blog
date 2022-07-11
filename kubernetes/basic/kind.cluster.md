@@ -43,8 +43,8 @@
           && mkdir -p $CERT_DIRECTORY_PATH \
           && kubectl -n basic-components wait --for=condition=ready certificate docker.registry.local-tls \
           && kubectl -n basic-components get secret docker.registry.local-tls \
-          -o jsonpath="{.data.tls\\.crt}" \
-          | base64 --decode > $CERT_DIRECTORY_PATH/ca.crt
+              -o jsonpath="{.data.tls\\.crt}" \
+              | base64 --decode > $CERT_DIRECTORY_PATH/ca.crt
       ```
 7. configure `/etc/hosts` for `docker-registry` and `chart-museum`
     * ```shell

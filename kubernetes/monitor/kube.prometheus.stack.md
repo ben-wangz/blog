@@ -9,7 +9,7 @@
 
 ## conceptions
 
-* [official docs](https://github.com/prometheus-operator/kube-prometheus-stack)
+* [official docs](https://github.com/prometheus-operator/prometheus-operator)
 * [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
   is a helm chart for [kube-prometheus](https://github.com/prometheus-operator/kube-prometheus)
 * kube-prometheus is a package contains
