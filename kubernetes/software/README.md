@@ -20,3 +20,4 @@
 * [cassandra](cassandra.md)
 * [zookeeper](zookeeper.md)
 * [devpi](devpi.md)
+* [postgresql](postgresql.md)
