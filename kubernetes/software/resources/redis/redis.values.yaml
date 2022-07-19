@@ -1,0 +1,99 @@
+image:
+  registry: insecure.docker.registry.local:80/docker.io
+  repository: bitnami/redis
+  tag: 7.0.4-debian-11-r2
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+  debug: false
+## @param architecture Redis&reg; architecture. Allowed values: `standalone` or `replication`
+architecture: replication
+auth:
+  enabled: true
+  ## @param auth.sentinel Enable password authentication on sentinels too
+  sentinel: true
+  password: "redis-password"
+commonConfiguration: |-
+  # Enable AOF https://redis.io/topics/persistence#append-only-file
+  appendonly yes
+  # Disable RDB persistence, AOF persistence already enabled.
+  save ""
+master:
+  count: 1
+  configuration: ""
+  disableCommands:
+    - FLUSHDB
+    - FLUSHALL
+  resources:
+    requests:
+      cpu: 250m
+      memory: 1024Mi
+  persistence:
+    enabled: true
+    storageClass: "standard"
+    size: 8Gi
+  service:
+    type: ClusterIP
+    ports:
+      redis: 6379
+replica:
+  replicaCount: 3
+  configuration: ""
+  disableCommands:
+    - FLUSHDB
+    - FLUSHALL
+  resources:
+    requests:
+      cpu: 250m
+      memory: 1024Mi
+  persistence:
+    enabled: false
+    path: /data
+    subPath: ""
+    storageClass: "standard"
+    size: 8Gi
+  service:
+    type: ClusterIP
+    ports:
+      redis: 6379
+sentinel:
+  enabled: false
+  image:
+    registry: insecure.docker.registry.local:80/docker.io
+    repository: bitnami/redis-sentinel
+    tag: 7.0.4-debian-11-r0
+    pullPolicy: IfNotPresent
+    debug: false
+  masterSet: mymaster
+  quorum: 2
+  getMasterTimeout: 220
+  automateClusterRecovery: false
+  downAfterMilliseconds: 60000
+  failoverTimeout: 18000
+  parallelSyncs: 1
+  configuration: ""
+  persistence:
+    enabled: false
+metrics:
+  enabled: false
+  image:
+    registry: insecure.docker.registry.local:80/docker.io
+    repository: bitnami/redis-exporter
+    tag: 1.43.0-debian-11-r9
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+volumePermissions:
+  enabled: false
+  image:
+    registry: insecure.docker.registry.local:80/docker.io
+    repository: bitnami/bitnami-shell
+    tag: 11-debian-11-r16
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+sysctl:
+  enabled: false
+  image:
+    registry: insecure.docker.registry.local:80/docker.io
+    repository: bitnami/bitnami-shell
+    tag: 11-debian-11-r16
+    pullPolicy: IfNotPresent
+    pullSecrets: []

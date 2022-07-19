@@ -11,6 +11,7 @@
 * [haproxy](haproxy.md)
 * [nexus-repository-manager](nexus.repository.manager.md)
 * [redis-cluster](redis-cluster.md)
+* [redis](redis.md)
 * [jupyterhub](jupyterhub.md)
 * [tidb](tidb.md)
 * [jenkins](jenkins.md)
