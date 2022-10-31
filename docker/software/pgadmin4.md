@@ -5,6 +5,6 @@
     -p 8080:80 \
     -e 'PGADMIN_DEFAULT_EMAIL=ben.wangz@foxmail.com' \
     -e 'PGADMIN_DEFAULT_PASSWORD=123456' \
-    -d dpage/pgadmin4:6.4
+    -d dpage/pgadmin4:6.15
   ```
 * visit http://localhost:8080
