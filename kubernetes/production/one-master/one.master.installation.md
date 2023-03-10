@@ -13,9 +13,9 @@
 4. configure repositories
     * remove all repo files
         + ```shell
-          remove all repo configuration
+          rm -rf /etc/yum.repos.d/*
           ```
-    * copy [all.in.one.8.repo](resources/all.in.one.8.repo.md)
+    * copy [all.in.one.8.repo](resources/all.in.one.8.repo.md) as /etc/yum.repos.d/all.in.one.8.repo
 5. configure ntp
     * ```shell
       yum install -y chrony \
@@ -29,73 +29,123 @@
     * ```shell
       systemctl stop firewalld && systemctl disable firewalld
       ```
-7. install base environment
+7. pre-configure docker
+    * ```shell
+      mkdir -p /etc/docker
+      cat >> /etc/docker/daemon.json <<EOF
+      {
+          "insecure-registries": ["insecure.docker.registry.local:80"]
+      }
+      EOF
+      ```
+8. install base environment
     * copy [setup.base.sh](resources/setup.base.sh.md) to /tmp/setup.base.sh
     * ```shell
       bash /tmp/setup.base.sh
       ```
-8. prepare images for every node
+9. prepare data as http resource
+    * download and decompress docker-images.tar.gz as data/docker-images/
     * ```shell
-      DOCKER_IMAGE_PATH=/root/docker-images && mkdir -p $DOCKER_IMAGE_PATH
-      BASE_URL="https://resource-ops.lab.zjvis.net:32443/docker-images"
-      for IMAGE in "docker.io_calico_apiserver_v3.21.2.dim" \
-          "docker.io_calico_pod2daemon-flexvol_v3.21.2.dim" \
-          "docker.io_calico_cni_v3.21.2.dim" \
-          "docker.io_calico_typha_v3.21.2.dim" \
-          "docker.io_calico_kube-controllers_v3.21.2.dim" \
-          "docker.io_calico_node_v3.21.2.dim" \
-          "docker.io_k8s.gcr.io_kube-apiserver_v1.23.3.dim" \
-          "docker.io_k8s.gcr.io_pause_3.6.dim" \
-          "docker.io_k8s.gcr.io_kube-controller-manager_v1.23.3.dim" \
-          "docker.io_k8s.gcr.io_coredns_coredns_v1.8.6.dim" \
-          "docker.io_k8s.gcr.io_kube-proxy_v1.23.3.dim" \
-          "docker.io_k8s.gcr.io_etcd_3.5.1-0.dim" \
-          "docker.io_k8s.gcr.io_kube-scheduler_v1.23.3.dim" \
-          "docker.io_registry_2.7.1.dim" \
-          "quay.io_tigera_operator_v1.23.3.dim" \
-          "docker.io_bitnami_mariadb_10.5.12-debian-10-r0.dim"
+      cat >> $(pwd)/default.conf <<EOF
+      server {
+          listen 80;
+          location / {
+              root   /usr/share/nginx/html;
+              autoindex on;
+          }
+      }
+      EOF
+      docker run --rm -p 8080:80 \
+          -v $(pwd)/data:/usr/share/nginx/html:ro \
+          -v $(pwd)/default.conf:/etc/nginx/conf.d/default.conf:ro \
+          -d nginx:1.19.9-alpine
+      ```
+    * check data
+        + ```shell
+          curl -i http://localhost:8080/docker-images/
+          ```
+10. prepare images for every node
+    * ```shell
+      DOCKER_IMAGE_PATH=/tmp/docker-images && mkdir -p $DOCKER_IMAGE_PATH
+      BASE_URL="http://localhost:8080/docker-images"
+      for IMAGE in "docker.io_calico_apiserver_v3.25.0.dim" \
+          "docker.io_calico_cni_v3.25.0.dim" \
+          "docker.io_calico_csi_v3.25.0.dim" \
+          "docker.io_calico_ctl_v3.25.0.dim" \
+          "docker.io_calico_kube-controllers_v3.25.0.dim" \
+          "docker.io_calico_node-driver-registrar_v3.25.0.dim" \
+          "docker.io_calico_node_v3.25.0.dim" \
+          "docker.io_calico_pod2daemon-flexvol_v3.25.0.dim" \
+          "docker.io_calico_typha_v3.25.0.dim" \
+          "docker.io_registry.k8s.io_coredns_coredns_v1.9.3.dim" \
+          "docker.io_registry.k8s.io_etcd_3.5.6-0.dim" \
+          "docker.io_registry.k8s.io_kube-apiserver_v1.25.6.dim" \
+          "docker.io_registry.k8s.io_kube-controller-manager_v1.25.6.dim" \
+          "docker.io_registry.k8s.io_kube-proxy_v1.25.6.dim" \
+          "docker.io_registry.k8s.io_kube-scheduler_v1.25.6.dim" \
+          "docker.io_registry.k8s.io_pause_3.8.dim" \
+          "docker.io_registry.k8s.io_pause_3.6.dim" \
+          "quay.io_tigera_operator_v1.29.0.dim"
       do
           IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE
           if [ ! -f $IMAGE_FILE ]; then
               TMP_FILE=$IMAGE_FILE.tmp \
-              && curl -o "$TMP_FILE" -L "$BASE_URL/$IMAGE" \
-              && mv $TMP_FILE $IMAGE_FILE
+                  && curl -o "$TMP_FILE" -L "$BASE_URL/$IMAGE" \
+                  && mv $TMP_FILE $IMAGE_FILE
           fi
           docker image load -i $IMAGE_FILE && rm -f $IMAGE_FILE
       done
       ```
-9. install master
+11. install cri-docker
+    * ```shell
+      curl -L -o /usr/local/bin/cri-dockerd http://localhost:8080/cri-dockerd/0.3.1/cri-dockerd
+      chmod u+x /usr/local/bin/cri-dockerd
+      curl -L -o /etc/systemd/system/cri-docker.service http://localhost:8080/cri-dockerd/cri-docker.service
+      curl -L -o /etc/systemd/system/cri-docker.socket http://localhost:8080/cri-dockerd/cri-docker.socket
+      systemctl daemon-reload
+      systemctl enable cri-docker.service
+      systemctl enable --now cri-docker.socket
+      systemctl status cri-docker.socket
+      systemctl status docker
+      ```
+12. install master
     * initialize master
         + ```shell
-          # TODO check kubeadm version to set --kubernetes-version
-          kubeadm init --kubernetes-version=v1.22.1 --pod-network-cidr=172.21.0.0/20 --image-repository registry.aliyuncs.com/google_containers
-          # TODO remove
-          sed -i -Ee "s/^([^#].*--port=0.*)/#\1/g" /etc/kubernetes/manifests/kube-scheduler.yaml
-          sed -i -Ee "s/^([^#].*--port=0.*)/#\1/g" /etc/kubernetes/manifests/kube-controller-manager.yaml
-          systemctl restart kubelet
-          ```
+          kubeadm init \
+              --kubernetes-version=v1.25.6 \
+              --pod-network-cidr=10.244.0.0/16 \
+              --cri-socket unix:///var/run/cri-dockerd.sock \
+              && systemctl restart kubelet
+           ```
     * copy k8s config
         + ```shell
-          mkdir -p $HOME/.kube \
-              && cp /etc/kubernetes/admin.conf $HOME/.kube/config \
-              && chown $(id -u):$(id -g) $HOME/.kube/config
-          ```
-    * copy [calico.yaml](../resources/calico.yaml.md) as file `/tmp/calico.yaml` and apply it to k8s cluster
-        + ```shell
-          kubectl apply -f /tmp/calico.yaml
-          ```
-    * wait for all pods in `kube-system` to be ready
-        + ```shell
-          kubectl -n kube-system wait --for=condition=ready pod --all
-          ```
+           mkdir -p $HOME/.kube \
+               && cp /etc/kubernetes/admin.conf $HOME/.kube/config \
+               && chown $(id -u):$(id -g) $HOME/.kube/config
+           ```
     * download specific helm binary
         + ```shell
-          # mirror of https://get.helm.sh
-          BASE_URL=https://resource-ops.lab.zjvis.net:32443/binary/helm \
-              && curl -LO ${BASE_URL}/helm-v3.6.2-linux-amd64.tar.gz \
-              && tar zxvf helm-v3.6.2-linux-amd64.tar.gz linux-amd64/helm \
-              && mkdir -p $HOME/bin \
-              && mv linux-amd64/helm $HOME/bin/helm \
-              && rm -rf linux-amd64/ helm-v3.6.2-linux-amd64.tar.gz
-
+           BASE_URL=http://localhost:8080/binary/helm \
+               && curl -LO ${BASE_URL}/helm-v3.6.2-linux-amd64.tar.gz \
+               && tar zxvf helm-v3.6.2-linux-amd64.tar.gz linux-amd64/helm \
+               && mkdir -p $HOME/bin \
+               && mv linux-amd64/helm $HOME/bin/helm \
+               && rm -rf linux-amd64/ helm-v3.6.2-linux-amd64.tar.gz
+           ```
+    * copy [tigera-operator.values.yaml](../resources/tigera-operator.values.yaml.md) as
+      file `/tmp/tigera-operator.values.yaml`
+    * install tigera-operator
+        + ```shell
+          helm install \
+              --create-namespace --namespace calico-system \
+              tigera-operator \
+              http://localhost:8080/charts/tigera-operator-v3.25.0.tgz \
+              --values /tmp/tigera-operator.values.yaml \
+              --atomic
+          ```
+    * wait for all pods to be ready
+        + ```shell
+          kubectl -n calico-system wait --for=condition=ready pod --all
+          kubectl -n kube-system wait --for=condition=ready pod --all
+          kubectl wait --for=condition=ready node --all
           ```

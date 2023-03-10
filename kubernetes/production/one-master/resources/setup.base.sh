@@ -2,8 +2,7 @@
 
 set -e
 set -x
-# install docker
-$(if [ "8" == "$(rpm --eval '%{centos_ver}')" ]; then echo dnf; else echo yum; fi) install -y device-mapper-persistent-data lvm2 docker-ce kubelet-1.23.3-0 kubeadm-1.23.3-0 kubectl-1.23.3-0 python3 iproute-tc \
+$(if [ "8" == "$(rpm --eval '%{centos_ver}')" ]; then echo dnf; else echo yum; fi) install -y device-mapper-persistent-data lvm2 docker-ce nfs-utils kubelet-1.25.6-0 kubeadm-1.25.6-0 kubectl-1.25.6-0 python3 iproute-tc \
     && sed -i -Ee 's#^(ExecStart=/usr/bin/dockerd .*$)#\1 --exec-opt native.cgroupdriver=systemd#g' /usr/lib/systemd/system/docker.service \
     && systemctl enable docker \
     && systemctl daemon-reload \
@@ -22,8 +21,8 @@ EOF
 cat > /etc/sysctl.d/k8s.conf <<EOF
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
 EOF
 sysctl --system
-# install
 systemctl enable kubelet
 systemctl start kubelet
