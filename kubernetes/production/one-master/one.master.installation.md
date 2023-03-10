@@ -149,3 +149,7 @@
           kubectl -n kube-system wait --for=condition=ready pod --all
           kubectl wait --for=condition=ready node --all
           ```
+13. remove master no schedule taint
+    * ```shell
+      kubectl taint nodes master.geekcity.tech node-role.kubernetes.io/control-plane:NoSchedule-
+      ```
