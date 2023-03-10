@@ -1,0 +1,24 @@
+installCRDs: true
+image:
+  registry: quay.io
+  repository: jetstack/cert-manager-controller
+  tag: v1.5.4
+  pullPolicy: IfNotPresent
+webhook:
+  image:
+    registry: quay.io
+    repository: jetstack/cert-manager-webhook
+    tag: v1.5.4
+    pullPolicy: IfNotPresent
+cainjector:
+  image:
+    registry: quay.io
+    repository: jetstack/cert-manager-cainjector
+    tag: v1.5.4
+    pullPolicy: IfNotPresent
+startupapicheck:
+  image:
+    registry: quay.io
+    repository: jetstack/cert-manager-ctl
+    tag: v1.5.4
+    pullPolicy: IfNotPresent

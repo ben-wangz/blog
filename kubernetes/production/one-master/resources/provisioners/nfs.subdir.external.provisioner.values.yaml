@@ -1,0 +1,22 @@
+image:
+  repository: k8s.gcr.io/sig-storage/nfs-subdir-external-provisioner
+  tag: v4.0.2
+  pullPolicy: IfNotPresent
+imagePullSecrets: [ ]
+nfs:
+  server: 051c649500-wdc91.cn-hangzhou.nas.aliyuncs.com
+  path: /
+  mountOptions:
+    - vers=4
+    - minorversion=0
+    - rsize=1048576
+    - wsize=1048576
+    - hard
+    - timeo=600
+    - retrans=2
+    - noresvport
+  volumeName: nfs-subdir-external-provisioner-nas
+  reclaimPolicy: Retain
+storageClass:
+  create: true
+  name: nfs-external-nas

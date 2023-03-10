@@ -1,0 +1,23 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: alidns-webhook-letsencrypt
+spec:
+  acme:
+    email: ben.wangz@foxmail.com
+    privateKeySecretRef:
+      name: alidns-webhook-letsencrypt
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+      - dns01:
+          webhook:
+            config:
+              accessTokenSecretRef:
+                key: access-token
+                name: alidns-webhook-secrets
+              regionId: cn-beijing
+              secretKeySecretRef:
+                key: secret-key
+                name: alidns-webhook-secrets
+            groupName: aliyun.geekcity.tech
+            solverName: alidns-solver

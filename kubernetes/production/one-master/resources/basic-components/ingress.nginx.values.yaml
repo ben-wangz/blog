@@ -1,0 +1,30 @@
+controller:
+  image:
+    registry: k8s.gcr.io
+    image: ingress-nginx/controller
+    tag: "v1.0.3"
+    digest: ""
+  service:
+    type: NodePort
+    nodePorts:
+      http: 32080
+      https: 32443
+      tcp:
+        8080: 32808
+  admissionWebhooks:
+    patch:
+      image:
+        registry: k8s.gcr.io
+        image: ingress-nginx/kube-webhook-certgen
+        tag: v1.0
+        digest: ""
+        pullPolicy: IfNotPresent
+defaultBackend:
+  enabled: false
+  name: defaultbackend
+  image:
+    registry: k8s.gcr.io
+    image: defaultbackend-amd64
+    tag: "1.5"
+    pullPolicy: IfNotPresent
+imagePullSecrets: [ ]

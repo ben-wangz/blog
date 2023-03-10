@@ -1,0 +1,1 @@
+[minio.for.provisioner.values.yaml](minio.for.provisioner.values.yaml ':include')
