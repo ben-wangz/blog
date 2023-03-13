@@ -10,8 +10,8 @@
           "docker.io_bitnami_minio-client_2022.8.11-debian-11-r3.dim" \
           "docker.io_bitnami_bitnami-shell_11-debian-11-r28.dim"
       do
-          IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE
-          docker image load -i $IMAGE_FILE
+          IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE \
+              && docker image load -i $IMAGE_FILE
       done
       ```
 3. install by helm

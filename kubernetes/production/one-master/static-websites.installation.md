@@ -21,8 +21,8 @@
       for IMAGE in "docker.io_bitnami_nginx_1.23.3-debian-11-r33.dim" \
           "docker.io_bitnami_git_2.39.2-debian-11-r9.dim"
       do
-          IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE
-          docker image load -i $IMAGE_FILE
+          IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE \
+              && docker image load -i $IMAGE_FILE
       done
       ```
 3. install by helm
@@ -44,8 +44,8 @@
       for IMAGE in "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim" \
           "docker.io_bitnami_git_2.39.2-debian-11-r9.dim"
       do
-          IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE
-          docker image load -i $IMAGE_FILE
+          IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE \
+              && docker image load -i $IMAGE_FILE
       done
       ```
 3. install by helm

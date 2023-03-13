@@ -1,0 +1,7 @@
+tigeraOperator:
+  image: tigera/operator
+  version: v1.29.0
+  registry: quay.io
+calicoctl:
+  image: docker.io/calico/ctl
+  tag: v3.25.0

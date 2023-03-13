@@ -5,6 +5,13 @@ ingress:
   enabled: false
 persistence:
   enabled: false
+extraEnvVars:
+  - name: REGISTRY_AUTH
+    value: "htpasswd"
+  - name: REGISTRY_AUTH_HTPASSWD_REALM
+    value: "Registry Realm"
+  - name: REGISTRY_AUTH_HTPASSWD_PATH
+    value: "/auth/htpasswd"
 extraVolumeMounts:
   - name: auth
     mountPath: /auth

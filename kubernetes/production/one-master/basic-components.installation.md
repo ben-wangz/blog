@@ -10,8 +10,8 @@
           "k8s.gcr.io_ingress-nginx_kube-webhook-certgen_v1.0.dim" \
           "k8s.gcr.io_defaultbackend-amd64_1.5.dim"
       do
-          IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE
-          docker image load -i $IMAGE_FILE
+          IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE \
+              && docker image load -i $IMAGE_FILE
       done
       ```
 3. install ingress-nginx with helm
@@ -37,8 +37,8 @@
           "quay.io_jetstack_cert-manager-acmesolver_v1.5.4.dim" \
           "ghcr.io_devmachine-fr_cert-manager-alidns-webhook_cert-manager-alidns-webhook_0.2.0.dim"
       do
-          IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE
-          docker image load -i $IMAGE_FILE
+          IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE \
+              && docker image load -i $IMAGE_FILE
       done
       ```
 3. install cert-manager with helm
@@ -85,8 +85,8 @@
           "docker.io_busybox_1.33.1-uclibc.dim" \
           "docker.io_httpd_2.4.56-alpine3.17.dim"
       do
-          IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE
-          docker image load -i $IMAGE_FILE
+          IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE \
+              && docker image load -i $IMAGE_FILE
       done
       ```
 3. create `docker-registry-secret`
@@ -130,9 +130,10 @@
     * ```shell
       IMAGE=busybox:1.33.1-uclibc \
           && DOCKER_REGISTRY_SERVICE=docker.registry.geekcity.tech:32443 \
-          && docker login -u admin -p $PASSWORD $DOCKER_REGISTRY_SERVICE
           && docker pull $IMAGE \
           && docker tag $IMAGE $DOCKER_REGISTRY_SERVICE/$IMAGE \
+          && PASSWORD=$(cat /root/docker.registry.password) \
+          && docker login -u admin -p $PASSWORD $DOCKER_REGISTRY_SERVICE \
           && docker push $DOCKER_REGISTRY_SERVICE/$IMAGE \
           && docker image rm $DOCKER_REGISTRY_SERVICE/$IMAGE \
           && docker pull $DOCKER_REGISTRY_SERVICE/$IMAGE
