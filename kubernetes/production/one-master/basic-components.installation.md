@@ -123,6 +123,8 @@
 6. wait for certificate named `docker-registry-geekcity-tech-tls` to be ready
     * ```shell
       kubectl -n basic-components get certificate -w
+      ```
+    * ```shell
       # check tls secret
       kubectl -n basic-components get secret docker-registry-geekcity-tech-tls
       ```
@@ -136,5 +138,8 @@
           && docker login -u admin -p $PASSWORD $DOCKER_REGISTRY_SERVICE \
           && docker push $DOCKER_REGISTRY_SERVICE/$IMAGE \
           && docker image rm $DOCKER_REGISTRY_SERVICE/$IMAGE \
+          && docker pull $DOCKER_REGISTRY_SERVICE/$IMAGE
+      # assert failed
+      docker logout $DOCKER_REGISTRY_SERVICE \
           && docker pull $DOCKER_REGISTRY_SERVICE/$IMAGE
       ```

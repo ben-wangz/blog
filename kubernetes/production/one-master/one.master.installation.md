@@ -112,7 +112,7 @@
           helm install \
               --create-namespace --namespace calico-system \
               tigera-operator \
-              http://localhost:8080/charts/tigera-operator-v3.25.0.tgz \
+              /root/data/charts/tigera-operator-v3.25.0.tgz \
               --values /tmp/tigera-operator.values.yaml \
               --atomic
           ```
