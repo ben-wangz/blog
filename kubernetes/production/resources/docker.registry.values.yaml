@@ -1,9 +1,0 @@
-image:
-  repository: localhost:5000/registry
-  tag: 2.7.1
-ingress:
-  enabled: false
-persistence:
-  enabled: true
-  size: 10Gi
-  storageClass: standard

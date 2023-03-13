@@ -1,1 +1,0 @@
-[ingress.nginx.values.yaml](ingress.nginx.values.yaml ':include')
