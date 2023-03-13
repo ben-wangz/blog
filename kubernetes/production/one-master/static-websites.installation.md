@@ -41,7 +41,7 @@
 2. prepare images
     * ```shell
       DOCKER_IMAGE_PATH=/root/data/docker-images
-      for IMAGE in "docker.io_bitnami_nginx_1.21.3-debian-10-r29.dim" \
+      for IMAGE in "docker.io_bitnami_nginx_1.23.3-debian-11-r33.dim" \
           "docker.io_bitnami_git_2.39.2-debian-11-r9.dim"
       do
           IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE \
