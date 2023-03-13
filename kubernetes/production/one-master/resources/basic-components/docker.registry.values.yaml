@@ -5,3 +5,14 @@ ingress:
   enabled: false
 persistence:
   enabled: false
+extraVolumeMounts:
+  - name: auth
+    mountPath: /auth
+    readOnly: true
+extraVolumes:
+  - name: auth
+    secret:
+      secretName: docker-registry-secret
+      items:
+        - key: htpasswd
+          path: htpasswd

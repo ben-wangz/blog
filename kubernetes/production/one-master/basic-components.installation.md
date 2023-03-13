@@ -82,13 +82,29 @@
     * ```shell
       DOCKER_IMAGE_PATH=/root/data/docker-images
       for IMAGE in "docker.io_registry_2.7.1.dim" \
-          "docker.io_busybox_1.33.1-uclibc.dim"
+          "docker.io_busybox_1.33.1-uclibc.dim" \
+          "docker.io_httpd_2.4.56-alpine3.17.dim"
       do
           IMAGE_FILE=$DOCKER_IMAGE_PATH/$IMAGE
           docker image load -i $IMAGE_FILE
       done
       ```
-3. install by helm
+3. create `docker-registry-secret`
+    * ```shell
+      # create PASSWORD
+      PASSWORD=($((echo -n $RANDOM | md5sum 2>/dev/null) || (echo -n $RANDOM | md5 2>/dev/null)))
+      # Make htpasswd
+      docker run --rm --entrypoint htpasswd httpd:2.4.56-alpine3.17 -Bbn admin ${PASSWORD} > ${PWD}/htpasswd
+      # NOTE: username should have at least 6 characters
+      kubectl -n basic-components create secret generic docker-registry-secret \
+          --from-literal=username=admin \
+          --from-literal=password=${PASSWORD} \
+          --from-file=${PWD}/htpasswd -o yaml --dry-run=client \
+          | kubectl -n basic-components apply -f -
+      rm -f ${PWD}/htpasswd
+      echo $PASSWORD > /root/docker.registry.password && chmod 600 /root/docker.registry.password
+      ```
+4. install by helm
     * ```shell
       helm install \
           --create-namespace --namespace basic-components \
@@ -97,23 +113,24 @@
           --values docker.registry.values.yaml \
           --atomic
       ```
-4. configure ingress
+5. configure ingress
     * NOTE: ingress in helm chart is not compatible enough for us, we have to install ingress manually
     * prepare [docker.registry.ingress.yaml](resources/basic-components/docker.registry.ingress.yaml.md)
     * apply ingress
         + ```shell
           kubectl -n basic-components apply -f docker.registry.ingress.yaml
           ```
-5. wait for certificate named `docker-registry-geekcity-tech-tls` to be ready
+6. wait for certificate named `docker-registry-geekcity-tech-tls` to be ready
     * ```shell
       kubectl -n basic-components get certificate -w
       # check tls secret
       kubectl -n basic-components get secret docker-registry-geekcity-tech-tls
       ```
-6. check with docker client
+7. check with docker client
     * ```shell
       IMAGE=busybox:1.33.1-uclibc \
           && DOCKER_REGISTRY_SERVICE=docker.registry.geekcity.tech:32443 \
+          && docker login -u admin -p $PASSWORD $DOCKER_REGISTRY_SERVICE
           && docker pull $IMAGE \
           && docker tag $IMAGE $DOCKER_REGISTRY_SERVICE/$IMAGE \
           && docker push $DOCKER_REGISTRY_SERVICE/$IMAGE \
