@@ -1,15 +1,18 @@
 # HA cluster of kubernetes
+
 ## Overview
+
 - [HA cluster of kubernetes](#ha-cluster-of-kubernetes)
   - [Overview](#overview)
   - [install kubernetes with kubespray](#install-kubernetes-with-kubespray)
   - [install argocd](#install-argocd)
-  - [install basic components](#install-basic-components)
-    - [install ingress-nginx](#install-ingress-nginx)
+  - [install ingress-nginx](#install-ingress-nginx)
   - [install storage components](#install-storage-components)
   - [install cert-manager](#install-cert-manager)
   - [install docker-registry](#install-docker-registry)
+
 ## install kubernetes with kubespray
+
 1. reference: [kubespray](https://github.com/kubernetes-sigs/kubespray)
 2. prepare nodes for kubernetes cluster
     * for example we have 3 nodes: node1(192.168.123.47), node2(192.168.123.151), node3(192.168.123.46)
@@ -64,7 +67,9 @@
           && sudo cp /etc/kubernetes/admin.conf ~/.kube/config \
           && sudo chown ben.wangz:ben.wangz ~/.kube/config
       ```
+
 ## install argocd
+
 1. argocd will be used to install all the other components in gitOps way
 2. prepare [argocd.values.yaml](resources/argocd/argocd.values.yaml.md)
 3. install argocd with helm
@@ -100,8 +105,9 @@
     * ```shell
       argocd account update-password
       ```
-## install basic components
-### install ingress-nginx
+
+## install ingress-nginx
+
 1. prepare [ingres-nginx.application.yaml](resources/argocd/applications/ingress-nginx/application.yaml.md)
 2. apply the application to k8s with kubectl
     * ```shell
@@ -111,7 +117,9 @@
     * ```shell
       argocd app sync ingress-nginx-application
       ```
+
 ## install storage components
+
 1. take nfs provisioner as example
 2. suppose we have a nfs server at node-storage
     * how to start nfs service with docker: [docker-nfsv4](../../../docker/software/nfs.md)
@@ -124,7 +132,9 @@
     * ```shell
       argocd app sync nfs-provisioner-application
       ```
+
 ## install cert-manager
+
 1. prepare [cert-manager.application.yaml](resources/argocd/applications/cert-manager/application.yaml.md)
 2. apply the application(cert-manager) to k8s with kubectl
     * ```shell
@@ -180,7 +190,9 @@
     * ```shell
       kubectl -n basic-components apply -f alidns.webhook.staging.issuer.yaml
       ```
+
 ## install docker-registry
+
 1. prepare [docker-registry.application.yaml](resources/argocd/applications/docker-registry/application.yaml.md)
 2. prepare secrets
     * ```shell
