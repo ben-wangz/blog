@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: alidns-webhook-application
+spec:
+  project: default
+  sources:
+  - repoURL: https://devmachine-fr.github.io/cert-manager-alidns-webhook
+    chart: alidns-webhook
+    targetRevision: 0.7.0
+    helm:
+      releaseName: basic-alidns-webhook
+      values: |
+        groupName: dev.geekcity.tech
+        certManager:
+          namespace: basic-components
+          serviceAccountName: basic-cert-manager
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: basic-components

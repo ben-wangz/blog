@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nfs-provisioner-application
+spec:
+  project: default
+  sources:
+  - repoURL: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
+    chart: nfs-subdir-external-provisioner
+    targetRevision: 4.0.18
+    helm:
+      releaseName: basic-nfs-provisioner
+      values: |
+        image:
+          repository: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner
+          tag: v4.0.2
+          pullPolicy: IfNotPresent
+        nfs:
+          server: 192.168.123.230
+          path: /
+          mountOptions:
+        storageClass:
+          create: true
+          defaultClass: true
+          name: nfs-external
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: basic-components

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: my-argo-cd
+    app.kubernetes.io/name: argocd-server-external
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v2.8.4
+  name: argocd-server-external
+spec:
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 30443
+  selector:
+    app.kubernetes.io/instance: my-argo-cd
+    app.kubernetes.io/name: argocd-server
+  type: NodePort
