@@ -18,6 +18,7 @@
 4. remove all docker images not used
     * ```shell
       docker image prune
+      #crictl rmi --prune
       ```
 5. remove all docker images not referenced by any container
     * ```shell

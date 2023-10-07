@@ -6,10 +6,12 @@
   - [Overview](#overview)
   - [install kubernetes with kubespray](#install-kubernetes-with-kubespray)
   - [install argocd](#install-argocd)
+  - [prepare namespace for basic components](#prepare-namespace-for-basic-components)
   - [install ingress-nginx](#install-ingress-nginx)
   - [install storage components](#install-storage-components)
   - [install cert-manager](#install-cert-manager)
   - [install docker-registry](#install-docker-registry)
+  - [install vcluster](#install-vcluster)
 
 ## install kubernetes with kubespray
 
@@ -67,6 +69,16 @@
           && sudo cp /etc/kubernetes/admin.conf ~/.kube/config \
           && sudo chown ben.wangz:ben.wangz ~/.kube/config
       ```
+9. download helm client
+    * ```shell
+      # asuming that $HOME/bin is in $PATH
+      mkdir -p $HOME/bin \
+          && curl -sSL -o $HOME/bin/helm.tar.gz https://get.helm.sh/helm-v3.7.0-linux-amd64.tar.gz \
+          && tar -zxf $HOME/bin/helm.tar.gz -C $HOME/bin/ \
+          && mv $HOME/bin/linux-amd64/helm $HOME/bin/ \
+          && chmod u+x $HOME/bin/helm \
+          && rm -rf $HOME/bin/linux-amd64 $HOME/bin/helm.tar.gz
+      ```
 
 ## install argocd
 
@@ -79,15 +91,16 @@
           --create-namespace \
           --version 5.46.7 \
           --repo https://argoproj.github.io/argo-helm \
-          --values values.yaml \
+          --values argocd.values.yaml \
           --atomic
       ```
 4. prepare [argocd-server-external.yaml](resources/argocd/argocd-server-external.yaml.md) and apply it
     * ```shell
-      kubectl apply -f argocd-server-external.yaml
+      kubectl -n argocd apply -f argocd-server-external.yaml
       ```
 5. download argocd cli
     * ```shell
+      # asuming that $HOME/bin is in $PATH
       mkdir -p $HOME/bin \
           && curl -sSL -o $HOME/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v2.8.4/argocd-linux-amd64 \
           && chmod u+x $HOME/bin/argocd
@@ -105,6 +118,12 @@
     * ```shell
       argocd account update-password
       ```
+
+## prepare namespace for basic components
+
+* ```shell
+  kubectl create namespace basic-components
+  ```
 
 ## install ingress-nginx
 
@@ -233,4 +252,32 @@
       docker logout $DOCKER_REGISTRY_SERVICE \
           && docker pull $DOCKER_REGISTRY_SERVICE/$IMAGE
 
+      ```
+
+## install vcluster
+
+1. prepare [vcluster.application.yaml](resources/argocd/applications/vcluster/application.yaml.md)
+2. create namespace for vcluster
+    * ```shell
+      kubectl create namespace basic-vcluster
+      ```
+2. apply the application to k8s with kubectl
+    * ```shell
+      kubectl -n argocd apply -f vcluster.application.yaml
+      ```
+3. sync the application with argocd cli
+    * ```shell
+      argocd app sync vcluster-application
+      ```
+4. download vcluster client
+    * ```shell
+      curl -Lo $HOME/bin/vcluster "https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-amd64" \
+          && chmod u+x $HOME/bin/vcluster
+      ```
+5. how to connect to specific vcluster
+    * ```shell
+      vcluster connect basic-vcluster -- bash
+      # communicate with vcluster using kubectl/helm
+      # kubectl get pods -A
+      # just using `exit` to disconnect from vcluster
       ```
