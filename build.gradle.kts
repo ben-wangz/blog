@@ -12,7 +12,7 @@ tasks.register<Exec>("startDocsNginxDocker") {
             "-p", "$port:80",
             "-v", "$docsPath:/usr/share/nginx/html:ro",
             "-v", "$docsPath/offline-docsify/default.conf:/etc/nginx/conf.d/default.conf:ro",
-            "-d", "nginx:1.19.9-alpine",
+            "-d", "docker.io/nginx:1.19.9-alpine",
         )
 }
 
