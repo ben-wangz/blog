@@ -21,4 +21,4 @@ spec:
           image: rancher/k3s:v1.23.5-k3s1
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: basic-components
+    namespace: basic-vcluster

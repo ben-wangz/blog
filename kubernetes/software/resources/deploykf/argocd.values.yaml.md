@@ -1,0 +1,1 @@
+[argocd.values.yaml](argocd.values.yaml ':include')
