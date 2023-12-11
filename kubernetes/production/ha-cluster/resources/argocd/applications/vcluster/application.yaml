@@ -13,7 +13,8 @@ spec:
       values: |
         etcd:
           replicas: 3
-          className: nfs-external
+          storage:
+            className: nfs-external
         controller:
           replicas: 2
         vcluster:

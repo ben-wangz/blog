@@ -33,13 +33,13 @@
       ```
 4. clone kubespray with specific version(v2.23.0)
     * ```shell
-      KUBESPRAY_DIREACTORY=$HOME/kubespray
+      KUBESPRAY_DIREACTORY=$HOME/k8s-cluster/kubespray
       git clone -b v2.23.0 https://github.com/kubernetes-sigs/kubespray $KUBESPRAY_DIREACTORY
       cd $KUBESPRAY_DIREACTORY
       ```
 5. install python dependencies for kubespray
     * ```shell
-      VENV_DIRECTORY=$HOME/kubespray-venv
+      VENV_DIRECTORY=$HOME/k8s-cluster/kubespray-venv
       python3 -m venv $VENV_DIRECTORY && source $VENV_DIRECTORY/bin/activate
       pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple/ \
           && pip install -U -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
@@ -67,7 +67,8 @@
     * ```shell
       mkdir ~/.kube \
           && sudo cp /etc/kubernetes/admin.conf ~/.kube/config \
-          && sudo chown ben.wangz:ben.wangz ~/.kube/config
+          && sudo chown ben.wangz:ben.wangz ~/.kube/config \
+          && chmod 600 ~/.kube/config
       ```
 9. download helm client
     * ```shell
@@ -216,9 +217,9 @@
 2. prepare secrets
     * ```shell
       # create PASSWORD
-      PASSWORD=($((echo -n $RANDOM | md5sum 2>/dev/null) || (echo -n $RANDOM | md5 2>/dev/null)))
+      PASSWORD=($((echo -n $RANDOM | md5sum 2>/dev/null) | awk '{print $1}' || (echo -n $RANDOM | md5 2>/dev/null)))
       # Make htpasswd
-      podman run --rm --entrypoint htpasswd httpd:2.4.56-alpine3.17 -Bbn admin ${PASSWORD} > ${PWD}/htpasswd
+      podman run --rm --entrypoint htpasswd docker.io/httpd:2.4.56-alpine3.17 -Bbn admin ${PASSWORD} > ${PWD}/htpasswd
       # NOTE: username should have at least 6 characters
       kubectl -n basic-components create secret generic docker-registry-secret \
           --from-literal=username=admin \
@@ -240,18 +241,17 @@
     * ```shell
       IMAGE=busybox:1.33.1-uclibc \
           && DOCKER_REGISTRY_SERVICE=docker-registry.dev.geekcity.tech:32443 \
-          && docker pull $IMAGE \
-          && docker tag $IMAGE $DOCKER_REGISTRY_SERVICE/$IMAGE \
+          && podman pull $IMAGE \
+          && podman tag $IMAGE $DOCKER_REGISTRY_SERVICE/$IMAGE \
           && PASSWORD=$(cat docker.registry.password) \
-          && docker login -u admin -p $PASSWORD $DOCKER_REGISTRY_SERVICE \
-          && docker push $DOCKER_REGISTRY_SERVICE/$IMAGE \
-          && docker image rm $DOCKER_REGISTRY_SERVICE/$IMAGE \
-          && docker pull $DOCKER_REGISTRY_SERVICE/$IMAGE \
+          && podman login -u admin -p $PASSWORD $DOCKER_REGISTRY_SERVICE \
+          && podman push $DOCKER_REGISTRY_SERVICE/$IMAGE \
+          && podman image rm $DOCKER_REGISTRY_SERVICE/$IMAGE \
+          && podman pull $DOCKER_REGISTRY_SERVICE/$IMAGE \
           && echo success
       # assert failed
-      docker logout $DOCKER_REGISTRY_SERVICE \
-          && docker pull $DOCKER_REGISTRY_SERVICE/$IMAGE
-
+      podman logout $DOCKER_REGISTRY_SERVICE \
+          && podman pull $DOCKER_REGISTRY_SERVICE/$IMAGE
       ```
 
 ## install vcluster

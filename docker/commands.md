@@ -28,3 +28,16 @@
     * ```shell
       docker run --rm wangz2019/jiuying-htpasswd:1.2.0 my-username my-password > htpasswd
       ```
+7. generate gradle projects
+    * ```shell
+      docker run --rm \
+          -v $(pwd):/app \
+          -w /app \
+          docker.io/gradle:8.4.0-jdk11-focal \
+          gradle init \
+              --dsl kotlin \
+              --type java-application \
+              --project-name hello-world \
+              --package com.example.helloworld \
+              --test-framework junit-jupiter
+      ```

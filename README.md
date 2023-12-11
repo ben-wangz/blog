@@ -66,7 +66,7 @@
 ## about us
 
 1. [about this site](about_site.md)
-2. [about me](ben.wangz.md)
+2. [about me](about-me/ben.wangz.md)
 
 ## others
 

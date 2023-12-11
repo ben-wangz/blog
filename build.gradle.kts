@@ -4,6 +4,9 @@ val dockerCommand = "podman"
 val port = 8083
 
 tasks.register<Exec>("startDocsNginxDocker") {
+    doFirst {
+        println("Executing command: ${commandLine.joinToString(" ")}")
+    }
     executable = dockerCommand
     args =
         listOf(
@@ -17,6 +20,9 @@ tasks.register<Exec>("startDocsNginxDocker") {
 }
 
 tasks.register<Exec>("stopDocsNginxDocker") {
+    doFirst {
+        println("Executing command: ${commandLine.joinToString(" ")}")
+    }
     executable = dockerCommand
     args = listOf("kill", containerName)
 }

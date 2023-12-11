@@ -12,7 +12,7 @@
           -p 2049:2049 \
           -v $(pwd)/data/nfs/data:/data \
           -v $(pwd)/data/nfs/exports:/etc/exports:ro \
-          -d erichough/nfs-server:2.2.1
+          -d docker.io/erichough/nfs-server:2.2.1
       ```
 2. test
     * ```shell

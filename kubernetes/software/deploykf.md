@@ -78,4 +78,18 @@
       argocd app sync -l "app.kubernetes.io/component=kubeflow-dependencies"
       argocd app sync -l "app.kubernetes.io/component=kubeflow-tools"
       ```
+6. port-forwarding
+    * ```shell
+      kubectl port-forward --namespace "deploykf-istio-gateway" svc/deploykf-gateway 8080:http 8443:https --address 0.0.0.0
+      ```
+7. configure you hosts, add following lines to `/etc/hosts`, you may change `127.0.0.1` to the ip of your cluster node
+    * ```text
+      127.0.0.1 deploykf.example.com
+      127.0.0.1 argo-server.deploykf.example.com
+      127.0.0.1 minio-api.deploykf.example.com
+      127.0.0.1 minio-console.deploykf.example.com
+      ```
+8. open browser and visit [deploykf.example.com](https://deploykf.example.com)
+    * username: user1@example.com
+    * password: user1
 
