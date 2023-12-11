@@ -2,7 +2,7 @@
 
 * backup database
     + ```shell
-      docker run -it mysql:8.0.25 mysqldump \
+      podman run -it docker.io/library/mysql:8.0.25 mysqldump \
           -h target.database.host.loccal \
           -P 3006 \
           -u root \
@@ -12,7 +12,7 @@
           | gzip > db.sql.$(date +%s_%Y%m%d_%H_%M_%S).gz
       ```
     + ```shell
-      docker run -it mysql:8.0.25 mysqldump \
+      podman run -it docker.io/library/mysql:8.0.25 mysqldump \
           -h target.database.host.loccal \
           -P 3006 \
           -u root \

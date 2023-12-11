@@ -1,5 +1,12 @@
 ## docker installation
 
+### podman is recommended to replace docker
+* [installation](https://podman.io/docs/installation)
+* installation is simple for fedora
+    + ```shell
+      sudo dnf install podman
+      ```
+
 ### install with CentOS 8
 
 * ```shell
