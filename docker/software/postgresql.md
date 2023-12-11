@@ -1,6 +1,7 @@
 ### postgresql
 
 * ```shell
+  mkdir $(pwd)/postgresql-data
   podman run --rm --name postgresql \
       -p 5432:5432 \
       -e POSTGRES_PASSWORD=postgresql \
