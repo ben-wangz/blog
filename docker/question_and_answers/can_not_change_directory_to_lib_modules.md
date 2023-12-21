@@ -12,7 +12,7 @@
       ```
 * solution
     + ```shell
-      modprobe ip_tables && echo 'ip_tables' >> /etc/modules
+      modprobe ip_tables && echo 'ip_tables' >> /etc/modules-load.d/docker.conf
       ```
 * reference
     + https://stackoverflow.com/questions/21983554/iptables-v1-4-14-cant-initialize-iptables-table-nat-table-does-not-exist-d

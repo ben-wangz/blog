@@ -1,0 +1,59 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: docker-registry-application
+  namespace: {{ .Values.spec.namespace }}
+spec:
+  project: {{ .Values.spec.project }}
+  sources:
+  - repoURL: https://helm.twun.io
+    chart: docker-registry
+    targetRevision: 2.2.2
+    helm:
+      releaseName: docker-registry
+      values: |
+        image:
+          repository: registry
+          tag: 2.8.1
+          pullPolicy: IfNotPresent
+        ingress:
+          enabled: true
+          className: nginx
+          path: /
+          hosts:
+            - docker-registry.dev.geekcity.tech
+          annotations:
+            kubernetes.io/ingress.class: nginx
+            cert-manager.io/cluster-issuer: alidns-webhook-letsencrypt
+            kubernetes.io/tls-acme: "true"
+          tls:
+            - hosts:
+              - docker-registry.dev.geekcity.tech
+              secretName: docker-registry-geekcity-tech-tls
+        persistence:
+          accessMode: 'ReadWriteOnce'
+          enabled: true
+          size: 10Gi
+          storageClass: nfs-external
+        storage: filesystem
+        extraEnvVars:
+          - name: REGISTRY_AUTH
+            value: "htpasswd"
+          - name: REGISTRY_AUTH_HTPASSWD_REALM
+            value: "Registry Realm"
+          - name: REGISTRY_AUTH_HTPASSWD_PATH
+            value: "/auth/htpasswd"
+        extraVolumeMounts:
+          - name: auth
+            mountPath: /auth
+            readOnly: true
+        extraVolumes:
+          - name: auth
+            secret:
+              secretName: docker-registry-secret
+              items:
+                - key: htpasswd
+                  path: htpasswd
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: {{ .Values.spec.destination.namespace }}

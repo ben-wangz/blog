@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx-application
+  namespace: basic-components
+spec:
+  project: {{ .Values.spec.project }}
+  sources:
+  - repoURL: https://kubernetes.github.io/ingress-nginx
+    chart: ingress-nginx
+    targetRevision: 4.8.0
+    helm:
+      releaseName: ingress-nginx
+      values: |
+        controller:
+          image:
+            registry: registry.k8s.io
+            image: ingress-nginx/controller
+            tag: "v1.9.0"
+            pullPolicy: IfNotPresent
+          service:
+            enabled: true
+            type: NodePort
+            nodePorts:
+              http: 32080
+              https: 32443
+              tcp:
+                8080: 32808
+          admissionWebhooks:
+            enabled: true
+            patch:
+              enabled: true
+              image:
+                registry: registry.k8s.io
+                image: ingress-nginx/kube-webhook-certgen
+                tag: v20230407
+                pullPolicy: IfNotPresent
+        defaultBackend:
+          enabled: false
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: basic-components

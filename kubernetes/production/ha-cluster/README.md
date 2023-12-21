@@ -27,24 +27,12 @@
         + ```shell
           sudo systemctl stop firewalld && sudo systemctl disable firewalld
           ```
-3. install git
+3. [prepare offline resource for kubespray](../offline-resource-prepare/README.md)
+4. prepare environment for kubespray
     * ```shell
-      sudo dnf -y install git
+      podman run --rm -v $HOME/.ssh:/root/.ssh -it quay.io/kubespray/kubespray:v2.23.1 bash
       ```
-4. clone kubespray with specific version(v2.23.0)
-    * ```shell
-      KUBESPRAY_DIREACTORY=$HOME/k8s-cluster/kubespray
-      git clone -b v2.23.0 https://github.com/kubernetes-sigs/kubespray $KUBESPRAY_DIREACTORY
-      cd $KUBESPRAY_DIREACTORY
-      ```
-5. install python dependencies for kubespray
-    * ```shell
-      VENV_DIRECTORY=$HOME/k8s-cluster/kubespray-venv
-      python3 -m venv $VENV_DIRECTORY && source $VENV_DIRECTORY/bin/activate
-      pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple/ \
-          && pip install -U -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
-      ```
-6. generate configurations for kubespray
+5. generate configurations for kubespray
     * ```shell
       cp -rfp inventory/sample inventory/mycluster
       declare -a IPS=(192.168.123.47 192.168.123.151 192.168.123.46)
@@ -57,20 +45,25 @@
       # https://github.com/kubernetes-sigs/kubespray/issues/9948
       vim inventory/mycluster/group_vars/all/all.yml
       ```
+6. reset kubernetes cluster with ansible
+    * ```shell
+      # need to type 'yes'
+      ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root reset.yml
+      ```
 7. install kubernetes cluster with ansible
     * ```shell
-      ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root reset.yml
       # you may have to retry several times to install kubernetes cluster successfully for the bad network
       ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml
       ```
-8. copy configurations for kubectl
+8. exit from container shell after installation
+9. copy configurations for kubectl
     * ```shell
       mkdir ~/.kube \
           && sudo cp /etc/kubernetes/admin.conf ~/.kube/config \
           && sudo chown ben.wangz:ben.wangz ~/.kube/config \
           && chmod 600 ~/.kube/config
       ```
-9. download helm client
+10. download helm client
     * ```shell
       # asuming that $HOME/bin is in $PATH
       mkdir -p $HOME/bin \
