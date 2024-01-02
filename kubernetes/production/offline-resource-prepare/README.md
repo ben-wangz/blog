@@ -4,6 +4,7 @@
 * [prepare offline resource for kubespray installation](#prepare-offline-resource-for-kubespray-installation)
     * [overview](#overview)
     * [container runtime](#container-runtime)
+    * [turn off selinux and firewalld](#turn-off-selinux-and-firewalld)
     * [offline resource directory](#offline-resource-directory)
     * [build inventory for kubespray](#build-inventory-for-kubespray)
     * [download files and images](#download-files-and-images)
@@ -46,11 +47,16 @@
       fi
       ```
 
-## turn off selinux
+## turn off selinux and firewalld
 1. turn off selinux permanently
     * ```shell
       sudo sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
       sudo setenforce 0
+      ```
+2. turn off firewalld permanently
+    * ```shell
+      sudo systemctl stop firewalld
+      sudo systemctl disable firewalld
       ```
 
 ## offline resource directory
@@ -80,7 +86,7 @@
 3. create inventory file
     * ```shell
       INVENTORY_FILE=$INVENTORY_DIRECTORY/single-master/hosts.yaml
-      declare -a IPS=(192.168.123.107)
+      declare -a IPS=(192.168.1.105)
       $CONTAINER_RUNTIME run --rm \
           -v $INVENTORY_DIRECTORY:/my-inventory \
           -e CONFIG_FILE=/my-inventory/single-master/hosts.yaml \
@@ -211,7 +217,7 @@
 ## start registry to serve images
 1. generate ssl
     * ```shell
-      IP_ADDRESS=192.168.1.107
+      IP_ADDRESS=192.168.1.105
       REGISTRY_DIRECTORY=$INVENTORY_DIRECTORY/single-master/registry
       mkdir -p $REGISTRY_DIRECTORY
       cat << EOF > $REGISTRY_DIRECTORY/san.conf
@@ -284,6 +290,7 @@
 1. create YUM_REPO_CONF
     * ```shell
       YUM_REPO_CONF_DIRECTORY=$HOME/kubespray-offline-resource/fedora-38
+      mkdir -p $YUM_REPO_CONF_DIRECTORY
       cat << 'EOF' > $YUM_REPO_CONF_DIRECTORY/fedora.repo
       [fedora]
       name=Fedora $releasever - $basearch
@@ -297,13 +304,56 @@
       gpgcheck=1
       gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
       skip_if_unavailable=False
+      EOF
       ```
 1. create local yum repository
     * ```shell
       YUM_REPOSITORY_DIRECTORY=$HOME/kubespray-offline-resource/yum-repository
+      mkdir -p $YUM_REPOSITORY_DIRECTORY
       $CONTAINER_RUNTIME run --rm \
           -v $YUM_REPOSITORY_DIRECTORY:/yum-repository \
           -v $YUM_REPO_CONF_DIRECTORY:/etc/yum.repos.d:ro \
           -it fedora:38 \
-          bash -c 'dnf install -y createrepo && createrepo /yum-repository'
+          bash -c 'dnf install -y createrepo reposync && reposync -p /yum-repository --repo=fedora --download-metadata'
+      ```
+
+## configure offline settings(NOT FINISHED)
+
+    * ```shell
+      cat << EOF >> $INVENTORY_DIRECTORY/group_vars/all/offline.yml
+      files_repo: "http://$IP_ADDRESS"
+      registry_host: "$IP_ADDRESS:5443"
+      kube_image_repo: "{{ registry_host }}"
+      gcr_image_repo: "{{ registry_host }}"
+      docker_image_repo: "{{ registry_host }}"
+      quay_image_repo: "{{ registry_host }}"
+      github_image_repo: "{{ registry_host }}"
+      kubeadm_download_url: "{{ files_repo }}/release/{{ kube_version }}/bin/linux/{{ image_arch }}/kubeadm"
+      kubectl_download_url: "{{ files_repo }}/release/{{ kube_version }}/bin/linux/{{ image_arch }}/kubectl"
+      kubelet_download_url: "{{ files_repo }}/release/{{ kube_version }}/bin/linux/{{ image_arch }}/kubelet"
+      # etcd is optional if you **DON'T** use etcd_deployment=host
+      etcd_download_url: "{{ files_repo }}/etcd-io/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-{{ image_arch }}.tar.gz"
+      cni_download_url: "{{ files_repo }}/containernetworking/plugins/releases/download/{{ cni_version }}/cni-plugins-linux-{{ image_arch }}-{{ cni_version }}.tgz"
+      crictl_download_url: "{{ files_repo }}/kubernetes-sigs/cri-tools/releases/download/{{ crictl_version }}/crictl-{{ crictl_version }}-{{ ansible_system | lower }}-{{ image_arch }}.tar.gz"
+      # If using Calico
+      calicoctl_download_url: "{{ files_repo }}/projectcalico/calico/releases/download/{{ calico_ctl_version }}/calicoctl-linux-{{ image_arch }}"
+      # If using Calico with kdd
+      calico_crds_download_url: "{{ files_repo }}/projectcalico/calico/archive/{{ calico_version }}.tar.gz"
+      # Containerd
+      containerd_download_url: "{{ files_repo }}/containerd/containerd/releases/download/v{{ containerd_version }}/containerd-{{ containerd_version }}-linux-{{ image_arch }}.tar.gz"
+      runc_download_url: "{{ files_repo }}/opencontainers/runc/releases/download/{{ runc_version }}/runc.{{ image_arch }}"
+      nerdctl_download_url: "{{ files_repo }}/containerd/nerdctl/releases/download/v{{ nerdctl_version }}/nerdctl-{{ nerdctl_version }}-{{ ansible_system | lower }}-{{ image_arch }}.tar.gz"
+      EOF
+      ```
+    * ```shell
+      cat << EOF >>
+      # unfortunately, containerd_registries_mirrors will be ignored if `container_manager=crio`
+      registry_addr: $IP_ADDRESS:5443
+      containerd_registries_mirrors:
+        - prefix: "{{ registry_addr }}"
+          mirrors:
+            - host: "$IP_ADDRESS:5443"
+              capabilities: ["pull", "resolve"]
+              skip_verify: true
+      EOF
       ```

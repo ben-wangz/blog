@@ -16,46 +16,80 @@
 ## install kubernetes with kubespray
 
 1. reference: [kubespray](https://github.com/kubernetes-sigs/kubespray)
-2. prepare nodes for kubernetes cluster
-    * for example we have 3 nodes: node1(192.168.123.47), node2(192.168.123.151), node3(192.168.123.46)
+2. operate nodes with root
+3. prepare nodes for kubernetes cluster
+    * for example we have 3 nodes: node1(192.168.1.47), node2(192.168.1.151), node3(192.168.1.46)
     * ssh no password login for each node
-    * configure sudo for each node
+    * turn off selinux and firewalld for each node
         + ```shell
-          sudo bash -c "echo 'ben.wangz ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/extra"
+          sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config && setenforce 0
           ```
-    * turn off firewalld for each node
         + ```shell
-          sudo systemctl stop firewalld && sudo systemctl disable firewalld
+          systemctl stop firewalld && systemctl disable firewalld
           ```
-3. [prepare offline resource for kubespray](../offline-resource-prepare/README.md)
-4. prepare environment for kubespray
+4. prepare for container runtime environment
     * ```shell
-      podman run --rm -v $HOME/.ssh:/root/.ssh -it quay.io/kubespray/kubespray:v2.23.1 bash
+      dnf -y install podman
+      CONTAINER_RUNTIME=podman
+      KUBESPRAY_IMAGE=quay.io/kubespray/kubespray:v2.23.1
       ```
-5. generate configurations for kubespray
+5. copy templates for kubespray installation
     * ```shell
-      cp -rfp inventory/sample inventory/mycluster
-      declare -a IPS=(192.168.123.47 192.168.123.151 192.168.123.46)
-      CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
-      # Review and change parameters under ``inventory/mycluster/group_vars``
-      #less inventory/mycluster/group_vars/all/all.yml
-      #less inventory/mycluster/group_vars/k8s_cluster/k8s-cluster.yml
-      # modify `upstream_dns_servers in `inventory/mycluster/group_vars/all/all.yml`
-      # uncomment `upstream_dns_servers` and add `223.5.5.5`, `223.6.6.6` to dns servers
-      # https://github.com/kubernetes-sigs/kubespray/issues/9948
-      vim inventory/mycluster/group_vars/all/all.yml
+      KUBESPRAY_INSTALLATION_DIRECTORY=$HOME/kubespray-installation
+      mkdir -p $KUBESPRAY_INSTALLATION_DIRECTORY
+      $CONTAINER_RUNTIME run --rm \
+          -v $KUBESPRAY_INSTALLATION_DIRECTORY:/kubespray-installation \
+          -it $KUBESPRAY_IMAGE \
+          /bin/cp -rfp /kubespray/inventory/sample /kubespray-installation/inventory
       ```
-6. reset kubernetes cluster with ansible
+6. generate configurations for kubespray
+    * ```shell
+      INVENTORY_DIRECTORY=$KUBESPRAY_INSTALLATION_DIRECTORY/inventory
+      declare -a IPS=(172.25.181.64)
+      $CONTAINER_RUNTIME run --rm \
+          -v $INVENTORY_DIRECTORY:/kubespray-installation/inventory \
+          -e CONFIG_FILE=/kubespray-installation/inventory/hosts.yaml \
+          -it $KUBESPRAY_IMAGE \
+          python3 /kubespray/contrib/inventory_builder/inventory.py ${IPS[@]}
+      ```
+    * ```shell
+      cat << 'EOF' >> $INVENTORY_DIRECTORY/group_vars/all/all.yml
+      upstream_dns_servers:
+        - 223.5.5.5
+        - 223.6.6.6
+      EOF
+      ```
+    * using DaoCloud mirrors
+        + ```shell
+          # replace files_repo, kube_image_repo, gcr_image_repo, github_image_repo, docker_image_repo and quay_image_repo
+          sed -i 's@^# files_repo: .*@files_repo: "https://files.m.daocloud.io"@g' $INVENTORY_DIRECTORY/group_vars/all/offline.yml
+          sed -i 's@^# kube_image_repo: .*@kube_image_repo: "k8s.m.daocloud.io"@g' $INVENTORY_DIRECTORY/group_vars/all/offline.yml
+          sed -i 's@^# gcr_image_repo: .*@gcr_image_repo: "gcr.m.daocloud.io"@g' $INVENTORY_DIRECTORY/group_vars/all/offline.yml
+          sed -i 's@^# github_image_repo: .*@github_image_repo: "ghcr.m.daocloud.io"@g' $INVENTORY_DIRECTORY/group_vars/all/offline.yml
+          sed -i 's@^# docker_image_repo: .*@docker_image_repo: "docker.m.daocloud.io"@g' $INVENTORY_DIRECTORY/group_vars/all/offline.yml
+          sed -i 's@^# quay_image_repo: .*@quay_image_repo: "quay.m.daocloud.io"@g' $INVENTORY_DIRECTORY/group_vars/all/offline.yml
+          # uncomment lines with files_repo and registry_host
+          sed -i -E '/# .*\{\{ files_repo/s/^# //g' $INVENTORY_DIRECTORY/group_vars/all/offline.yml
+          ```
+        + if you want to configure you own services, try [offline-resource-prepare](../offline-resource-prepare/README.md)
+7. reset kubernetes cluster with ansible
     * ```shell
       # need to type 'yes'
-      ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root reset.yml
+      $CONTAINER_RUNTIME run --rm \
+          -v $HOME/.ssh:/root/.ssh:ro \
+          -v $INVENTORY_DIRECTORY:/kubespray-installation/inventory \
+          -it $KUBESPRAY_IMAGE \
+          ansible-playbook -i /kubespray-installation/inventory/hosts.yaml --become --become-user=root reset.yml
       ```
-7. install kubernetes cluster with ansible
+8. install kubernetes cluster with ansible
     * ```shell
       # you may have to retry several times to install kubernetes cluster successfully for the bad network
-      ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml
+      $CONTAINER_RUNTIME run --rm \
+          -v $HOME/.ssh:/root/.ssh:ro \
+          -v $INVENTORY_DIRECTORY:/kubespray-installation/inventory \
+          -it $KUBESPRAY_IMAGE \
+          ansible-playbook -i /kubespray-installation/inventory/hosts.yaml --become --become-user=root cluster.yml
       ```
-8. exit from container shell after installation
 9. copy configurations for kubectl
     * ```shell
       mkdir ~/.kube \

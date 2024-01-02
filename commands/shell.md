@@ -102,3 +102,9 @@ journalctl -u docker
 ```shell
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 ```
+
+### query for ip address
+```shell
+# dnf -y install curl jq
+curl -sL 'https://www.ip.cn/api/index?ip&type=0' | jq -r '.ip'
+```
