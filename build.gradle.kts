@@ -1,28 +1,40 @@
-val docsPath = file(".")
-val containerName = "blog"
-val dockerCommand = "podman"
-val port = 8083
-
-tasks.register<Exec>("startDocsNginxDocker") {
-    doFirst {
-        println("Executing command: ${commandLine.joinToString(" ")}")
+plugins {
+    id("com.diffplug.spotless") version "6.23.3"
+}
+configure<com.diffplug.gradle.spotless.SpotlessExtension> {
+    kotlinGradle {
+        target("**/*.kts")
+        ktlint()
     }
-    executable = dockerCommand
-    args =
-        listOf(
-            "run", "--rm",
-            "--name", containerName,
-            "-p", "$port:80",
-            "-v", "$docsPath:/usr/share/nginx/html:ro",
-            "-v", "$docsPath/offline-docsify/default.conf:/etc/nginx/conf.d/default.conf:ro",
-            "-d", "docker.io/nginx:1.19.9-alpine",
-        )
+    java {
+        target("**/*.java")
+        googleJavaFormat()
+            .reflowLongStrings()
+            .skipJavadocFormatting()
+            .reorderImports(false)
+    }
+    yaml {
+        target("**/*.yaml")
+        jackson()
+            .feature("ORDER_MAP_ENTRIES_BY_KEYS", true)
+    }
+    json {
+        target("**/*.json")
+        targetExclude(".vscode/settings.json")
+        jackson()
+            .feature("ORDER_MAP_ENTRIES_BY_KEYS", true)
+    }
 }
 
-tasks.register<Exec>("stopDocsNginxDocker") {
-    doFirst {
-        println("Executing command: ${commandLine.joinToString(" ")}")
+allprojects {
+    repositories {
+        maven { setUrl("https://maven.aliyun.com/repository/public") }
+        maven { setUrl("https://maven.aliyun.com/repository/spring") }
+        maven { setUrl("https://maven.aliyun.com/repository/mapr-public") }
+        maven { setUrl("https://maven.aliyun.com/repository/spring-plugin") }
+        maven { setUrl("https://maven.aliyun.com/repository/gradle-plugin") }
+        maven { setUrl("https://maven.aliyun.com/repository/google") }
+        maven { setUrl("https://maven.aliyun.com/repository/jcenter") }
+        mavenCentral()
     }
-    executable = dockerCommand
-    args = listOf("kill", containerName)
 }
