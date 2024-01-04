@@ -12,7 +12,7 @@ spec:
     chart: flink-kubernetes-operator
     targetRevision: 1.6.1
     helm:
-      releaseName: flink-kubernetes-operator
+      releaseName: flink-operator
       values: |
         image:
           repository: m.daocloud.io/ghcr.io/apache/flink-kubernetes-operator
