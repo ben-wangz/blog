@@ -16,5 +16,6 @@
 
 2. build and host with container
     * ```shell
-      podman build -t geekcity-blog .
+      podman build --ulimit nofile=4096:4096 -t geekcity-blog .
+      pomdna run -d -p 8080:80 geekcity-blog
       ```

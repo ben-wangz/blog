@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: flink-kubernetes-operator
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://downloads.apache.org/flink/flink-kubernetes-operator-1.6.1
+    chart: flink-kubernetes-operator
+    targetRevision: 1.6.1
+    helm:
+      releaseName: flink-kubernetes-operator
+      values: |
+        image:
+          repository: m.daocloud.io/ghcr.io/apache/flink-kubernetes-operator
+          pullPolicy: IfNotPresent
+          tag: "1.6.1"
+      version: v3
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: flink

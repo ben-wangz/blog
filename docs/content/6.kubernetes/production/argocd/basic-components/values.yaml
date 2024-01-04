@@ -1,6 +1,0 @@
-spec:
-  project: default
-  namespace: basic-components
-  destination:
-    namespace: basic-components
-    server: https://kubernetes.default.svc

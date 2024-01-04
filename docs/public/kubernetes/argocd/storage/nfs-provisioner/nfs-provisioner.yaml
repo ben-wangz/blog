@@ -3,9 +3,12 @@ kind: Application
 metadata:
   name: nfs-provisioner-application
 spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
   project: default
-  sources:
-  - repoURL: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
+  source:
+    repoURL: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
     chart: nfs-subdir-external-provisioner
     targetRevision: 4.0.18
     helm:
@@ -16,23 +19,13 @@ spec:
           tag: v4.0.2
           pullPolicy: IfNotPresent
         nfs:
-          server: 051c649500-wdc91.cn-hangzhou.nas.aliyuncs.com
+          server: nfs.services.geekcity.tech
           path: /
           mountOptions:
-            - vers=4
-            - minorversion=0
-            - rsize=1048576
-            - wsize=1048576
-            - hard
-            - timeo=600
-            - retrans=2
-            - noresvport
-          volumeName: nfs-subdir-external-provisioner-nas
-          reclaimPolicy: Retain
         storageClass:
           create: true
-          name: nfs-external-nas
           defaultClass: true
+          name: nfs-external
   destination:
     server: "https://kubernetes.default.svc"
     namespace: basic-components

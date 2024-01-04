@@ -1,1 +1,0 @@
-[argocd-server-external.yaml](argocd-server-external.yaml ':include')
