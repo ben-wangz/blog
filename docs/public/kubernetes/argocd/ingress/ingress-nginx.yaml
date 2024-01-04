@@ -12,7 +12,7 @@ spec:
     chart: ingress-nginx
     targetRevision: 4.9.0
     helm:
-      releaseName: basic-ingress-nginx
+      releaseName: ingress-nginx
       values: |
         controller:
           image:
