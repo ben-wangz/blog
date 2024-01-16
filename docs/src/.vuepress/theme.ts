@@ -1,7 +1,9 @@
+import { getDirname, path } from "@vuepress/utils";
 import { hopeTheme } from "vuepress-theme-hope";
 import navbar from "./navbar.js";
 import sidebar from "./sidebar.js";
 
+const __dirname = getDirname(import.meta.url);
 export default hopeTheme({
   hostname: "https://mister-hope.github.io",
   author: {
@@ -44,7 +46,13 @@ export default hopeTheme({
       figure: true,
       imgLazyload: true,
       imgSize: true,
-      include: true,
+      include: {
+        resolvePath: (file) => {
+          if (file.startsWith("@src"))
+            return file.replace("@src", path.resolve(__dirname, ".."));
+          return file;
+        },
+      },
       mark: true,
       stylize: [
         {

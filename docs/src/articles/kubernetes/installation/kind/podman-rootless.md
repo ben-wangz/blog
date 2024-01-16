@@ -15,23 +15,11 @@
       ```
 4. kind binary
     * ```shell
-      MIRROR="files.m.daocloud.io/"
-      KIND_VERSION=v0.20.0
-      [ $(uname -m) = x86_64 ] && curl -Lo kind "https://${MIRROR}github.com/kubernetes-sigs/kind/releases/download/${KIND_VERSION}/kind-linux-amd64"
-      [ $(uname -m) = aarch64 ] && curl -Lo kind "https://${MIRROR}github.com/kubernetes-sigs/kind/releases/download/${KIND_VERSION}/kind-linux-arm64"
-      chmod u+x kind
-      mkdir -p $HOME/bin
-      mv kind $HOME/bin
+      <!-- @include: @src/articles/kubernetes/binary/download_kind_binary.sh -->
       ```
 5. kubectl binary
     * ```shell
-      MIRROR="files.m.daocloud.io/"
-      VERSION=$(curl -L -s https://${MIRROR}dl.k8s.io/release/stable.txt)
-      [ $(uname -m) = x86_64 ] && curl -LO "https://${MIRROR}dl.k8s.io/release/${VERSION}/bin/linux/amd64/kubectl"
-      [ $(uname -m) = aarch64 ] && curl -LO "https://${MIRROR}dl.k8s.io/release/${VERSION}/bin/linux/arm64/kubectl"
-      chmod u+x kubectl
-      mkdir -p $HOME/bin
-      mv kubectl $HOME/bin
+      <!-- @include: @src/articles/kubernetes/binary/download_kubectl_binary.sh -->
       ```
 6. image of kind node
     * ```shell
