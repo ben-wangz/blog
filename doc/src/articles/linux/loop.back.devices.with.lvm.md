@@ -24,7 +24,7 @@
 
 ### do it
 
-1. prepare a virtual machine according to [create centos 8 with qemu](/qemu/create.centos.8.with.qemu)
+1. prepare a virtual machine according to [create centos 8 with qemu](../qemu/create.centos.8.with.qemu)
 2. create an image file
     * ```shell
       dd if=/dev/zero of=disk.img bs=1M count=1024

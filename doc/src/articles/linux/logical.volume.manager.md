@@ -12,7 +12,7 @@
 
 ## conceptions
 
-* ![lvm.svg from wikipedia](/images/lvm.svg)
+* ![lvm.svg from wikipedia](images/lvm.svg)
 
 1. PVs: physical volumes
     * can be hard disks or partitions
@@ -50,7 +50,7 @@
 
 ### do it
 
-1. prepare a virtual machine according to [create centos 8 with qemu](/qemu/create.centos.8.with.qemu.md)
+1. prepare a virtual machine according to [create centos 8 with qemu](../qemu/create.centos.8.with.qemu.md)
 2. check volume structures
     * use `fdisk -l` to check disks
         + ```text
