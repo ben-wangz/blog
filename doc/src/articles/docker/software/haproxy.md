@@ -1,4 +1,4 @@
-### haproxy
+# haproxy
 
 * prepare haproxy.cfg
     + ```shell

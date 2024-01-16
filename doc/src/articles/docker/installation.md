@@ -1,13 +1,13 @@
-## docker installation
+# docker installation
 
-### podman is recommended to replace docker
+## podman is recommended to replace docker
 * [installation](https://podman.io/docs/installation)
 * installation is simple for fedora
     + ```shell
       sudo dnf install podman
       ```
 
-### install with CentOS 8
+## install with CentOS 8
 
 * ```shell
   cat > /etc/yum.repos.d/docker-ce.repo <<EOF
@@ -23,7 +23,7 @@
       && systemctl start docker
   ```
 
-### install with Ubuntu 20.04.2 LTS (x86_64)
+## install with Ubuntu 20.04.2 LTS (x86_64)
 
 * ```shell
   apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
@@ -35,7 +35,7 @@
   ```
 * reference to https://docs.docker.com/engine/install/ubuntu/ for other arch
 
-### install docker Desktop with mac/windows
+## install docker Desktop with mac/windows
 
 * reference to https://www.docker.com/products/docker-desktop for mac
 * reference to https://docs.docker.com/desktop/windows/install/ for windows

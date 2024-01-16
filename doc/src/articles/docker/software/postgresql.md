@@ -1,4 +1,4 @@
-### postgresql
+# postgresql
 
 * ```shell
   mkdir $(pwd)/postgresql-data

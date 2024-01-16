@@ -1,6 +1,6 @@
-## docker with multi-architecture
+# docker with multi-architecture
 
-### how to run images with other architecture
+## how to run images with other architecture
 
 1. reference: [qemu-user-static](https://github.com/multiarch/qemu-user-static)
 2. requirements: only support x86_64 architectures
@@ -41,7 +41,7 @@
       docker run --rm --platform linux/s390x alpine:3.13.6 uname -m
       ```
 
-### how to build images with other architecture
+## how to build images with other architecture
 
 1. check your buildx environment
     * ```shell

@@ -1,4 +1,4 @@
-### docker commands
+# docker commands
 
 1. remove all `<none>` images
     * ```shell

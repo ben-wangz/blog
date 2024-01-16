@@ -1,4 +1,4 @@
-### pgadmin4
+# pgadmin4
 
 * ```shell
   podman run --rm \

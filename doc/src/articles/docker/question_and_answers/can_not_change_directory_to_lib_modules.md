@@ -1,4 +1,4 @@
-### modprobe: can't change directory to '/lib/modules'
+# modprobe: can't change directory to '/lib/modules'
 
 * logs
     + ```text

@@ -1,4 +1,4 @@
-### nginx
+# nginx
 
 * ```shell
   # prepare default.conf
