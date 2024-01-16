@@ -1,3 +1,12 @@
+---
+title: mysql
+icon: pen-to-square
+category:
+  - commands
+tag:
+  - git
+---
+
 ### show transaction info
 
 ```SQL

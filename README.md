@@ -13,8 +13,15 @@
       # Ctrl + C is just kills the gradle process, not the node process
       ./gradlew :docs:dev
       ```
-
-2. build and host with container
+2. dev mode with docker
+    * ```shell
+      podman run --rm \
+          -p 8080:8080 \
+          -v $(pwd)/doc:/app \
+          --workdir /app \
+          -it docker.io/library/node:16.13.1-alpine npm run dev
+      ```
+3. build and host with container
     * ```shell
       podman build --ulimit nofile=4096:4096 -t geekcity-blog .
       pomdna run -d -p 8080:80 geekcity-blog

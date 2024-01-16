@@ -1,3 +1,12 @@
+---
+title: git
+icon: pen-to-square
+category:
+  - commands
+tag:
+  - git
+---
+
 ### init global config
 
 ```shell

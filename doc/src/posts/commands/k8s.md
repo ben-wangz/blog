@@ -1,3 +1,12 @@
+---
+title: k8s
+icon: pen-to-square
+category:
+  - commands
+tag:
+  - git
+---
+
 ### completion for bash
 
 ```shell

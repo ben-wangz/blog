@@ -10,17 +10,12 @@ export default hopeTheme({
   },
   iconAssets: "fontawesome-with-brands",
   logo: "https://theme-hope-assets.vuejs.press/logo.svg",
-  repo: "vuepress-theme-hope/vuepress-theme-hope",
+  repo: "ben.wangz/blog",
   docsDir: "src",
   navbar,
   sidebar,
   footer: "Default footer",
   displayFooter: true,
-  encrypt: {
-    config: {
-      "/demo/encrypt.html": ["1234"],
-    },
-  },
   blog: {
     description: "java coder",
     intro: "/intro.html",

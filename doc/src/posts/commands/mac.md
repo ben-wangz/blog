@@ -1,3 +1,12 @@
+---
+title: mac
+icon: pen-to-square
+category:
+  - commands
+tag:
+  - git
+---
+
 ### install rosetta for apple m1 chip
 
 ```shell

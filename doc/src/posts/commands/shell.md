@@ -1,3 +1,12 @@
+---
+title: shell
+icon: pen-to-square
+category:
+  - commands
+tag:
+  - git
+---
+
 ### clean files 3 days ago
 
 ```shell

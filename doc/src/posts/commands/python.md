@@ -1,3 +1,12 @@
+---
+title: python
+icon: pen-to-square
+category:
+  - commands
+tag:
+  - git
+---
+
 ### I need a random string(including digits)
 
 ```shell
