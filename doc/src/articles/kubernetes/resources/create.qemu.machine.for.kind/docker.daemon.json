@@ -1,5 +1,0 @@
-{
-  "insecure-registries": [
-    "insecure.docker.registry.local:80"
-  ]
-}

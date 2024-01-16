@@ -33,6 +33,7 @@ export default hopeTheme({
       components: ["Badge", "VPCard", "PDF"],
     },
     searchPro: true,
+    copyCode: {},
     // all features are enabled for demo, only preserve features you need here
     mdEnhance: {
       align: true,

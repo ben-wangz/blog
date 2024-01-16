@@ -1,1 +1,0 @@
-[load.image.function.sh](load.image.function.sh ':include')

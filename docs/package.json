@@ -1,15 +1,20 @@
 {
-  "name": "docs",
+  "name": "geekcity",
   "version": "1.0.0",
-  "description": "docs for ben.wangz's blog",
-  "main": "index.js",
+  "description": "a blog for ben.wangz",
+  "license": "MIT",
+  "type": "module",
   "scripts": {
-    "dev": "vuepress dev docs",
-    "build": "vuepress build docs"
+    "build": "vuepress build src",
+    "clean-dev": "vuepress dev src --clean-cache",
+    "dev": "vuepress dev src",
+    "update-package": "npx vp-update"
   },
-  "author": "ben.wangz",
-  "license": "UNLICENSED",
   "devDependencies": {
-    "vuepress": "^2.0.0-rc.0"
+    "@vuepress/client": "2.0.0-rc.0",
+    "vue": "^3.4.3",
+    "vuepress": "2.0.0-rc.0",
+    "vuepress-plugin-search-pro": "^2.0.0-rc.11",
+    "vuepress-theme-hope": "2.0.0-rc.11"
   }
 }

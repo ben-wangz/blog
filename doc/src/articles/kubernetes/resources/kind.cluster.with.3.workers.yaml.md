@@ -1,1 +1,0 @@
-[kind.cluster.with.3.workers.yaml](kind.cluster.with.3.workers.yaml ':include')
