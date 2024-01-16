@@ -6,9 +6,9 @@ export default sidebar({
     {
       text: "Articles",
       icon: "laptop-code",
-      prefix: "posts/",
+      prefix: "articles/",
       children: "structure",
     },
-    "intro",
+    "intro/me.md",
   ],
 });

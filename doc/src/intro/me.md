@@ -1,4 +1,11 @@
-# [Wang Zhi](ben.wangz@foxmail.com)
+---
+title: intro
+icon: circle-info
+cover: /assets/images/black-hole-hero-f872641.jpg
+---
+
+## Wang Zhi 
+* email: ben.wangz@foxmail.com
 
 ## Summary
 I am an experienced coder with a focus on Java development. Over the past 8 years, I have developed many data processing platforms at various companies, including Alibaba and ZhejiangLab. My expertise lies in designing and implementing scalable and efficient systems that can handle very large volumes of data.
@@ -64,5 +71,5 @@ I am an experienced coder with a focus on Java development. Over the past 8 year
 ## Certifications
 
 * English: Certificate VI
-* [Red Hat Certified Engineer](/pdf/RHCE-Zhi_Wang.pdf)
+* [Red Hat Certified Engineer](RHCE_Zhi_Wang.pdf.md)
     + early in my high school: 2010.08.31
