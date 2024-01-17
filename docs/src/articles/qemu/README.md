@@ -1,6 +1,6 @@
 ---
 title: QEMU
-icon: pen-to-square
+icon: folder
 category:
   - qemu
 tag:
@@ -8,7 +8,7 @@ tag:
 index: false
 ---
 
-### what
+## what
 * common usage of qemu
 
 <AutoCatalog />

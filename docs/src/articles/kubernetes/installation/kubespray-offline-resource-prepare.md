@@ -1,17 +1,5 @@
 # prepare offline resource for kubespray installation
 
-## overview
-* [prepare offline resource for kubespray installation](#prepare-offline-resource-for-kubespray-installation)
-    * [overview](#overview)
-    * [container runtime](#container-runtime)
-    * [turn off selinux and firewalld](#turn-off-selinux-and-firewalld)
-    * [offline resource directory](#offline-resource-directory)
-    * [build inventory for kubespray](#build-inventory-for-kubespray)
-    * [download files and images](#download-files-and-images)
-    * [start nginx to serve files](#start-nginx-to-serve-files)
-    * [start registry to serve images](#start-registry-to-serve-images)
-    * [create local yum repository](#create-local-yum-repository)
-
 ## container runtime
 1. install podman
     * ```shell

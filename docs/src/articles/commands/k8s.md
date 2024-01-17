@@ -1,25 +1,18 @@
----
-title: k8s
-icon: pen-to-square
-category:
-  - commands
-tag:
-  - git
----
+# k8s
 
-### completion for bash
+## completion for bash
 
 ```shell
 source<(kubectl completionbash)
 ```
 
-### port forwarding
+## port forwarding
 
 ```shell
 kubectl port-forward --address 0.0.0.0 $SERVICE_OR_POD 8080:80 # local:pod
 ```
 
-### update certs
+## update certs
 
 ```shell
 kubeadm alpha certs renew all

@@ -1,5 +1,5 @@
 ---
-title: k8s installation
+title: installation
 icon: pen-to-square
 category:
   - k8s
@@ -10,7 +10,7 @@ tag:
 index: false
 ---
 
-### what
+## what
 * installation methods for k8s
 
 <AutoCatalog />

@@ -1,6 +1,6 @@
 ---
 title: commands
-icon: pen-to-square
+icon: folder
 category:
   - commands
 tag:
@@ -10,7 +10,7 @@ tag:
 index: false
 ---
 
-### what
+## what
 * record some useful commands
 
 <AutoCatalog />

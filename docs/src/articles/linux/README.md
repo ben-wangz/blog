@@ -1,6 +1,6 @@
 ---
 title: Linux
-icon: pen-to-square
+icon: folder
 category:
   - linux
 tag:

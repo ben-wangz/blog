@@ -1,13 +1,6 @@
----
-title: mysql
-icon: pen-to-square
-category:
-  - commands
-tag:
-  - git
----
+# mysql
 
-### show transaction info
+## show transaction info
 
 ```SQL
 select 
@@ -21,13 +14,13 @@ select
 from information_schema.INNODB_TRX;
 ```
 
-### show process
+## show process
 
 ```SQL
 show full processlist;
 ```
 
-### show open tables
+## show open tables
 
 ```SQL
 SHOW OPEN TABLES where `database` = 'my_database';

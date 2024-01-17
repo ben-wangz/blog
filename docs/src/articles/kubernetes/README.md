@@ -1,6 +1,6 @@
 ---
 title: k8s
-icon: pen-to-square
+icon: folder
 category:
   - k8s
 tag:

@@ -1,13 +1,6 @@
----
-title: vim
-icon: pen-to-square
-category:
-  - commands
-tag:
-  - git
----
+# vim
 
-### json format
+## json format
 
 ```text
 %!python -m json.tool
