@@ -1,8 +1,10 @@
-# install k8s by kubespray
+# kubespray
 
 ## references
 
 1. [kubespray](https://github.com/kubernetes-sigs/kubespray)
+
+## limitations: not work for aliyun environment
 
 ## prepare
 

@@ -1,4 +1,4 @@
-# install argocd by helm
+# argocd
 
 ## prepare
 

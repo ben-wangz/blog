@@ -1,0 +1,5 @@
+https://dl.k8s.io/release/v1.28.5/bin/linux/amd64/kubelet
+https://dl.k8s.io/release/v1.28.5/bin/linux/amd64/kubectl
+https://dl.k8s.io/release/v1.28.5/bin/linux/amd64/kubeadm
+https://github.com/etcd-io/etcd/releases/download/v3.5.10/etcd-v3.5.10-linux-amd64.tar.gz
+https://github.com/containernetworking/plugins/releases/download/v1.3.0/cni-plugins-linux-amd64-v1.3.0.tgz

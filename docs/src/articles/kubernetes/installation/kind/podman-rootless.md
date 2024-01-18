@@ -1,4 +1,4 @@
-# install k8s environment with podman rootless
+# podman-rootless
 
 ## references
 
@@ -32,7 +32,7 @@
 ## configure for rootless
 1. The host needs to be running with cgroup v2
     * ```shell
-      podman info | grep Cgroup
+      podman info | grep -i cgroup
       ```
     * expected output contains `cgroupVersion: v2`
     * if not, see: https://kind.sigs.k8s.io/docs/user/rootless/#host-requirements
@@ -79,5 +79,5 @@
     * NOTE: container port 32080 and 32443 are bind to host ports(80 and 443)
 2. start
     * ```shell
-      KIND_EXPERIMENTAL_PROVIDER=podman kind create cluster --image=docker.io/kindest/node:v1.29.0k --config kind.yaml
+      KIND_EXPERIMENTAL_PROVIDER=podman kind create cluster --image=docker.io/kindest/node:v1.29.0 --config kind.yaml
       ```

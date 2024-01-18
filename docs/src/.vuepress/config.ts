@@ -7,6 +7,7 @@ export default defineUserConfig({
   lang: "en-US",
   title: "GeekCity",
   description: "A blog for ben.wangz",
+  dest: "${sourceDir}/../build/dist",
 
   theme,
 

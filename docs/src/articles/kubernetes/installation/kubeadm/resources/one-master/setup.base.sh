@@ -16,6 +16,7 @@ if [ -f "/etc/fstab" ]; then
 fi
 swapoff -a
 cat > /etc/modules-load.d/k8s.conf <<EOF
+overlay
 br_netfilter
 EOF
 cat > /etc/sysctl.d/k8s.conf <<EOF
