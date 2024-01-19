@@ -1,0 +1,1 @@
+systemctl disable --now systemd-resolved

@@ -1,0 +1,23 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+nodeRegistration:
+  kubeletExtraArgs:
+    # https://coredns.io/plugins/loop/#troubleshooting
+    # NOTE: this is deprecated but the only way works i found
+    resolv-conf: "/run/systemd/resolve/resolv.conf"
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+imageRepository: registry.k8s.io
+kind: ClusterConfiguration
+kubernetesVersion: 1.26.0
+networking:
+  podSubnet: 10.244.0.0/16
+controllerManager:
+  extraArgs:
+    "node-cidr-mask-size": "16"
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+# https://coredns.io/plugins/loop/#troubleshooting
+# NOTE: this is the recommended way but not works, may be limited to the k8s version 1.26, which is limited by fedora 38
+resolvConf: /run/systemd/resolve/resolv.conf

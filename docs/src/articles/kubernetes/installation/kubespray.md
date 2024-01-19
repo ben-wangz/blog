@@ -104,10 +104,7 @@
       ```
 3. copy kubeconfig to local
     * ```shell
-      mkdir $HOME/.kube \
-          && cp /etc/kubernetes/admin.conf $HOME/.kube/config \
-          && chown $UID:$UID $HOME/.kube/config \
-          && chmod 600 $HOME/.kube/config
+      <!-- @include: @src/articles/kubernetes/installation/copy-kubeconfig.sh -->
       ```
 
 ## addtional software
