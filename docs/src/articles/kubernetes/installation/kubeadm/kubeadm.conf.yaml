@@ -1,20 +1,26 @@
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 nodeRegistration:
+  criSocket: unix:///var/run/crio/crio.sock
+  imagePullPolicy: IfNotPresent
+  name: k8s-master
   kubeletExtraArgs:
     # https://coredns.io/plugins/loop/#troubleshooting
     # NOTE: this is deprecated but the only way works i found
     resolv-conf: "/run/systemd/resolve/resolv.conf"
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
-imageRepository: registry.k8s.io
 kind: ClusterConfiguration
-kubernetesVersion: 1.26.0
-networking:
-  podSubnet: 10.244.0.0/16
+clusterName: kubernetes
 controllerManager:
   extraArgs:
     "node-cidr-mask-size": "16"
+imageRepository: m.daocloud.io/registry.k8s.io
+kubernetesVersion: 1.27.0
+networking:
+  dnsDomain: cluster.local
+  serviceSubnet: 10.96.0.0/12
+  podSubnet: 10.244.0.0/16
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration

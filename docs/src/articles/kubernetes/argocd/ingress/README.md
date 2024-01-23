@@ -11,7 +11,11 @@
     * ```yaml
       <!-- @include: @src/articles/kubernetes/argocd/ingress/ingress-nginx.yaml -->
       ```
-2. sync by argocd
+2. apply `ingress-nginx.yaml` to k8s
+    * ```shell
+      kubectl -n argocd apply -f ingress-nginx.yaml
+      ```
+3. sync by argocd
     * ```shell
       argocd app sync argocd/ingress-nginx
       ```

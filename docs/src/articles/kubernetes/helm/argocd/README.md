@@ -20,7 +20,7 @@
       ```
 2. install argocd with helm
     * ```shell
-      helm install my-argo-cd argo-cd \
+      helm install argo-cd argo-cd \
           --namespace argocd \
           --create-namespace \
           --version 5.46.7 \
@@ -40,11 +40,15 @@
     * ```shell
       kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
       ```
-6. login argocd
+6. login with argocd cli
     * ```shell
       # you need to typein the password
-      argocd login --insecure --username admin node1:30443
+      argocd login --insecure --username admin localhost:30443
       ```
+7. login with browser
+    * open https://k8s-master:30443
+    * username: admin
+    * password: the password you get in step 5
 8. change admin password
     * optional for dev environment
     * ```shell

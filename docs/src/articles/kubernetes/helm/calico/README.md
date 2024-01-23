@@ -14,8 +14,10 @@
     * ```shell
       helm install \
           --create-namespace --namespace tigera-operator \
-          tigera-operator \
-          --repo https://docs.tigera.io/calico/charts
-          --version v3.27.0
+          tigera-operator tigera-operator \
+          --repo https://docs.tigera.io/calico/charts \
+          --version v3.27.0 \
+          --set tigeraOperator.registry=m.daocloud.io/ \
+          --set calicoctl.image=m.daocloud.io/docker.io/calico/ctl \
           --atomic
       ```

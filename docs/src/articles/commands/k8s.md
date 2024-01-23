@@ -19,3 +19,8 @@ kubeadm alpha certs renew all
 docker ps | grep -v pause | grep -E "etcd|scheduler|controller|apiserver" | awk '{print $1}' | awk '{print "docker","restart",$1}' | bash
 cp /etc/kubernetes/admin.conf ~/.kube/config
 ```
+
+## extract podCIDR
+```shell
+kubectl get nodes -o jsonpath='{.items[*].spec.podCIDR}'
+```

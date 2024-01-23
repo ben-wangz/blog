@@ -8,7 +8,7 @@ export default hopeTheme({
   hostname: "https://mister-hope.github.io",
   author: {
     name: "ben.wangz",
-    url: "https://blog.geekcity.tech/",
+    url: "/intro/me.md",
   },
   iconAssets: "fontawesome-with-brands",
   logo: "https://theme-hope-assets.vuejs.press/logo.svg",

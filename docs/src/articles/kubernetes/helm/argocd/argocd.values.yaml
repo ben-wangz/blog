@@ -1,3 +1,24 @@
 crds:
   install: true
   keep: false
+global:
+  revisionHistoryLimit: 3
+  image:
+    repository: m.daocloud.io/quay.io/argoproj/argocd
+    imagePullPolicy: IfNotPresent
+redis-ha:
+  image:
+    repository: m.daocloud.io/docker.io/library/redis
+  configmapTest:
+    repository: m.daocloud.io/docker.io/koalaman/shellcheck
+  haproxy:
+    enabled: false
+    image:
+      repository: m.daocloud.io/docker.io/library/haproxy
+  exporter:
+    enabled: false
+    image: m.daocloud.io/docker.io/oliver006/redis_exporter
+dex:
+  enabled: true
+  image:
+    repository: m.daocloud.io/ghcr.io/dexidp/dex

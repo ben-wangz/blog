@@ -17,9 +17,12 @@
       ```
 1. install with helm
     * ```shell
+      MIRROR=m.daocloud.io/
       helm install flannel flannel \
           --namespace kube-flannel \
           --repo https://flannel-io.github.io/flannel/ \
           --set podCidr="10.244.0.0/16" \
+          --set flannel.image.repository=${MIRROR}docker.io/flannel/flannel \
+          --set flannel.image_cni.repository=${MIRROR}docker.io/flannel/flannel-cni-plugin \
           --atomic
       ```

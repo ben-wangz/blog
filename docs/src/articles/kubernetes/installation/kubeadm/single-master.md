@@ -7,24 +7,45 @@
 
 ## prepare
 
-1. 1 node with fedora 38
+1. 1 node with fedora 38(use fedora 39 if you are play with aliyun ecs)
 2. root account required
 3. install necessary packages for each node
     * ```shell
-      dnf install -y iptables iproute-tc cri-o containernetworking-plugins \
-          kubernetes-client kubernetes-node kubernetes-kubeadm
+      dnf -y install iptables iproute-tc
+      ```
+    * ```shell
+      KUBE_VERSION=1.27
+      dnf -y module enable cri-o:${KUBE_VERSION}
+      dnf -y install cri-o
+      ```
+    * ```shell
+      KUBE_VERSION=1.27
+      cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+      [kubernetes]
+      name=Kubernetes
+      baseurl=https://pkgs.k8s.io/core:/stable:/v${KUBE_VERSION}/rpm/
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://pkgs.k8s.io/core:/stable:/v${KUBE_VERSION}/rpm/repodata/repomd.xml.key
+      exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+      EOF
+      dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+      ```
+4. (for aliyun) modify grub and reboot
+    * ```shell
+      echo 'GRUB_CMDLINE_LINUX="cgroup_enable=cpu"' >> /etc/default/grub
       ```
 
 ## configure node
 
 1. change hostname of master node
     * ```shell
-      hostnamectl set-hostname master
+      hostnamectl set-hostname k8s-master
       ```
 2. configure `/etc/hosts`
     * ```shell
       cat >> /etc/hosts <<EOF
-      172.25.181.62 master
+      172.25.181.62 k8s-master
       EOF
       ```
 3. configure ntp
@@ -40,7 +61,7 @@
     * ```shell
       <!-- @include: @src/articles/commands/linux/turn-off-selinux.sh -->
       <!-- @include: @src/articles/commands/linux/turn-off-firewalld.sh -->
-      <!-- @include: @src/articles/commands/linux/turn-off-swap.sh -->
+      <!-- @include: @src/articles/commands/linux/turn-off-swap-fedora.sh -->
       ```
 5. configure forwarding IPv4
     * ```shell
@@ -102,10 +123,32 @@
 12. install pod network(chose one of the methods below)
     * flannel by kubectl
         + ```shell
+          # If you use custom podCIDR (not 10.244.0.0/16) you first need to download the above manifest and modify the network to match your one.
           kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
           ```
     * [flannel by helm chart](../../helm/flannel/README.md)
     * [calico by helm chart](../../helm/calico/README.md)
+
+## test with deployment
+1. prepare nginx deployment
+    * ```yaml
+      <!-- @include: nginx-deployment.yaml -->
+      ```
+2. apply to cluster
+    * ```shell
+      kubectl apply -f nginx-deployment.yaml
+      ```
+3. check pods
+    * ```shell
+      kubectl get pod
+      ```
+
+## troubles
+1. "cni0" already has an IP address different from 10.2.44.1/24
+    * https://github.com/kubernetes/kubernetes/issues/39557#issuecomment-457839765
+    * ```shell
+      ip link delete cni0
+      ```
 
 ## uninstallation
 1. uninstall by kubeadm
