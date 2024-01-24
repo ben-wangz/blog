@@ -16,8 +16,8 @@ spec:
       values: |
         image:
           registry: m.daocloud.io/ghcr.io
-          repository: ben.wangz/blog
-          tag: 1.25.3-debian-11-r4
+          repository: ben-wangz/blog
+          tag: main
         service:
           type: ClusterIP
         ingress:
