@@ -11,10 +11,6 @@ on:
         - info
         - warning
         - debug
-      tags:
-        description: 'test scenario tags'
-        required: false
-        type: boolean
   push:
     branches: ['release']
 env:
