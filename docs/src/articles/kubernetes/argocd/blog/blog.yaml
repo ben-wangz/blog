@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nginx
+  name: blog
 spec:
   syncPolicy:
     syncOptions:
@@ -12,11 +12,11 @@ spec:
     chart: nginx
     targetRevision: 15.9.0
     helm:
-      releaseName: nginx
+      releaseName: blog
       values: |
         image:
-          registry: m.daocloud.io/docker.io
-          repository: bitnami/nginx
+          registry: m.daocloud.io/ghcr.io
+          repository: ben.wangz/blog
           tag: 1.25.3-debian-11-r4
         service:
           type: ClusterIP
@@ -26,7 +26,7 @@ spec:
             kubernetes.io/ingress.class: nginx
             cert-manager.io/cluster-issuer: alidns-webhook-letsencrypt
             nginx.ingress.kubernetes.io/rewrite-target: /$1
-          hostname: blog-local.geekcity.tech
+          hostname: blog.geekcity.tech
           path: /?(.*)
           tls: true
   destination:

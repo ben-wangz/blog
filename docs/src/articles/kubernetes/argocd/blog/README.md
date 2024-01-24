@@ -1,4 +1,4 @@
-# nginx
+# blog
 
 ## prepare
 
@@ -7,15 +7,15 @@
 
 ## installation
 
-1. prepare `nginx.yaml`
+1. prepare `blog.yaml`
     * ```yaml
-      <!-- @include: nginx.yaml -->
+      <!-- @include: blog.yaml -->
       ```
 2. apply to k8s
     * ```shell
-      kubectl -n argocd apply -f nginx.yaml
+      kubectl -n argocd apply -f blog.yaml
       ```
 3. sync by argocd
     * ```shell
-      argocd app sync argocd/nginx
+      argocd app sync argocd/blog
       ```
