@@ -1,1 +1,0 @@
-[docker.registry.values.yaml](docker.registry.values.yaml ':include')
