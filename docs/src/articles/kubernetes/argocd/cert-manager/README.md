@@ -9,9 +9,9 @@
 
 1. prepare `cert-manager.yaml`
     * ```yaml
-      <!-- @include: @src/articles/kubernetes/argocd/cert-manager/cert-manager.yaml -->
+      <!-- @include: cert-manager.yaml -->
       ```
-2. apply `cert-manager.yaml` to k8s
+2. apply to k8s
     * ```shell
       kubectl -n argocd apply -f cert-manager.yaml
       ```

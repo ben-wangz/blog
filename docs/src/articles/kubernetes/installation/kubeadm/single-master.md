@@ -130,7 +130,8 @@
     * [calico by helm chart](../../helm/calico/README.md)
 
 ## test with deployment
-1. prepare nginx deployment
+
+1. prepare `nginx-deployment.yaml`
     * ```yaml
       <!-- @include: nginx-deployment.yaml -->
       ```

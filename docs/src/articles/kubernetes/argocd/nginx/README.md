@@ -1,4 +1,4 @@
-# ingress
+# nginx
 
 ## prepare
 
@@ -7,15 +7,15 @@
 
 ## installation
 
-1. prepare `ingress-nginx.yaml`
+1. prepare `nginx.yaml`
     * ```yaml
-      <!-- @include: ingress-nginx.yaml -->
+      <!-- @include: nginx.yaml -->
       ```
 2. apply to k8s
     * ```shell
-      kubectl -n argocd apply -f ingress-nginx.yaml
+      kubectl -n argocd apply -f nginx.yaml
       ```
 3. sync by argocd
     * ```shell
-      argocd app sync argocd/ingress-nginx
+      argocd app sync argocd/nginx
       ```
