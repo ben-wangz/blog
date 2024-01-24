@@ -18,6 +18,7 @@ spec:
           registry: m.daocloud.io/ghcr.io
           repository: ben-wangz/blog
           tag: main
+          pullPolicy: Always
         service:
           type: ClusterIP
         ingress:

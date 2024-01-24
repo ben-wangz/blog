@@ -4,5 +4,5 @@ COPY . /app
 WORKDIR /app
 RUN ./gradlew :docs:npm_run_build
 
-FROM docker.io/library/nginx:1.25.3-alpine-slim
-COPY --from=builder /app/docs/build/dist /usr/share/nginx/html
+FROM docker.io/bitnami/nginx:1.25.3-debian-11-r4
+COPY --from=builder /app/docs/build/dist /app
