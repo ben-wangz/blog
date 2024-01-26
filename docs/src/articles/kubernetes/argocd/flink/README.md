@@ -24,4 +24,47 @@
 
 ## deploy flink application
 
-<!-- TODO -->
+### basic
+
+1. prepare `basic.yaml`
+    * ```yaml
+      <!-- @include: basic.yaml -->
+      ```
+2. apply to k8s
+    * ```shell
+      kubectl -n flink apply -f basic.yaml
+      ```
+3. check status with web ui
+    * flink.k8s.io should be resolved to nginx-ingress
+        + for example, add `$K8S_MASTER_IP flink.k8s.io` to `/etc/hosts`
+    * https://flink.k8s.io:32443/flink/basic/
+
+### pyflink
+
+1. build docker image and push to registry
+    * optional if you are using the pre-build image: `ghcr.io/ben.wangz/blog-pyflink:main`
+    * prepare `docker/Dockerfile`
+        + ```dockerfile
+          <!-- @include: docker/Dockerfile -->
+          ```
+    * prepare `docker/python_demo.py`
+        + ```dockerfile
+          <!-- @include: docker/python_demo.py -->
+          ```
+    * build
+        + ```shell
+          # cd docker/
+          podman build -t ghcr.io/ben.wangz/blog-pyflink:main .
+          ```
+2. * prepare `pyflink.yaml`
+    * ```yaml
+      <!-- @include: pyflink.yaml -->
+      ```
+3. apply to k8s
+    * ```shell
+      kubectl -n flink apply -f pyflink.yaml
+      ```
+4. check status with web ui
+    * flink.k8s.io should be resolved to nginx-ingress
+        + for example, add `$K8S_MASTER_IP flink.k8s.io` to `/etc/hosts`
+    * https://flink.k8s.io:32443/flink/python-example/

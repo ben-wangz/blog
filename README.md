@@ -23,6 +23,6 @@
       ```
 3. build and host with container
     * ```shell
-      podman build --ulimit nofile=4096:4096 -f docs/Dockerfile -t blog .
-      podman run --rm -p 8080:8080 -d localhost/blog
+      podman build --ulimit nofile=4096:4096 -f docs/Dockerfile -t blog-docs .
+      podman run --rm -p 8080:8080 -d localhost/blog-docs
       ```
