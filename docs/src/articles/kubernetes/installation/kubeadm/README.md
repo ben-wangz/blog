@@ -31,12 +31,6 @@
       EOF
       dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
       ```
-4. (for aliyun) modify grub and reboot
-    * ```shell
-      echo 'GRUB_CMDLINE_LINUX="cgroup_enable=cpu"' >> /etc/default/grub
-      grub2-mkconfig -o /boot/grub2/grub.cfg
-      reboot
-      ```
 
 ## configure node
 
