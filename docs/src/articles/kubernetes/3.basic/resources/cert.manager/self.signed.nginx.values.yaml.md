@@ -1,1 +1,0 @@
-[self.signed.nginx.values.yaml](self.signed.nginx.values.yaml ':include')

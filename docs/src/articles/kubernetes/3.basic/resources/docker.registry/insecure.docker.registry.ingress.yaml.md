@@ -1,1 +1,0 @@
-[insecure.docker.registry.ingress.yaml](insecure.docker.registry.ingress.yaml ':include')

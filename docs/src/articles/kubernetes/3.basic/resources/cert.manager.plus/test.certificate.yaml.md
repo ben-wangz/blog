@@ -1,1 +1,0 @@
-[test.certificate.yaml](test.certificate.yaml ':include')
