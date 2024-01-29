@@ -19,7 +19,7 @@
           -p 8080:8080 \
           -v $(pwd)/docs:/app \
           --workdir /app \
-          -it docker.io/library/node:16.13.1-alpine npm run dev
+          -it docker.io/library/node:21.4.0-alpine sh -c 'npm install && npm run dev'
       ```
 3. build and host with container
     * ```shell
