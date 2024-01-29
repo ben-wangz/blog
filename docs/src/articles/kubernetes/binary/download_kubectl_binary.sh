@@ -4,4 +4,4 @@ VERSION=$(curl -L -s https://${MIRROR}dl.k8s.io/release/stable.txt)
 [ $(uname -m) = aarch64 ] && curl -sSLo kubectl "https://${MIRROR}dl.k8s.io/release/${VERSION}/bin/linux/arm64/kubectl"
 chmod u+x kubectl
 mkdir -p ${HOME}/bin
-mv kubectl ${HOME}/bin
+mv -f kubectl ${HOME}/bin

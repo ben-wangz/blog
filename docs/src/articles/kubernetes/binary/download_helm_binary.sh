@@ -12,7 +12,7 @@ FILE_NAME=helm-${VERSION}-${ARCH_IN_FILE_NAME}.tar.gz
 curl -sSLo ${FILE_NAME} "https://${MIRROR}get.helm.sh/${FILE_NAME}"
 tar zxf ${FILE_NAME}
 mkdir -p ${HOME}/bin
-mv ${ARCH_IN_FILE_NAME}/helm ${HOME}/bin
+mv -f ${ARCH_IN_FILE_NAME}/helm ${HOME}/bin
 rm -rf ./${FILE_NAME}
 rm -rf ./${ARCH_IN_FILE_NAME}
 chmod u+x ${HOME}/bin/helm
