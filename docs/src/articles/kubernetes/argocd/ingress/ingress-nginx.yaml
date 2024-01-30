@@ -8,7 +8,7 @@ spec:
       - CreateNamespace=true
   project: default
   source:
-    repoURL: https://kubernetes.github.io/ingress-nginx
+    repoURL: https://ben-wangz.github.io/helm-chart-mirror/charts
     chart: ingress-nginx
     targetRevision: 4.9.0
     helm:

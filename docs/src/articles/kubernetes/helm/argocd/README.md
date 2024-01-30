@@ -24,7 +24,7 @@
           --namespace argocd \
           --create-namespace \
           --version 5.46.7 \
-          --repo https://argoproj.github.io/argo-helm \
+          --repo https://ben-wangz.github.io/helm-chart-mirror/charts \
           --values argocd.values.yaml \
           --atomic
       ```

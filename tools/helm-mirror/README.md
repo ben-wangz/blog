@@ -24,5 +24,9 @@
           -v $(pwd)/charts.yaml:/tmp/charts.yaml:ro \
           -v $(pwd)/charts:/data \
           --env CHART_YAML_FILE=/tmp/charts.yaml \
-          --env DESTINATION=/data -it $IMAGE /app/mirror.sh
+          --env DESTINATION=/data \
+          -it $IMAGE
       ```
+
+## case
+* https://ben-wangz.github.io/helm-chart-mirror/charts/README.md

@@ -8,7 +8,7 @@ spec:
       - CreateNamespace=true
   project: default
   source:
-    repoURL: https://charts.bitnami.com/bitnami
+    repoURL: https://ben-wangz.github.io/helm-chart-mirror/charts
     chart: nginx
     targetRevision: 15.9.0
     helm:
