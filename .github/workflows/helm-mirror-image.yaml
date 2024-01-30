@@ -1,4 +1,4 @@
-name: publish-pyflink-example-image
+name: publish-helm-mirror-image
 on:
   workflow_dispatch: 
     inputs:
@@ -13,7 +13,7 @@ on:
         - debug
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}-pyflink
+  IMAGE_NAME: ${{ github.repository }}-helm-mirror
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
@@ -37,8 +37,8 @@ jobs:
       - name: build and push container image
         uses: docker/build-push-action@v5
         with:
-          context: docs/src/articles/kubernetes/argocd/flink/docker
-          file: docs/src/articles/kubernetes/argocd/flink/docker/Dockerfile
+          context: tools/helm-mirror
+          file: tools/helm-mirror/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
