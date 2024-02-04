@@ -1,12 +1,14 @@
 # binary mirror
 
 ## what
-* mirror container images from remote to local
-    + save as *.img
-    + tag (remove/add prefix) as another repository name
-    + mirror to another registry
+* mirror container images from remote to private repository
 
 ## usage
-* build images
-    + ```shell
-      ```
+* ```shell
+  export REGISTRY_USERNAME=xxx \
+      && export REGISTRY_PASSWORD='yyy' \
+      && export TARGET_REGISTRY=registry.cn-hangzhou.aliyuncs.com \
+      && export REPOSITORY_PREFIX=mirror-pub/ \
+      && export KEEP_STRUCTURE=false \
+      && bash mirror.sh
+  ```

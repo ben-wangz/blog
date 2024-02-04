@@ -1,0 +1,6 @@
+- registry: docker.io
+  repository: library/busybox
+  tag: stable-glibc
+- registry: docker.io
+  repository: library/alpine
+  tag: latest
