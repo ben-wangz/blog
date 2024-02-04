@@ -25,6 +25,11 @@
     * ```shell
       <!-- @include: @src/articles/kubernetes/binary/download_minikube_binary.sh -->
       ```
+6. disable aegis service and reboot system for aliyun
+    * https://bugzilla.openanolis.cn/show_bug.cgi?id=5437
+    * ```shell
+      systemctl disable aegis && reboot
+      ```
 
 ## install k8s by minikube
 
@@ -32,11 +37,11 @@
     * ::: code-tabs#shell
       @tab aliyun
       ```shell
-      minikube start --driver=podman --container-runtime=cri-o --kubernetes-version=v1.27.10 --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers
+      minikube start --driver=podman --container-runtime=cri-o --kubernetes-version=v1.27.10 --image-mirror-country=cn --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers
       ```
       @tab m.daocloud.io
       ```shell
-      minikube start --driver=podman --container-runtime=cri-o --kubernetes-version=v1.27.10 --image-repository=m.daocloud.io/gcr.io
+      minikube start --driver=podman --container-runtime=cri-o --kubernetes-version=v1.27.10 --image-mirror-country=cn --image-repository=m.daocloud.io/gcr.io
       ```
       :::
 2. add alias of `kubectl`
@@ -45,7 +50,7 @@
       ```
 3. may change memory(requires a restart)
     * ```shell
-      minikube config set memory 9001
+      minikube config set memory 6144
       ```
 4. restart minikube
     * ```shell
