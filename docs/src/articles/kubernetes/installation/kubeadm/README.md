@@ -41,7 +41,7 @@
 2. configure `/etc/hosts`
     * ```shell
       cat >> /etc/hosts <<EOF
-      172.25.181.62 k8s-master
+      192.168.1.109 k8s-master
       EOF
       ```
 3. configure ntp
