@@ -54,7 +54,7 @@
     * build
         + ```shell
           # cd docker/
-          podman build -t ghcr.io/ben.wangz/blog-pyflink:main .
+          podman build --build-arg PYPI_REPO=https://mirrors.aliyun.com/pypi/simple -t ghcr.io/ben.wangz/blog-pyflink:main .
           ```
 2. * prepare `pyflink.yaml`
     * ```yaml

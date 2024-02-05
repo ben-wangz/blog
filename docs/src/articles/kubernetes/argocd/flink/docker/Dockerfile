@@ -14,8 +14,9 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install "apache-flink==1.17.2"
+ARG PYPI_MIRROR=https://pypi.python.org/simple
+RUN pip3 install "apache-flink==1.17.2" -i ${PYPI_MIRROR}
 
-USER docker.io/flink:1.17
+USER flink
 RUN mkdir /opt/flink/usrlib
 ADD python_demo.py /opt/flink/usrlib/python_demo.py
