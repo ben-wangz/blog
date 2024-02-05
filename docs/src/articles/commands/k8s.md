@@ -24,3 +24,14 @@ cp /etc/kubernetes/admin.conf ~/.kube/config
 ```shell
 kubectl get nodes -o jsonpath='{.items[*].spec.podCIDR}'
 ```
+
+## delete error pods
+
+* with awk
+    + ```shell
+      kubectl get pods --all-namespaces | grep -E "Error|CrashLoopBackOff" | awk '{print "kubectl","-n",$1,"delete","pod",$2}' | bash
+      ```
+* with kubectl only
+    + ```shell
+      kubectl -n argocd delete pods --field-selector status.phase=Failed
+      ```
