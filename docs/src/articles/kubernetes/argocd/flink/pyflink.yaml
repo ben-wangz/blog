@@ -10,12 +10,12 @@ spec:
   serviceAccount: flink
   jobManager:
     resource:
-      memory: "2048m"
-      cpu: 1
+      memory: "1024m"
+      cpu: 0.5
   taskManager:
     resource:
-      memory: "2048m"
-      cpu: 1
+      memory: "1024m"
+      cpu: 0.5
   job:
     # Note, this jarURI is actually a placeholder
     jarURI: local:///opt/flink/opt/flink-python_2.12-1.17.2.jar
