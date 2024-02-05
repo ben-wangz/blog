@@ -44,11 +44,11 @@
 1. build docker image and push to registry
     * optional if you are using the pre-build image: `ghcr.io/ben.wangz/blog-pyflink:main`
     * prepare `docker/Dockerfile`
-        + ```dockerfile
-          <!-- @include: docker/Dockerfile -->
+        + ```text
+          <!-- @include: docker/Dockerfile.shadow -->
           ```
     * prepare `docker/python_demo.py`
-        + ```dockerfile
+        + ```python
           <!-- @include: docker/python_demo.py -->
           ```
     * build
