@@ -41,3 +41,7 @@
               --package com.example.helloworld \
               --test-framework junit-jupiter
       ```
+8. find ip address of a container
+    * ```shell
+      podman inspect --format='{{.NetworkSettings.IPAddress}}' minio-server
+      ```

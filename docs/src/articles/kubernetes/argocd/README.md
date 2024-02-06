@@ -1,5 +1,5 @@
 ---
-title: installation
+title: argocd
 icon: folder
 category:
   - k8s

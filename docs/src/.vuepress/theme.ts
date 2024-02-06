@@ -71,6 +71,7 @@ export default hopeTheme({
       sup: true,
       tabs: true,
       vPre: true,
+      mermaid: true,
       // install chart.js before enabling it
       // chart: true,
       // insert component easily
@@ -84,8 +85,6 @@ export default hopeTheme({
       // katex: true,
       // install mathjax-full before enabling it
       // mathjax: true,
-      // install mermaid before enabling it
-      // mermaid: true,
       // playground: {
       //   presets: ["ts", "vue"],
       // },

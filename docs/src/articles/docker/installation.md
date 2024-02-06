@@ -1,4 +1,4 @@
-# docker installation
+# installation
 
 ## podman is recommended to replace docker
 * [installation](https://podman.io/docs/installation)
@@ -6,6 +6,13 @@
     + ```shell
       sudo dnf install podman
       ```
+
+## podman with mac
+* [podman for mac](https://podman.io/docs/installation#macos)
+* ```shell
+  podman machine init -v $HOME:$HOME
+  podman machine start
+  ```
 
 ## install with CentOS 8
 

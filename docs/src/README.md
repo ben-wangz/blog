@@ -32,6 +32,10 @@ projects:
     name: Kubernetes
     desc: "Kubernetes is an open-source system for automating deployment, scaling, and management of containerized applications"
     link: /articles/kubernetes/
+  - icon: /assets/icon/data-lake-icon.png
+    name: Data-Lake
+    desc: "A data lake is a centralized repository that allows you to store all your structured and unstructured data at any scale"
+    link: /articles/data-lake/
   - icon: book
     name: "about me"
     desc: "about me"

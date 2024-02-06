@@ -1,5 +1,5 @@
 ---
-title: installation
+title: helm
 icon: folder
 category:
   - k8s

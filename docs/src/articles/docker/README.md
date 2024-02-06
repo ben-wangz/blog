@@ -10,6 +10,6 @@ index: false
 ---
 
 ## what
-* play with softwares with docker
+* play with docker
 
 <AutoCatalog />
