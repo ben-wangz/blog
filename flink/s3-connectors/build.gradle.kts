@@ -3,10 +3,6 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-repositories {
-    mavenCentral()
-}
-
 val lombokDependency = "org.projectlombok:lombok:1.18.22"
 var flinkVersion = "1.17.1"
 val jacksonVersion = "2.13.4"
