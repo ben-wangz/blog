@@ -1,1 +1,2 @@
 include("docs")
+include("flink:s3-connectors")

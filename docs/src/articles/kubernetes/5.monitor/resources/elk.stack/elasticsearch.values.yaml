@@ -1,24 +1,11 @@
+---
 clusterName: "elasticsearch"
 nodeGroup: "master"
 replicas: 3
 minimumMasterNodes: 2
-# Allows you to add any config files in /usr/share/elasticsearch/config/
-# such as elasticsearch.yml and log4j2.properties
 esConfig: {}
-#  elasticsearch.yml: |
-#    key:
-#      nestedkey: value
-#  log4j2.properties: |
-#    key = value
 esJvmOptions: {}
-#  processors.options: |
-#    -XX:ActiveProcessorCount=3
-# Extra environment variables to append to this nodeGroup
-# This will be appended to the current 'env:' key. You can use any of the kubernetes env
-# syntax here
 extraEnvs: []
-#  - name: MY_ENVIRONMENT_VAR
-#    value: the_value_goes_here
 image: "insecure.docker.registry.local:80/docker.io/docker.elastic.co/elasticsearch/elasticsearch"
 imageTag: "7.16.3"
 imagePullPolicy: "IfNotPresent"
@@ -31,63 +18,52 @@ resources:
     cpu: "1000m"
     memory: "2Gi"
 volumeClaimTemplate:
-  accessModes: ["ReadWriteOnce"]
+  accessModes:
+  - "ReadWriteOnce"
   storageClassName: "standard"
   resources:
     requests:
-      storage: 10Gi
+      storage: "10Gi"
 persistence:
   enabled: true
   labels:
-    # Add default labels for the volumeClaimTemplate of the StatefulSet
     enabled: false
   annotations: {}
-extraVolumes:
-  []
-  # - name: extras
-  #   emptyDir: {}
-extraVolumeMounts:
-  []
-  # - name: extras
-  #   mountPath: /usr/share/extras
-  #   readOnly: true
-protocol: http
+extraVolumes: []
+extraVolumeMounts: []
+protocol: "http"
 httpPort: 9200
 transportPort: 9300
 service:
   enabled: true
   labels: {}
   labelsHeadless: {}
-  type: ClusterIP
+  type: "ClusterIP"
   nodePort: ""
   annotations: {}
-  httpPortName: http
-  transportPortName: transport
+  httpPortName: "http"
+  transportPortName: "transport"
   loadBalancerIP: ""
   loadBalancerSourceRanges: []
   externalTrafficPolicy: ""
-updateStrategy: RollingUpdate
-# This is the max unavailable setting for the pod disruption budget
-# The default value of 1 will make sure that kubernetes won't allow more than 1
-# of your pods to be unavailable during maintenance
+updateStrategy: "RollingUpdate"
 maxUnavailable: 1
 ingress:
   enabled: true
   annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/issuer: self-signed-issuer
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/issuer: "self-signed-issuer"
   className: ""
-  pathtype: ImplementationSpecific
+  pathtype: "ImplementationSpecific"
   hosts:
-    - host: elasticsearch.local
-      paths:
-        - path: /
+  - host: "elasticsearch.local"
+    paths:
+    - path: "/"
   tls:
-    - secretName: elasticsearch.local-tls
-      hosts:
-        - elasticsearch.local
+  - secretName: "elasticsearch.local-tls"
+    hosts:
+    - "elasticsearch.local"
   transport:
     enabled: false
 tests:
   enabled: true
-

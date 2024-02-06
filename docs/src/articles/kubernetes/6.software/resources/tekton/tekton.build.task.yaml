@@ -1,37 +1,38 @@
-apiVersion: tekton.dev/v1beta1
-kind: Task
-metadata:
-  name: build-task
-spec:
-  steps:
-    - name: build-step-1
-      image: insecure.docker.registry.local:80/docker.io/busybox:1.33.1-uclibc
-      command:
-        - echo
-      args:
-        - "building step 1..."
-    - name: build-step-2
-      image: insecure.docker.registry.local:80/docker.io/busybox:1.33.1-uclibc
-      command:
-        - echo
-      args:
-        - "building step 2..."
-    - name: build-step-3
-      image: insecure.docker.registry.local:80/docker.io/busybox:1.33.1-uclibc
-      command:
-        - echo
-      args:
-        - "building step 3..."
 ---
-apiVersion: tekton.dev/v1beta1
-kind: Task
+apiVersion: "tekton.dev/v1beta1"
+kind: "Task"
 metadata:
-  name: publish-task
+  name: "build-task"
 spec:
   steps:
-    - name: publish-step-1
-      image: insecure.docker.registry.local:80/docker.io/busybox:1.33.1-uclibc
-      command:
-        - echo
-      args:
-        - "publishing..."
+  - name: "build-step-1"
+    image: "insecure.docker.registry.local:80/docker.io/busybox:1.33.1-uclibc"
+    command:
+    - "echo"
+    args:
+    - "building step 1..."
+  - name: "build-step-2"
+    image: "insecure.docker.registry.local:80/docker.io/busybox:1.33.1-uclibc"
+    command:
+    - "echo"
+    args:
+    - "building step 2..."
+  - name: "build-step-3"
+    image: "insecure.docker.registry.local:80/docker.io/busybox:1.33.1-uclibc"
+    command:
+    - "echo"
+    args:
+    - "building step 3..."
+---
+apiVersion: "tekton.dev/v1beta1"
+kind: "Task"
+metadata:
+  name: "publish-task"
+spec:
+  steps:
+  - name: "publish-step-1"
+    image: "insecure.docker.registry.local:80/docker.io/busybox:1.33.1-uclibc"
+    command:
+    - "echo"
+    args:
+    - "publishing..."

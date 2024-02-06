@@ -1,27 +1,28 @@
-apiVersion: apps/v1
-kind: Deployment
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
 metadata:
-  name: zookeeper-tool
+  name: "zookeeper-tool"
   labels:
-    app.kubernetes.io/name: zookeeper-tool
+    app.kubernetes.io/name: "zookeeper-tool"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: zookeeper-tool
+      app.kubernetes.io/name: "zookeeper-tool"
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: zookeeper-tool
+        app.kubernetes.io/name: "zookeeper-tool"
     spec:
       containers:
-        - name: zookeeper-tool
-          image: insecure.docker.registry.local:80/docker.io/bitnami/zookeeper:3.8.0-debian-10-r37
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: TZ
-              value: Asia/Shanghai
-          command:
-            - tail
-            - -f
-            - /etc/hosts
+      - name: "zookeeper-tool"
+        image: "insecure.docker.registry.local:80/docker.io/bitnami/zookeeper:3.8.0-debian-10-r37"
+        imagePullPolicy: "IfNotPresent"
+        env:
+        - name: "TZ"
+          value: "Asia/Shanghai"
+        command:
+        - "tail"
+        - "-f"
+        - "/etc/hosts"

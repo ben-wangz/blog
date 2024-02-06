@@ -1,170 +1,156 @@
-apiVersion: tekton.dev/v1beta1
-kind: Task
+---
+apiVersion: "tekton.dev/v1beta1"
+kind: "Task"
 metadata:
-  name: git-clone
+  name: "git-clone"
 spec:
   params:
-    - name: url
-      type: string
-      description: git url to clone
-    - name: revision
-      description: git revision to checkout (branch, tag, sha, ref…)
-      type: string
-      default: main
-    - name: sslVerify
-      description: defines if http.sslVerify should be set to true or false in the global git config
-      type: string
-      default: "true"
-    - name: deleteExisting
-      description: clean out the contents of the repo's destination directory (if it already exists)
-      type: string
-      default: "false"
-    - name: image-registry
-      type: string
-      default: docker.io
-      description: image-registry
+  - name: "url"
+    type: "string"
+    description: "git url to clone"
+  - name: "revision"
+    description: "git revision to checkout (branch, tag, sha, ref…)"
+    type: "string"
+    default: "main"
+  - name: "sslVerify"
+    description: "defines if http.sslVerify should be set to true or false in the\
+      \ global git config"
+    type: "string"
+    default: "true"
+  - name: "deleteExisting"
+    description: "clean out the contents of the repo's destination directory (if it\
+      \ already exists)"
+    type: "string"
+    default: "false"
+  - name: "image-registry"
+    type: "string"
+    default: "docker.io"
+    description: "image-registry"
   workspaces:
-    - name: code
-      description: path for git clone
-      mountPath: /app/blog
-    - name: git-ssh-keys
-      description: ssh keys for git
-      mountPath: /app/git-ssh-keys
+  - name: "code"
+    description: "path for git clone"
+    mountPath: "/app/blog"
+  - name: "git-ssh-keys"
+    description: "ssh keys for git"
+    mountPath: "/app/git-ssh-keys"
   results:
-    - name: git-commit-id
-      description: commit id of git repo cloned
+  - name: "git-commit-id"
+    description: "commit id of git repo cloned"
   steps:
-    - name: git-clone
-      image: $(params.image-registry)/bitnami/git:2.35.1-debian-10-r44
-      env:
-        - name: TZ
-          value: "Asia/Shanghai"
-        - name: PARAM_URL
-          value: $(params.url)
-        - name: PARAM_REVISION
-          value: $(params.revision)
-        - name: PARAM_SSL_VERIFY
-          value: $(params.sslVerify)
-        - name: PARAM_DELETE_EXISTING
-          value: $(params.deleteExisting)
-        - name: CODE_PATH
-          value: $(workspaces.code.path)
-        - name: SSH_KEYS_PATH
-          value: $(workspaces.git-ssh-keys.path)
-        - name: GIT_COMMIT_ID_PATH
-          value: $(results.git-commit-id.path)
-      script: |
-        #!/usr/bin/env bash
-
-        set -x
-        set -e
-        cleandir() {
-          if [[ -d "$CODE_PATH" ]] ; then
-            rm -rf "$CODE_PATH"/*
-            rm -rf "$CODE_PATH"/.[!.]*
-            rm -rf "$CODE_PATH"/..?*
-          fi
-        }
-        if [[ "${PARAM_DELETE_EXISTING}" == "true" ]] ; then
-          cleandir
-        fi
-        export GIT_SSH_COMMAND="ssh -i $SSH_KEYS_PATH/id_rsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
-        git clone --single-branch --branch $PARAM_REVISION $PARAM_URL $CODE_PATH
-        cd $CODE_PATH && (git rev-parse --short HEAD | tee $GIT_COMMIT_ID_PATHS)
+  - name: "git-clone"
+    image: "$(params.image-registry)/bitnami/git:2.35.1-debian-10-r44"
+    env:
+    - name: "TZ"
+      value: "Asia/Shanghai"
+    - name: "PARAM_URL"
+      value: "$(params.url)"
+    - name: "PARAM_REVISION"
+      value: "$(params.revision)"
+    - name: "PARAM_SSL_VERIFY"
+      value: "$(params.sslVerify)"
+    - name: "PARAM_DELETE_EXISTING"
+      value: "$(params.deleteExisting)"
+    - name: "CODE_PATH"
+      value: "$(workspaces.code.path)"
+    - name: "SSH_KEYS_PATH"
+      value: "$(workspaces.git-ssh-keys.path)"
+    - name: "GIT_COMMIT_ID_PATH"
+      value: "$(results.git-commit-id.path)"
+    script: "#!/usr/bin/env bash\n\nset -x\nset -e\ncleandir() {\n  if [[ -d \"$CODE_PATH\"\
+      \ ]] ; then\n    rm -rf \"$CODE_PATH\"/*\n    rm -rf \"$CODE_PATH\"/.[!.]*\n\
+      \    rm -rf \"$CODE_PATH\"/..?*\n  fi\n}\nif [[ \"${PARAM_DELETE_EXISTING}\"\
+      \ == \"true\" ]] ; then\n  cleandir\nfi\nexport GIT_SSH_COMMAND=\"ssh -i $SSH_KEYS_PATH/id_rsa\
+      \ -o IdentitiesOnly=yes -o StrictHostKeyChecking=no\"\ngit clone --single-branch\
+      \ --branch $PARAM_REVISION $PARAM_URL $CODE_PATH\ncd $CODE_PATH && (git rev-parse\
+      \ --short HEAD | tee $GIT_COMMIT_ID_PATHS)\n"
 ---
-apiVersion: tekton.dev/v1beta1
-kind: Task
+apiVersion: "tekton.dev/v1beta1"
+kind: "Task"
 metadata:
-  name: release-docker-image
+  name: "release-docker-image"
 spec:
   params:
-    - name: image-registry
-      type: string
-      default: docker.io
-      description: image registry
+  - name: "image-registry"
+    type: "string"
+    default: "docker.io"
+    description: "image registry"
   workspaces:
-    - name: code
-      description: path for git clone
-      mountPath: /app/blog
+  - name: "code"
+    description: "path for git clone"
+    mountPath: "/app/blog"
   volumes:
-    - name: dind-storage
-      emptyDir: { }
-    - name: dind-socket
-      emptyDir: { }
+  - name: "dind-storage"
+    emptyDir: {}
+  - name: "dind-socket"
+    emptyDir: {}
   sidecars:
-    - image: $(params.image-registry)/docker:20.10.13-dind-alpine3.15
-      name: dockerd
-      args:
-        - --insecure-registry=insecure.docker.registry.local
-      securityContext:
-        privileged: true
-      volumeMounts:
-        - mountPath: /var/lib/docker
-          name: dind-storage
-        - mountPath: /var/run/
-          name: dind-socket
-        - name: $(workspaces.code.volume)
-          mountPath: $(workspaces.code.path)
+  - image: "$(params.image-registry)/docker:20.10.13-dind-alpine3.15"
+    name: "dockerd"
+    args:
+    - "--insecure-registry=insecure.docker.registry.local"
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - mountPath: "/var/lib/docker"
+      name: "dind-storage"
+    - mountPath: "/var/run/"
+      name: "dind-socket"
+    - name: "$(workspaces.code.volume)"
+      mountPath: "$(workspaces.code.path)"
   steps:
-    - name: build-and-push
-      image: $(params.image-registry)/docker:20.10.13-dind-alpine3.15
-      volumeMounts:
-        - mountPath: /var/run/
-          name: dind-socket
-      env:
-        - name: TZ
-          value: "Asia/Shanghai"
-        - name: CODE_PATH
-          value: $(workspaces.code.path)
-        - name: DOCKER_REGISTRY
-          value: $(params.image-registry)
-      script: |
-        DOCKER_RESOURCE_PATH=$CODE_PATH/kubernetes/software/resources/tekton/demo/pipeline/docker
-        IMAGE_ID=$DOCKER_REGISTRY/tekton-pipeline-test:v1.0
-        for i in $(seq 1 100)
-        do
-            docker info && break || sleep 3
-        done
-        docker build $DOCKER_RESOURCE_PATH -f $DOCKER_RESOURCE_PATH/Dockerfile -t $IMAGE_ID
-        docker push $IMAGE_ID
-
+  - name: "build-and-push"
+    image: "$(params.image-registry)/docker:20.10.13-dind-alpine3.15"
+    volumeMounts:
+    - mountPath: "/var/run/"
+      name: "dind-socket"
+    env:
+    - name: "TZ"
+      value: "Asia/Shanghai"
+    - name: "CODE_PATH"
+      value: "$(workspaces.code.path)"
+    - name: "DOCKER_REGISTRY"
+      value: "$(params.image-registry)"
+    script: "DOCKER_RESOURCE_PATH=$CODE_PATH/kubernetes/software/resources/tekton/demo/pipeline/docker\n\
+      IMAGE_ID=$DOCKER_REGISTRY/tekton-pipeline-test:v1.0\nfor i in $(seq 1 100)\n\
+      do\n    docker info && break || sleep 3\ndone\ndocker build $DOCKER_RESOURCE_PATH\
+      \ -f $DOCKER_RESOURCE_PATH/Dockerfile -t $IMAGE_ID\ndocker push $IMAGE_ID\n"
 ---
-apiVersion: tekton.dev/v1beta1
-kind: Pipeline
+apiVersion: "tekton.dev/v1beta1"
+kind: "Pipeline"
 metadata:
-  name: pipeline-demo
+  name: "pipeline-demo"
 spec:
   params:
-    - name: image-registry
-      type: string
-      default: insecure.docker.registry.local:80/docker.io
+  - name: "image-registry"
+    type: "string"
+    default: "insecure.docker.registry.local:80/docker.io"
   workspaces:
-    - name: git-source
-    - name: git-ssh-keys
+  - name: "git-source"
+  - name: "git-ssh-keys"
   tasks:
-    - name: fetch-from-git
-      taskRef:
-        name: git-clone
-      params:
-        - name: url
-          value: git@github.com:ben-wangz/blog.git
-        - name: revision
-          value: main
-        - name: image-registry
-          value: $(params.image-registry)
-      workspaces:
-        - name: code
-          workspace: git-source
-        - name: git-ssh-keys
-          workspace: git-ssh-keys
-    - name: release-docker-image
-      runAfter:
-        - fetch-from-git
-      taskRef:
-        name: release-docker-image
-      params:
-        - name: image-registry
-          value: $(params.image-registry)
-      workspaces:
-        - name: code
-          workspace: git-source
+  - name: "fetch-from-git"
+    taskRef:
+      name: "git-clone"
+    params:
+    - name: "url"
+      value: "git@github.com:ben-wangz/blog.git"
+    - name: "revision"
+      value: "main"
+    - name: "image-registry"
+      value: "$(params.image-registry)"
+    workspaces:
+    - name: "code"
+      workspace: "git-source"
+    - name: "git-ssh-keys"
+      workspace: "git-ssh-keys"
+  - name: "release-docker-image"
+    runAfter:
+    - "fetch-from-git"
+    taskRef:
+      name: "release-docker-image"
+    params:
+    - name: "image-registry"
+      value: "$(params.image-registry)"
+    workspaces:
+    - name: "code"
+      workspace: "git-source"

@@ -1,13 +1,14 @@
+---
 image:
-  registry: insecure.docker.registry.local:80/docker.io
-  repository: bitnami/zookeeper
-  tag: 3.8.0-debian-10-r37
-  pullPolicy: IfNotPresent
-  pullSecrets: [ ]
+  registry: "insecure.docker.registry.local:80/docker.io"
+  repository: "bitnami/zookeeper"
+  tag: "3.8.0-debian-10-r37"
+  pullPolicy: "IfNotPresent"
+  pullSecrets: []
   debug: false
 auth:
   enabled: false
-logLevel: ERROR
+logLevel: "ERROR"
 replicaCount: 3
 containerPorts:
   client: 2181
@@ -39,13 +40,13 @@ startupProbe:
   successThreshold: 1
 resources:
   limits:
-    memory: 1024Mi
-    cpu: 1000m
+    memory: "1024Mi"
+    cpu: "1000m"
   requests:
-    memory: 256Mi
-    cpu: 250m
+    memory: "256Mi"
+    cpu: "250m"
 service:
-  type: ClusterIP
+  type: "ClusterIP"
   ports:
     client: 2181
     tls: 3181
@@ -55,21 +56,21 @@ persistence:
   enabled: true
   storageClass: "standard"
   accessModes:
-    - ReadWriteOnce
-  size: 2Gi
+  - "ReadWriteOnce"
+  size: "2Gi"
   dataLogDir:
-    size: 2Gi
+    size: "2Gi"
 volumePermissions:
   enabled: true
   image:
-    registry: insecure.docker.registry.local:80/docker.io
-    repository: bitnami/bitnami-shell
-    tag: 10-debian-10-r403
-    pullPolicy: IfNotPresent
-    pullSecrets: [ ]
+    registry: "insecure.docker.registry.local:80/docker.io"
+    repository: "bitnami/bitnami-shell"
+    tag: "10-debian-10-r403"
+    pullPolicy: "IfNotPresent"
+    pullSecrets: []
   resources:
-    limits: { }
-    requests: { }
+    limits: {}
+    requests: {}
   containerSecurityContext:
     runAsUser: 0
 metrics:
@@ -80,5 +81,5 @@ tls:
   quorum:
     enabled: false
   resources:
-    limits: { }
-    requests: { }
+    limits: {}
+    requests: {}

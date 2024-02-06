@@ -1,25 +1,26 @@
+---
 primary:
   service:
-    type: ClusterIP
+    type: "ClusterIP"
   persistence:
-    storageClass: nfs-external
-    size: 8Gi
+    storageClass: "nfs-external"
+    size: "8Gi"
   extraEnvVars:
-    - name: TZ
-      value: "Asia/Shanghai"
+  - name: "TZ"
+    value: "Asia/Shanghai"
 image:
-  registry: insecure.docker.registry.local:80/docker.io
-  repository: bitnami/mariadb
-  tag: 10.5.12-debian-10-r0
-  pullPolicy: IfNotPresent
+  registry: "insecure.docker.registry.local:80/docker.io"
+  repository: "bitnami/mariadb"
+  tag: "10.5.12-debian-10-r0"
+  pullPolicy: "IfNotPresent"
 volumePermissions:
-  registry: insecure.docker.registry.local:80/docker.io
-  repository: bitnami/bitnami-shell
-  tag: 10-debian-10-r153
-  pullPolicy: Always
+  registry: "insecure.docker.registry.local:80/docker.io"
+  repository: "bitnami/bitnami-shell"
+  tag: "10-debian-10-r153"
+  pullPolicy: "Always"
 metrics:
   image:
-    registry: insecure.docker.registry.local:80/docker.io
-    repository: bitnami/mysqld-exporter
-    tag: 0.13.0-debian-10-r56
-    pullPolicy: IfNotPresent
+    registry: "insecure.docker.registry.local:80/docker.io"
+    repository: "bitnami/mysqld-exporter"
+    tag: "0.13.0-debian-10-r56"
+    pullPolicy: "IfNotPresent"

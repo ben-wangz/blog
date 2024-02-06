@@ -1,86 +1,57 @@
+---
 image:
-  repository: insecure.docker.registry.local:80/docker.io/verdaccio/verdaccio
-  tag: 5.2.0
-  pullPolicy: IfNotPresent
-  pullSecrets: [ ]
+  repository: "insecure.docker.registry.local:80/docker.io/verdaccio/verdaccio"
+  tag: "5.2.0"
+  pullPolicy: "IfNotPresent"
+  pullSecrets: []
 service:
   port: 4873
-  type: ClusterIP
+  type: "ClusterIP"
 replicaCount: 1
 resources:
   requests:
-    cpu: 100m
-    memory: 512Mi
+    cpu: "100m"
+    memory: "512Mi"
   limits:
-    cpu: 1000m
-    memory: 1024Mi
+    cpu: "1000m"
+    memory: "1024Mi"
 ingress:
   enabled: true
   className: "nginx"
   paths:
-    - /
-  extraPaths: [ ]
+  - "/"
+  extraPaths: []
   hosts:
-    - verdaccio.local
+  - "verdaccio.local"
   annotations:
-    cert-manager.io/issuer: self-signed-issuer
+    cert-manager.io/issuer: "self-signed-issuer"
   tls:
-    - secretName: verdaccio.local-tls
-      hosts:
-        - verdaccio.local
+  - secretName: "verdaccio.local-tls"
+    hosts:
+    - "verdaccio.local"
 serviceAccount:
   create: false
-configMap: |
-  # This is the config file used for the docker images.
-  # It allows all users to do anything, so don't use it on production systems.
-  storage: /verdaccio/storage/data
-  web:
-    enable: true
-    title: Verdaccio
-  auth:
-    htpasswd:
-      # Do not change this path if secrets htpasswd is used.
-      file: /verdaccio/storage/htpasswd
-      # set this to -1 to disable registration
-      max_users: -1
-  # a list of other known repositories we can talk to
-  uplinks:
-    npm-taobao:
-      url: https://registry.npm.taobao.org/
-      agent_options:
-        keepAlive: true
-        maxSockets: 40
-        maxFreeSockets: 10
-    npmjs:
-      url: https://registry.npmjs.org/
-      agent_options:
-        keepAlive: true
-        maxSockets: 40
-        maxFreeSockets: 10
-  packages:
-    '@*/*':
-      access: $all
-      publish: $authenticated
-      proxy: npmjs
-    '**':
-      access: $all
-      # (anyone can register by default, remember?)
-      publish: $authenticated
-      proxy: npm-taobao
-  middlewares:
-    audit:
-      enabled: true
-  logs: {type: stdout, format: pretty, level: info}
+configMap: "# This is the config file used for the docker images.\n# It allows all\
+  \ users to do anything, so don't use it on production systems.\nstorage: /verdaccio/storage/data\n\
+  web:\n  enable: true\n  title: Verdaccio\nauth:\n  htpasswd:\n    # Do not change\
+  \ this path if secrets htpasswd is used.\n    file: /verdaccio/storage/htpasswd\n\
+  \    # set this to -1 to disable registration\n    max_users: -1\n# a list of other\
+  \ known repositories we can talk to\nuplinks:\n  npm-taobao:\n    url: https://registry.npm.taobao.org/\n\
+  \    agent_options:\n      keepAlive: true\n      maxSockets: 40\n      maxFreeSockets:\
+  \ 10\n  npmjs:\n    url: https://registry.npmjs.org/\n    agent_options:\n     \
+  \ keepAlive: true\n      maxSockets: 40\n      maxFreeSockets: 10\npackages:\n \
+  \ '@*/*':\n    access: $all\n    publish: $authenticated\n    proxy: npmjs\n  '**':\n\
+  \    access: $all\n    # (anyone can register by default, remember?)\n    publish:\
+  \ $authenticated\n    proxy: npm-taobao\nmiddlewares:\n  audit:\n    enabled: true\n\
+  logs: {type: stdout, format: pretty, level: info}\n"
 persistence:
   enabled: true
-  storageClass: standard
-  accessMode: ReadWriteOnce
-  size: 8Gi
+  storageClass: "standard"
+  accessMode: "ReadWriteOnce"
+  size: "8Gi"
 priorityClass:
   enabled: false
 secrets:
-  # list of users and password for htpasswd plugin
-  # This this is mounted as /verdaccio/auth/htpasswd on pods
   htpasswd:
-    - username: "admin"
-      password: "your-admin-password"
+  - username: "admin"
+    password: "your-admin-password"

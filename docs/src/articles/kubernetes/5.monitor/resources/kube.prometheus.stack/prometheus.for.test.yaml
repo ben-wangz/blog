@@ -1,85 +1,86 @@
-apiVersion: monitoring.coreos.com/v1
-kind: Prometheus
+---
+apiVersion: "monitoring.coreos.com/v1"
+kind: "Prometheus"
 metadata:
   labels:
-    app: test-prometheus
-    app.kubernetes.io/part-of: test-monitor
-    release: test-prometheus
-  name: test-prometheus
+    app: "test-prometheus"
+    app.kubernetes.io/part-of: "test-monitor"
+    release: "test-prometheus"
+  name: "test-prometheus"
 spec:
-  version: v2.33.1
+  version: "v2.33.1"
   alerting:
     alertmanagers:
-      - apiVersion: v2
-        name: test-prometheus-alertmanager
-        namespace: test
-        pathPrefix: /
-        port: http-web
+    - apiVersion: "v2"
+      name: "test-prometheus-alertmanager"
+      namespace: "test"
+      pathPrefix: "/"
+      port: "http-web"
   enableAdminAPI: false
-  externalUrl: http://test-prometheus.local/
-  image: insecure.docker.registry.local:80/docker.io/quay.io/prometheus/prometheus:v2.33.1
+  externalUrl: "http://test-prometheus.local/"
+  image: "insecure.docker.registry.local:80/docker.io/quay.io/prometheus/prometheus:v2.33.1"
   listenLocal: false
-  logFormat: logfmt
-  logLevel: info
+  logFormat: "logfmt"
+  logLevel: "info"
   paused: false
-  podMonitorNamespaceSelector: { }
+  podMonitorNamespaceSelector: {}
   podMonitorSelector:
     matchLabels:
-      monitor-pod: test-prometheus
-  portName: http-web
-  probeNamespaceSelector: { }
+      monitor-pod: "test-prometheus"
+  portName: "http-web"
+  probeNamespaceSelector: {}
   probeSelector:
     matchLabels:
-      monitor-probe: test-prometheus
+      monitor-probe: "test-prometheus"
   replicas: 1
-  retention: 10d
-  routePrefix: /
-  ruleNamespaceSelector: { }
+  retention: "10d"
+  routePrefix: "/"
+  ruleNamespaceSelector: {}
   ruleSelector:
     matchLabels:
-      monitor-rule: test-prometheus
+      monitor-rule: "test-prometheus"
   securityContext:
     fsGroup: 2000
     runAsGroup: 2000
     runAsNonRoot: true
     runAsUser: 1000
-  serviceAccountName: prometheus-for-test
-  serviceMonitorNamespaceSelector: { }
+  serviceAccountName: "prometheus-for-test"
+  serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector:
     matchLabels:
-      monitor-service: test-prometheus
+      monitor-service: "test-prometheus"
   shards: 1
   storage:
     volumeClaimTemplate:
       spec:
         accessModes:
-          - ReadWriteOnce
+        - "ReadWriteOnce"
         resources:
           requests:
-            storage: 2Gi
-        storageClassName: standard
+            storage: "2Gi"
+        storageClassName: "standard"
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: "networking.k8s.io/v1"
+kind: "Ingress"
 metadata:
-  name: test-prometheus
+  name: "test-prometheus"
   labels:
-    app: test-prometheus
-    release: test-prometheus
-    app.kubernetes.io/name: prometheus-ingress
-    app.kubernetes.io/instance: test-prometheus-ingress
+    app: "test-prometheus"
+    release: "test-prometheus"
+    app.kubernetes.io/name: "prometheus-ingress"
+    app.kubernetes.io/instance: "test-prometheus-ingress"
   annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$1"
 spec:
   rules:
-    - host: test-prometheus.local
-      http:
-        paths:
-          - path: /?(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: prometheus-operated
-                port:
-                  number: 9090
+  - host: "test-prometheus.local"
+    http:
+      paths:
+      - path: "/?(.*)"
+        pathType: "ImplementationSpecific"
+        backend:
+          service:
+            name: "prometheus-operated"
+            port:
+              number: 9090

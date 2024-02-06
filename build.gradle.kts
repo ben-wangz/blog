@@ -15,12 +15,13 @@ configure<com.diffplug.gradle.spotless.SpotlessExtension> {
     }
     yaml {
         target("**/*.yaml")
+        targetExclude("**/.gradle/**")
         jackson()
             .feature("ORDER_MAP_ENTRIES_BY_KEYS", true)
     }
     json {
         target("**/*.json")
-        targetExclude(".vscode/settings.json")
+        targetExclude(".vscode/settings.json", "**/.gradle/**")
         jackson()
             .feature("ORDER_MAP_ENTRIES_BY_KEYS", true)
     }

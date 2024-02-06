@@ -1,33 +1,31 @@
+---
 image:
-  repository: localhost:5000/docker.io/rook/ceph
-  tag: v1.7.3
-  pullPolicy: IfNotPresent
+  repository: "localhost:5000/docker.io/rook/ceph"
+  tag: "v1.7.3"
+  pullPolicy: "IfNotPresent"
 crds:
   enabled: true
 resources:
   limits:
-    cpu: 500m
-    memory: 256Mi
+    cpu: "500m"
+    memory: "256Mi"
   requests:
-    cpu: 100m
-    memory: 128Mi
-logLevel: INFO
+    cpu: "100m"
+    memory: "128Mi"
+logLevel: "INFO"
 csi:
-  # Set logging level for csi containers.
-  # Supported values from 0 to 5. 0 for general useful logs, 5 for trace level verbosity.
-  #logLevel: 0
   cephcsi:
-    image: localhost:5000/docker.io/quay.io/cephcsi/cephcsi:v3.4.0
+    image: "localhost:5000/docker.io/quay.io/cephcsi/cephcsi:v3.4.0"
   registrar:
-    image: localhost:5000/docker.io/k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.2.0
+    image: "localhost:5000/docker.io/k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.2.0"
   provisioner:
-    image: localhost:5000/docker.io/k8s.gcr.io/sig-storage/csi-provisioner:v2.2.2
+    image: "localhost:5000/docker.io/k8s.gcr.io/sig-storage/csi-provisioner:v2.2.2"
   snapshotter:
-    image: localhost:5000/docker.io/k8s.gcr.io/sig-storage/csi-snapshotter:v4.1.1
+    image: "localhost:5000/docker.io/k8s.gcr.io/sig-storage/csi-snapshotter:v4.1.1"
   attacher:
-    image: localhost:5000/docker.io/k8s.gcr.io/sig-storage/csi-attacher:v3.2.1
+    image: "localhost:5000/docker.io/k8s.gcr.io/sig-storage/csi-attacher:v3.2.1"
   resizer:
-    image: localhost:5000/docker.io/k8s.gcr.io/sig-storage/csi-resizer:v1.2.0
+    image: "localhost:5000/docker.io/k8s.gcr.io/sig-storage/csi-resizer:v1.2.0"
   volumeReplication:
     enabled: false
     image: "localhost:5000/docker.io/quay.io/csiaddons/volumereplication-operator:v0.1.0"

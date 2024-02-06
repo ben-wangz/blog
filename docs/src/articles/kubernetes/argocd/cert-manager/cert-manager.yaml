@@ -1,39 +1,25 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+---
+apiVersion: "argoproj.io/v1alpha1"
+kind: "Application"
 metadata:
-  name: cert-manager
+  name: "cert-manager"
 spec:
   syncPolicy:
     syncOptions:
-      - CreateNamespace=true
-  project: default
+    - "CreateNamespace=true"
+  project: "default"
   source:
-    repoURL: https://ben-wangz.github.io/helm-chart-mirror/charts
-    chart: cert-manager
-    targetRevision: 1.13.3
+    repoURL: "https://ben-wangz.github.io/helm-chart-mirror/charts"
+    chart: "cert-manager"
+    targetRevision: "1.13.3"
     helm:
-      releaseName: cert-manager
-      values: |
-        installCRDs: true
-        image:
-          repository: m.daocloud.io/quay.io/jetstack/cert-manager-controller
-          tag: v1.13.3
-        webhook:
-          image:
-            repository: m.daocloud.io/quay.io/jetstack/cert-manager-webhook
-            tag: v1.13.3
-        cainjector:
-          image:
-            repository: m.daocloud.io/quay.io/jetstack/cert-manager-cainjector
-            tag: v1.13.3
-        acmesolver:
-          image:
-            repository: m.daocloud.io/quay.io/jetstack/cert-manager-acmesolver
-            tag: v1.13.3
-        startupapicheck:
-          image:
-            repository: m.daocloud.io/quay.io/jetstack/cert-manager-ctl
-            tag: v1.13.3
+      releaseName: "cert-manager"
+      values: "installCRDs: true\nimage:\n  repository: m.daocloud.io/quay.io/jetstack/cert-manager-controller\n\
+        \  tag: v1.13.3\nwebhook:\n  image:\n    repository: m.daocloud.io/quay.io/jetstack/cert-manager-webhook\n\
+        \    tag: v1.13.3\ncainjector:\n  image:\n    repository: m.daocloud.io/quay.io/jetstack/cert-manager-cainjector\n\
+        \    tag: v1.13.3\nacmesolver:\n  image:\n    repository: m.daocloud.io/quay.io/jetstack/cert-manager-acmesolver\n\
+        \    tag: v1.13.3\nstartupapicheck:\n  image:\n    repository: m.daocloud.io/quay.io/jetstack/cert-manager-ctl\n\
+        \    tag: v1.13.3\n"
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: basic-components
+    namespace: "basic-components"

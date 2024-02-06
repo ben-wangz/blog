@@ -1,45 +1,45 @@
+---
 image:
-  registry: insecure.docker.registry.local:80/docker.io
-  repository: bitnami/postgresql
-  tag: 14.4.0-debian-11-r9
-  pullPolicy: IfNotPresent
+  registry: "insecure.docker.registry.local:80/docker.io"
+  repository: "bitnami/postgresql"
+  tag: "14.4.0-debian-11-r9"
+  pullPolicy: "IfNotPresent"
   pullSecrets: []
   debug: false
 auth:
   enablePostgresUser: true
   postgresPassword: ""
-architecture: standalone
+architecture: "standalone"
 primary:
-  ## ref: https://www.postgresql.org/docs/current/static/runtime-config.html
   configuration: ""
   resources:
     limits: {}
     requests:
-      memory: 256Mi
-      cpu: 250m
+      memory: "256Mi"
+      cpu: "250m"
   service:
-    type: ClusterIP
+    type: "ClusterIP"
     ports:
       postgresql: 5432
   persistence:
     enabled: true
     storageClass: "standard"
-    size: 8Gi
+    size: "8Gi"
 volumePermissions:
   enabled: false
   image:
-    registry: insecure.docker.registry.local:80/docker.io
-    repository: bitnami/bitnami-shell
-    tag: 11-debian-11-r14
-    pullPolicy: IfNotPresent
+    registry: "insecure.docker.registry.local:80/docker.io"
+    repository: "bitnami/bitnami-shell"
+    tag: "11-debian-11-r14"
+    pullPolicy: "IfNotPresent"
     pullSecrets: []
 metrics:
   enabled: false
   image:
-    registry: insecure.docker.registry.local:80/docker.io
-    repository: bitnami/postgres-exporter
-    tag: 0.10.1-debian-11-r14
-    pullPolicy: IfNotPresent
+    registry: "insecure.docker.registry.local:80/docker.io"
+    repository: "bitnami/postgres-exporter"
+    tag: "0.10.1-debian-11-r14"
+    pullPolicy: "IfNotPresent"
     pullSecrets: []
   serviceMonitor:
     enabled: false

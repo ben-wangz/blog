@@ -1,44 +1,35 @@
-name: publish-pyflink-example-image
-on:
-  workflow_dispatch: 
-    inputs:
-      logLevel:
-        description: 'log level'
-        required: true
-        default: 'warning'
-        type: choice
-        options:
-        - info
-        - warning
-        - debug
+---
+name: "publish-pyflink-example-image"
+"on":
+  workflow_dispatch: null
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}-pyflink
+  REGISTRY: "ghcr.io"
+  IMAGE_NAME: "${{ github.repository }}-pyflink"
 jobs:
   build-and-push-image:
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     permissions:
-      contents: read
-      packages: write
+      contents: "read"
+      packages: "write"
     steps:
-      - name: checkout-repository
-        uses: actions/checkout@v4
-      - name: log in to the container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: extract metadata (tags, labels)
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: build and push container image
-        uses: docker/build-push-action@v5
-        with:
-          context: docs/src/articles/kubernetes/argocd/flink/docker
-          file: docs/src/articles/kubernetes/argocd/flink/docker/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+    - name: "checkout-repository"
+      uses: "actions/checkout@v4"
+    - name: "log in to the container registry"
+      uses: "docker/login-action@v3"
+      with:
+        registry: "${{ env.REGISTRY }}"
+        username: "${{ github.actor }}"
+        password: "${{ secrets.GITHUB_TOKEN }}"
+    - name: "extract metadata (tags, labels)"
+      id: "meta"
+      uses: "docker/metadata-action@v5"
+      with:
+        images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+    - name: "build and push container image"
+      uses: "docker/build-push-action@v5"
+      with:
+        context: "docs/src/articles/kubernetes/argocd/flink/docker"
+        file: "docs/src/articles/kubernetes/argocd/flink/docker/Dockerfile"
+        push: true
+        tags: "${{ steps.meta.outputs.tags }}"
+        labels: "${{ steps.meta.outputs.labels }}"

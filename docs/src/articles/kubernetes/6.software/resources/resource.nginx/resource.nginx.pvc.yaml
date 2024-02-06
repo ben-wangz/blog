@@ -1,11 +1,12 @@
-kind: PersistentVolumeClaim
-apiVersion: v1
+---
+kind: "PersistentVolumeClaim"
+apiVersion: "v1"
 metadata:
-  name: resource-nginx-pvc
+  name: "resource-nginx-pvc"
 spec:
-  storageClassName: standard
+  storageClassName: "standard"
   accessModes:
-    - ReadWriteOnce
+  - "ReadWriteOnce"
   resources:
     requests:
-      storage: 10Gi
+      storage: "10Gi"
