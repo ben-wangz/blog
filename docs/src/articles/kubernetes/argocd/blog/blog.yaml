@@ -1,24 +1,36 @@
 ---
-apiVersion: "argoproj.io/v1alpha1"
-kind: "Application"
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  name: "blog"
+  name: blog
 spec:
   syncPolicy:
     syncOptions:
-    - "CreateNamespace=true"
-  project: "default"
+    - CreateNamespace=true
+  project: default
   source:
-    repoURL: "https://ben-wangz.github.io/helm-chart-mirror/charts"
-    chart: "nginx"
-    targetRevision: "15.9.0"
+    repoURL: https://ben-wangz.github.io/helm-chart-mirror/charts
+    chart: nginx
+    targetRevision: 15.9.0
     helm:
-      releaseName: "blog"
-      values: "image:\n  registry: m.daocloud.io/ghcr.io\n  repository: ben-wangz/blog\n\
-        \  tag: main\n  pullPolicy: Always\nservice:\n  type: ClusterIP\ningress:\n\
-        \  enabled: true\n  annotations:\n    kubernetes.io/ingress.class: nginx\n\
-        \    cert-manager.io/cluster-issuer: alidns-webhook-letsencrypt\n    nginx.ingress.kubernetes.io/rewrite-target:\
-        \ /$1\n  hostname: blog.geekcity.tech\n  path: /?(.*)\n  tls: true\n"
+      releaseName: blog
+      values: |
+        image:
+          registry: m.daocloud.io/ghcr.io
+          repository: ben-wangz/blog
+          tag: main
+          pullPolicy: Always
+        service:
+          type: ClusterIP
+        ingress:
+          enabled: true
+          annotations:
+            kubernetes.io/ingress.class: nginx
+            cert-manager.io/cluster-issuer: alidns-webhook-letsencrypt
+            nginx.ingress.kubernetes.io/rewrite-target: /$1
+          hostname: blog.geekcity.tech
+          path: /?(.*)
+          tls: true
   destination:
-    server: "https://kubernetes.default.svc"
-    namespace: "application"
+    server: https://kubernetes.default.svc
+    namespace: application

@@ -1,53 +1,53 @@
 ---
 controller:
-  componentName: "jenkins-controller"
-  image: "insecure.docker.registry.local:80/docker.io/jenkins/jenkins"
-  tag: "2.319.3-jdk11"
-  tagLabel: "jdk11"
-  imagePullPolicy: "IfNotPresent"
+  componentName: jenkins-controller
+  image: insecure.docker.registry.local:80/docker.io/jenkins/jenkins
+  tag: 2.319.3-jdk11
+  tagLabel: jdk11
+  imagePullPolicy: IfNotPresent
   imagePullSecretName: null
   disableRememberMe: false
   numExecutors: 0
-  executorMode: "NORMAL"
-  markupFormatter: "plainText"
+  executorMode: NORMAL
+  markupFormatter: plainText
   customJenkinsLabels: []
   adminSecret: true
   hostNetworking: false
-  adminUser: "admin"
+  adminUser: admin
   admin:
-    existingSecret: "jenkins-admin-secret"
-    userKey: "username"
-    passwordKey: "password"
-  jenkinsHome: "/var/jenkins_home"
-  jenkinsRef: "/usr/share/jenkins/ref"
-  jenkinsWar: "/usr/share/jenkins/jenkins.war"
+    existingSecret: jenkins-admin-secret
+    userKey: username
+    passwordKey: password
+  jenkinsHome: /var/jenkins_home
+  jenkinsRef: /usr/share/jenkins/ref
+  jenkinsWar: /usr/share/jenkins/jenkins.war
   resources:
     requests:
-      cpu: "50m"
-      memory: "256Mi"
+      cpu: 50m
+      memory: 256Mi
     limits:
-      cpu: "2000m"
-      memory: "4096Mi"
-  jenkinsUrlProtocol: "http"
-  jenkinsUrl: "http://jenkins.local"
-  serviceType: "ClusterIP"
+      cpu: 2000m
+      memory: 4096Mi
+  jenkinsUrlProtocol: http
+  jenkinsUrl: http://jenkins.local
+  serviceType: ClusterIP
   serviceExternalTrafficPolicy: null
   healthProbes: true
   agentListenerEnabled: true
   agentListenerPort: 50000
   disabledAgentProtocols:
-  - "JNLP-connect"
-  - "JNLP2-connect"
+  - JNLP-connect
+  - JNLP2-connect
   csrf:
     defaultCrumbIssuer:
       enabled: true
       proxyCompatability: true
-  agentListenerServiceType: "ClusterIP"
+  agentListenerServiceType: ClusterIP
   installPlugins:
-  - "kubernetes:1.31.3"
-  - "workflow-aggregator:2.6"
-  - "git:4.10.2"
-  - "configuration-as-code:1.55.1"
+  - kubernetes:1.31.3
+  - workflow-aggregator:2.6
+  - git:4.10.2
+  - configuration-as-code:1.55.1
   installLatestPlugins: true
   installLatestSpecifiedPlugins: false
   additionalPlugins: []
@@ -56,42 +56,50 @@ controller:
   JCasC:
     defaultConfig: true
     configScripts:
-      welcome-message: "jenkins:\n  systemMessage: Welcome to our CI\\CD server. \
-        \ This Jenkins is configured and managed 'as code'.\n"
-    securityRealm: "local:\n  allowsSignup: true\n  enableCaptcha: true\n  users:\n\
-      \  - id: \"${chart-admin-username}\"\n    name: \"Jenkins Admin\"\n    password:\
-      \ \"${chart-admin-password}\""
-    authorizationStrategy: "loggedInUsersCanDoAnything:\n  allowAnonymousRead: false"
+      welcome-message: |
+        jenkins:
+          systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
+    securityRealm: |-
+      local:
+        allowsSignup: true
+        enableCaptcha: true
+        users:
+        - id: "${chart-admin-username}"
+          name: "Jenkins Admin"
+          password: "${chart-admin-password}"
+    authorizationStrategy: |-
+      loggedInUsersCanDoAnything:
+        allowAnonymousRead: false
   sidecars:
     configAutoReload:
       enabled: true
-      image: "insecure.docker.registry.local:80/docker.io/kiwigrid/k8s-sidecar:1.15.0"
-      imagePullPolicy: "IfNotPresent"
+      image: insecure.docker.registry.local:80/docker.io/kiwigrid/k8s-sidecar:1.15.0
+      imagePullPolicy: IfNotPresent
       resources:
         limits:
-          cpu: "100m"
-          memory: "100Mi"
+          cpu: 100m
+          memory: 100Mi
         requests:
-          cpu: "50m"
-          memory: "50Mi"
+          cpu: 50m
+          memory: 50Mi
       reqRetryConnect: 10
-      folder: "/var/jenkins_home/casc_configs"
+      folder: /var/jenkins_home/casc_configs
       containerSecurityContext:
         readOnlyRootFilesystem: true
         allowPrivilegeEscalation: false
     other: []
   ingress:
     enabled: true
-    apiVersion: "networking.k8s.io/v1"
+    apiVersion: networking.k8s.io/v1
     annotations:
-      nginx.ingress.kubernetes.io/proxy-body-size: "10m"
-      cert-manager.io/issuer: "self-signed-issuer"
-    ingressClassName: "nginx"
-    hostName: "jenkins.local"
+      nginx.ingress.kubernetes.io/proxy-body-size: 10m
+      cert-manager.io/issuer: self-signed-issuer
+    ingressClassName: nginx
+    hostName: jenkins.local
     tls:
-    - secretName: "jenkins.local-tls"
+    - secretName: jenkins.local-tls
       hosts:
-      - "jenkins.local"
+      - jenkins.local
   secondaryingress:
     enabled: false
   prometheus:
@@ -104,25 +112,25 @@ agent:
   jenkinsTunnel: null
   kubernetesConnectTimeout: 5
   kubernetesReadTimeout: 15
-  maxRequestsPerHostStr: "32"
+  maxRequestsPerHostStr: 32
   namespace: null
-  image: "insecure.docker.registry.local:80/docker.io/jenkins/inbound-agent"
-  tag: "4.11.2-4"
-  workingDir: "/home/jenkins/agent"
-  nodeUsageMode: "NORMAL"
+  image: insecure.docker.registry.local:80/docker.io/jenkins/inbound-agent
+  tag: 4.11.2-4
+  workingDir: /home/jenkins/agent
+  nodeUsageMode: NORMAL
   customJenkinsLabels:
-  - "default-agent"
+  - default-agent
   imagePullSecretName: null
-  componentName: "jenkins-agent"
+  componentName: jenkins-agent
   websocket: false
   privileged: false
   resources:
     requests:
-      cpu: "256m"
-      memory: "256Mi"
+      cpu: 256m
+      memory: 256Mi
     limits:
-      cpu: "512m"
-      memory: "512Mi"
+      cpu: 512m
+      memory: 512Mi
   alwaysPullImage: false
   showRawYaml: true
   volumes: []
@@ -130,34 +138,34 @@ agent:
   envVars: []
   command: null
   args: "${computer.jnlpmac} ${computer.name}"
-  sideContainerName: "jnlp"
+  sideContainerName: jnlp
   TTYEnabled: false
   containerCap: 10
-  podName: "default-agent"
+  podName: default-agent
   idleMinutes: 15
   yamlTemplate: ""
-  yamlMergeStrategy: "override"
+  yamlMergeStrategy: override
   connectTimeout: 120
   podTemplates: {}
 additionalAgents:
   maven:
-    podName: "maven-agent"
+    podName: maven-agent
     customJenkinsLabels:
-    - "maven-agent"
-    image: "insecure.docker.registry.local:80/docker.io/jenkins/jnlp-agent-maven"
-    tag: "jdk11"
+    - maven-agent
+    image: insecure.docker.registry.local:80/docker.io/jenkins/jnlp-agent-maven
+    tag: jdk11
     resources:
       requests:
-        cpu: "512m"
-        memory: "512Mi"
+        cpu: 512m
+        memory: 512Mi
       limits:
-        cpu: "512m"
-        memory: "512Mi"
+        cpu: 512m
+        memory: 512Mi
 persistence:
   enabled: true
-  storageClass: "standard"
-  accessMode: "ReadWriteOnce"
-  size: "8Gi"
+  storageClass: standard
+  accessMode: ReadWriteOnce
+  size: 8Gi
 rbac:
   create: true
   readSecrets: false
@@ -166,6 +174,6 @@ serviceAccountAgent:
 backup:
   enabled: false
   image:
-    repository: "insecure.docker.registry.local:80/docker.io/maorfr/kube-tasks"
-    tag: "0.2.0"
+    repository: insecure.docker.registry.local:80/docker.io/maorfr/kube-tasks
+    tag: 0.2.0
 checkDeprecation: true

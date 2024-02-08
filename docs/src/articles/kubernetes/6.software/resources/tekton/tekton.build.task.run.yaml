@@ -1,8 +1,8 @@
 ---
-apiVersion: "tekton.dev/v1beta1"
-kind: "TaskRun"
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
 metadata:
-  generateName: "build-task-run-"
+  generateName: build-task-run-
 spec:
   taskRef:
-    name: "build-task"
+    name: build-task

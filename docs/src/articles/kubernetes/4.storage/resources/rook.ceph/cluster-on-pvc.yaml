@@ -1,29 +1,29 @@
 ---
-apiVersion: "ceph.rook.io/v1"
-kind: "CephCluster"
+apiVersion: ceph.rook.io/v1
+kind: CephCluster
 metadata:
-  name: "rook-ceph"
-  namespace: "rook-ceph"
+  name: rook-ceph
+  namespace: rook-ceph
 spec:
-  dataDirHostPath: "/var/lib/rook"
+  dataDirHostPath: /var/lib/rook
   mon:
     count: 3
     allowMultiplePerNode: false
     volumeClaimTemplate:
       spec:
-        storageClassName: "rook-monitor"
+        storageClassName: rook-monitor
         resources:
           requests:
-            storage: "500Mi"
+            storage: 500Mi
   cephVersion:
-    image: "quay.io/ceph/ceph:v16.2.5"
+    image: quay.io/ceph/ceph:v16.2.5
     allowUnsupported: false
   skipUpgradeChecks: false
   continueUpgradeAfterChecksEvenIfNotHealthy: false
   mgr:
     count: 1
     modules:
-    - name: "pg_autoscaler"
+    - name: pg_autoscaler
       enabled: true
   dashboard:
     enabled: true
@@ -32,7 +32,7 @@ spec:
     disable: false
   storage:
     storageClassDeviceSets:
-    - name: "set1"
+    - name: set1
       count: 3
       portable: false
       tuneDeviceClass: true
@@ -41,14 +41,14 @@ spec:
       placement:
         topologySpreadConstraints:
         - maxSkew: 1
-          topologyKey: "kubernetes.io/hostname"
-          whenUnsatisfiable: "ScheduleAnyway"
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchExpressions:
-            - key: "app"
-              operator: "In"
+            - key: app
+              operator: In
               values:
-              - "rook-ceph-osd"
+              - rook-ceph-osd
       preparePlacement:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -56,37 +56,37 @@ spec:
             podAffinityTerm:
               labelSelector:
                 matchExpressions:
-                - key: "app"
-                  operator: "In"
+                - key: app
+                  operator: In
                   values:
-                  - "rook-ceph-osd"
-                - key: "app"
-                  operator: "In"
+                  - rook-ceph-osd
+                - key: app
+                  operator: In
                   values:
-                  - "rook-ceph-osd-prepare"
-              topologyKey: "kubernetes.io/hostname"
+                  - rook-ceph-osd-prepare
+              topologyKey: kubernetes.io/hostname
         topologySpreadConstraints:
         - maxSkew: 1
-          topologyKey: "kubernetes.io/hostname"
-          whenUnsatisfiable: "DoNotSchedule"
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchExpressions:
-            - key: "app"
-              operator: "In"
+            - key: app
+              operator: In
               values:
-              - "rook-ceph-osd-prepare"
+              - rook-ceph-osd-prepare
       resources: null
       volumeClaimTemplates:
       - metadata:
-          name: "data"
+          name: data
         spec:
           resources:
             requests:
-              storage: "256Mi"
-          storageClassName: "rook-data"
-          volumeMode: "Block"
+              storage: 256Mi
+          storageClassName: rook-data
+          volumeMode: Block
           accessModes:
-          - "ReadWriteOnce"
+          - ReadWriteOnce
     onlyApplyOSDPlacement: false
   resources: null
   disruptionManagement:
@@ -94,4 +94,4 @@ spec:
     osdMaintenanceTimeout: 30
     pgHealthCheckTimeout: 0
     manageMachineDisruptionBudgets: false
-    machineDisruptionBudgetNamespace: "openshift-machine-api"
+    machineDisruptionBudgetNamespace: openshift-machine-api

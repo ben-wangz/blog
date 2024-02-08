@@ -1,20 +1,23 @@
 ---
-name: "image-mirror"
+name: image-mirror
 "on":
   workflow_dispatch: null
 env:
-  TARGET_REGISTRY: "registry.cn-hangzhou.aliyuncs.com"
+  TARGET_REGISTRY: registry.cn-hangzhou.aliyuncs.com
   REGISTRY_USERNAME: "${{ secrets.REGISTRY_USERNAME }}"
   REGISTRY_PASSWORD: "${{ secrets.REGISTRY_PASSWORD }}"
-  REPOSITORY_PREFIX: "mirror-pub/"
+  REPOSITORY_PREFIX: mirror-pub/
   KEEP_STRUCTURE: false
 jobs:
   mirror-image:
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
     steps:
-    - name: "setup podman"
-      run: "sudo apt-get update\nsudo apt-get install -y podman\n"
-    - name: "checkout-repository"
-      uses: "actions/checkout@v4"
-    - name: "mirror"
-      run: "bash tools/image-mirror/mirror.sh\n"
+    - name: setup podman
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y podman
+    - name: checkout-repository
+      uses: actions/checkout@v4
+    - name: mirror
+      run: |
+        bash tools/image-mirror/mirror.sh

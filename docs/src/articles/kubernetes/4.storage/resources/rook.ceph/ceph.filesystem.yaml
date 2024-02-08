@@ -1,9 +1,9 @@
 ---
-apiVersion: "ceph.rook.io/v1"
-kind: "CephFilesystem"
+apiVersion: ceph.rook.io/v1
+kind: CephFilesystem
 metadata:
-  name: "ceph-filesystem-01"
-  namespace: "rook-ceph"
+  name: ceph-filesystem-01
+  namespace: rook-ceph
 spec:
   metadataPool:
     replicated:

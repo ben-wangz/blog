@@ -1,21 +1,26 @@
 ---
-apiVersion: "argoproj.io/v1alpha1"
-kind: "Application"
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  name: "alidns-webhook"
+  name: alidns-webhook
 spec:
   syncPolicy:
     syncOptions:
-    - "CreateNamespace=true"
-  project: "default"
+    - CreateNamespace=true
+  project: default
   source:
-    repoURL: "https://devmachine-fr.github.io/cert-manager-alidns-webhook"
-    chart: "alidns-webhook"
-    targetRevision: "0.7.0"
+    repoURL: https://devmachine-fr.github.io/cert-manager-alidns-webhook
+    chart: alidns-webhook
+    targetRevision: 0.7.0
     helm:
-      releaseName: "alidns-webhook"
-      values: "groupName: dev.geekcity.tech\ncertManager:\n  namespace: basic-components\n\
-        \  serviceAccountName: cert-manager\nimage:\n  repository: m.daocloud.io/ghcr.io/devmachine-fr/cert-manager-alidns-webhook/cert-manager-alidns-webhook\n"
+      releaseName: alidns-webhook
+      values: |
+        groupName: dev.geekcity.tech
+        certManager:
+          namespace: basic-components
+          serviceAccountName: cert-manager
+        image:
+          repository: m.daocloud.io/ghcr.io/devmachine-fr/cert-manager-alidns-webhook/cert-manager-alidns-webhook
   destination:
-    server: "https://kubernetes.default.svc"
-    namespace: "basic-components"
+    server: https://kubernetes.default.svc
+    namespace: basic-components

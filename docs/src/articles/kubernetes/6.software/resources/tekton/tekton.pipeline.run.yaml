@@ -1,33 +1,33 @@
 ---
-apiVersion: "tekton.dev/v1beta1"
-kind: "PipelineRun"
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
 metadata:
-  name: "pipelinerun-demo"
+  name: pipelinerun-demo
 spec:
   pipelineRef:
-    name: "pipeline-demo"
+    name: pipeline-demo
   podTemplate:
     hostAliases:
-    - ip: "192.168.123.7"
+    - ip: 192.168.123.7
       hostnames:
-      - "insecure.docker.registry.local"
+      - insecure.docker.registry.local
   workspaces:
-  - name: "git-source"
+  - name: git-source
     volumeClaimTemplate:
       spec:
-        storageClassName: "standard"
+        storageClassName: standard
         accessModes:
-        - "ReadWriteOnce"
+        - ReadWriteOnce
         resources:
           requests:
-            storage: "1Gi"
-  - name: "git-ssh-keys"
+            storage: 1Gi
+  - name: git-ssh-keys
     secret:
-      secretName: "git-ssh-key-secret"
+      secretName: git-ssh-key-secret
       items:
-      - key: "id_rsa"
-        path: "id_rsa"
+      - key: id_rsa
+        path: id_rsa
         mode: 384
-      - key: "id_rsa.pub"
-        path: "id_rsa.pub"
+      - key: id_rsa.pub
+        path: id_rsa.pub
         mode: 384

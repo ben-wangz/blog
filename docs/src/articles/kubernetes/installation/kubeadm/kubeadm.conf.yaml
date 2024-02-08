@@ -1,26 +1,26 @@
 ---
-apiVersion: "kubeadm.k8s.io/v1beta3"
-kind: "InitConfiguration"
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
 nodeRegistration:
-  criSocket: "unix:///var/run/crio/crio.sock"
-  imagePullPolicy: "IfNotPresent"
-  name: "k8s-master"
+  criSocket: unix:///var/run/crio/crio.sock
+  imagePullPolicy: IfNotPresent
+  name: k8s-master
   kubeletExtraArgs:
-    resolv-conf: "/run/systemd/resolve/resolv.conf"
+    resolv-conf: /run/systemd/resolve/resolv.conf
 ---
-apiVersion: "kubeadm.k8s.io/v1beta3"
-kind: "ClusterConfiguration"
-clusterName: "kubernetes"
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+clusterName: kubernetes
 controllerManager:
   extraArgs:
-    node-cidr-mask-size: "16"
-imageRepository: "m.daocloud.io/registry.k8s.io"
-kubernetesVersion: "1.27.0"
+    node-cidr-mask-size: 16
+imageRepository: m.daocloud.io/registry.k8s.io
+kubernetesVersion: 1.27.0
 networking:
-  dnsDomain: "cluster.local"
-  serviceSubnet: "10.96.0.0/12"
-  podSubnet: "10.244.0.0/16"
+  dnsDomain: cluster.local
+  serviceSubnet: 10.96.0.0/12
+  podSubnet: 10.244.0.0/16
 ---
-apiVersion: "kubelet.config.k8s.io/v1beta1"
-kind: "KubeletConfiguration"
-resolvConf: "/run/systemd/resolve/resolv.conf"
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+resolvConf: /run/systemd/resolve/resolv.conf

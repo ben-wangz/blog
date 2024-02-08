@@ -1,9 +1,9 @@
 ---
 persistence:
-  storageClass: "standard"
-  size: "2Gi"
+  storageClass: standard
+  size: 2Gi
 service:
-  type: "ClusterIP"
+  type: ClusterIP
 livenessProbe:
   periodSeconds: 120
   timeoutSeconds: 60
@@ -13,19 +13,19 @@ readinessProbe:
   timeoutSeconds: 60
   failureThreshold: 20
 image:
-  registry: "insecure.docker.registry.local:80/docker.io"
-  repository: "bitnami/cassandra"
-  tag: "3.11.11-debian-10-r4"
-  pullPolicy: "IfNotPresent"
+  registry: insecure.docker.registry.local:80/docker.io
+  repository: bitnami/cassandra
+  tag: 3.11.11-debian-10-r4
+  pullPolicy: IfNotPresent
 volumePermissions:
   image:
-    registry: "insecure.docker.registry.local:80/docker.io"
-    repository: "bitnami/bitnami-shell"
-    tag: "10-debian-10-r153"
-    pullPolicy: "Always"
+    registry: insecure.docker.registry.local:80/docker.io
+    repository: bitnami/bitnami-shell
+    tag: 10-debian-10-r153
+    pullPolicy: Always
 metrics:
   image:
-    registry: "insecure.docker.registry.local:80/docker.io"
-    pullPolicy: "IfNotPresent"
-    repository: "bitnami/cassandra-exporter"
-    tag: "2.3.4-debian-10-r478"
+    registry: insecure.docker.registry.local:80/docker.io
+    pullPolicy: IfNotPresent
+    repository: bitnami/cassandra-exporter
+    tag: 2.3.4-debian-10-r478

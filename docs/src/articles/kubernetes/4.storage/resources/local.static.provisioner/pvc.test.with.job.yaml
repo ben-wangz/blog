@@ -1,39 +1,39 @@
 ---
-apiVersion: "v1"
-kind: "PersistentVolumeClaim"
+apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: "pvc-local-disks"
-  namespace: "default"
+  name: pvc-local-disks
+  namespace: default
 spec:
   accessModes:
-  - "ReadWriteOnce"
+  - ReadWriteOnce
   resources:
     requests:
-      storage: "1Gi"
-  storageClassName: "local-disks"
+      storage: 1Gi
+  storageClassName: local-disks
 ---
-apiVersion: "batch/v1"
-kind: "Job"
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: "job-test-pvc"
-  namespace: "default"
+  name: job-test-pvc
+  namespace: default
 spec:
   template:
     spec:
       volumes:
-      - name: "volume"
+      - name: volume
         persistentVolumeClaim:
-          claimName: "pvc-local-disks"
+          claimName: pvc-local-disks
       containers:
-      - name: "job-test-pvc"
-        image: "busybox:1.33.1-uclibc"
+      - name: job-test-pvc
+        image: busybox:1.33.1-uclibc
         command:
-        - "/bin/sh"
-        - "-c"
-        - "test -e /scrub && echo test > /scrub/test.txt && rm /scrub/test.txt ||\
-          \ exit 1"
+        - /bin/sh
+        - -c
+        - test -e /scrub && echo test > /scrub/test.txt && rm /scrub/test.txt || exit
+          1
         volumeMounts:
-        - name: "volume"
-          mountPath: "/scrub"
-      restartPolicy: "Never"
+        - name: volume
+          mountPath: /scrub
+      restartPolicy: Never
   backoffLimit: 2

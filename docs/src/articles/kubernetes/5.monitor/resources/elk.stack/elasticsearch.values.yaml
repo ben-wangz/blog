@@ -1,29 +1,29 @@
 ---
-clusterName: "elasticsearch"
-nodeGroup: "master"
+clusterName: elasticsearch
+nodeGroup: master
 replicas: 3
 minimumMasterNodes: 2
 esConfig: {}
 esJvmOptions: {}
 extraEnvs: []
-image: "insecure.docker.registry.local:80/docker.io/docker.elastic.co/elasticsearch/elasticsearch"
-imageTag: "7.16.3"
-imagePullPolicy: "IfNotPresent"
-esJavaOpts: "-Xmx512m -Xms512m"
+image: insecure.docker.registry.local:80/docker.io/docker.elastic.co/elasticsearch/elasticsearch
+imageTag: 7.16.3
+imagePullPolicy: IfNotPresent
+esJavaOpts: -Xmx512m -Xms512m
 resources:
   requests:
-    cpu: "100m"
-    memory: "1Gi"
+    cpu: 100m
+    memory: 1Gi
   limits:
-    cpu: "1000m"
-    memory: "2Gi"
+    cpu: 1000m
+    memory: 2Gi
 volumeClaimTemplate:
   accessModes:
-  - "ReadWriteOnce"
-  storageClassName: "standard"
+  - ReadWriteOnce
+  storageClassName: standard
   resources:
     requests:
-      storage: "10Gi"
+      storage: 10Gi
 persistence:
   enabled: true
   labels:
@@ -31,38 +31,38 @@ persistence:
   annotations: {}
 extraVolumes: []
 extraVolumeMounts: []
-protocol: "http"
+protocol: http
 httpPort: 9200
 transportPort: 9300
 service:
   enabled: true
   labels: {}
   labelsHeadless: {}
-  type: "ClusterIP"
+  type: ClusterIP
   nodePort: ""
   annotations: {}
-  httpPortName: "http"
-  transportPortName: "transport"
+  httpPortName: http
+  transportPortName: transport
   loadBalancerIP: ""
   loadBalancerSourceRanges: []
   externalTrafficPolicy: ""
-updateStrategy: "RollingUpdate"
+updateStrategy: RollingUpdate
 maxUnavailable: 1
 ingress:
   enabled: true
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/issuer: "self-signed-issuer"
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/issuer: self-signed-issuer
   className: ""
-  pathtype: "ImplementationSpecific"
+  pathtype: ImplementationSpecific
   hosts:
-  - host: "elasticsearch.local"
+  - host: elasticsearch.local
     paths:
-    - path: "/"
+    - path: /
   tls:
-  - secretName: "elasticsearch.local-tls"
+  - secretName: elasticsearch.local-tls
     hosts:
-    - "elasticsearch.local"
+    - elasticsearch.local
   transport:
     enabled: false
 tests:

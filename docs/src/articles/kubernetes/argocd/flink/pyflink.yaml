@@ -1,29 +1,29 @@
 ---
-apiVersion: "flink.apache.org/v1beta1"
-kind: "FlinkDeployment"
+apiVersion: flink.apache.org/v1beta1
+kind: FlinkDeployment
 metadata:
-  name: "python-example"
+  name: python-example
 spec:
-  image: "m.daocloud.io/ghcr.io/ben.wangz/blog-pyflink:main"
-  flinkVersion: "v1_17"
+  image: m.daocloud.io/ghcr.io/ben.wangz/blog-pyflink:main
+  flinkVersion: v1_17
   flinkConfiguration:
-    taskmanager.numberOfTaskSlots: "1"
-  serviceAccount: "flink"
+    taskmanager.numberOfTaskSlots: 1
+  serviceAccount: flink
   jobManager:
     resource:
-      memory: "1024m"
+      memory: 1024m
       cpu: 0.5
   taskManager:
     resource:
-      memory: "1024m"
+      memory: 1024m
       cpu: 0.5
   job:
-    jarURI: "local:///opt/flink/opt/flink-python_2.12-1.17.2.jar"
-    entryClass: "org.apache.flink.client.python.PythonDriver"
+    jarURI: local:///opt/flink/opt/flink-python_2.12-1.17.2.jar
+    entryClass: org.apache.flink.client.python.PythonDriver
     args:
-    - "-pyclientexec"
-    - "/usr/local/bin/python3"
-    - "-py"
-    - "/opt/flink/usrlib/python_demo.py"
+    - -pyclientexec
+    - /usr/local/bin/python3
+    - -py
+    - /opt/flink/usrlib/python_demo.py
     parallelism: 1
-    upgradeMode: "stateless"
+    upgradeMode: stateless

@@ -1,27 +1,45 @@
 ---
-apiVersion: "argoproj.io/v1alpha1"
-kind: "Application"
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  name: "ingress-nginx"
+  name: ingress-nginx
 spec:
   syncPolicy:
     syncOptions:
-    - "CreateNamespace=true"
-  project: "default"
+    - CreateNamespace=true
+  project: default
   source:
-    repoURL: "https://ben-wangz.github.io/helm-chart-mirror/charts"
-    chart: "ingress-nginx"
-    targetRevision: "4.9.0"
+    repoURL: https://ben-wangz.github.io/helm-chart-mirror/charts
+    chart: ingress-nginx
+    targetRevision: 4.9.0
     helm:
-      releaseName: "ingress-nginx"
-      values: "controller:\n  image:\n    registry: m.daocloud.io\n    image: registry.k8s.io/ingress-nginx/controller\n\
-        \    tag: \"v1.9.5\"\n    pullPolicy: IfNotPresent\n  service:\n    enabled:\
-        \ true\n    type: NodePort\n    nodePorts:\n      http: 32080\n      https:\
-        \ 32443\n      tcp:\n        8080: 32808\n  admissionWebhooks:\n    enabled:\
-        \ true\n    patch:\n      enabled: true\n      image:\n        registry: m.daocloud.io\n\
-        \        image: registry.k8s.io/ingress-nginx/kube-webhook-certgen\n     \
-        \   tag: v20231011-8b53cabe0\n        pullPolicy: IfNotPresent\ndefaultBackend:\n\
-        \  enabled: false\n"
+      releaseName: ingress-nginx
+      values: |
+        controller:
+          image:
+            registry: m.daocloud.io
+            image: registry.k8s.io/ingress-nginx/controller
+            tag: "v1.9.5"
+            pullPolicy: IfNotPresent
+          service:
+            enabled: true
+            type: NodePort
+            nodePorts:
+              http: 32080
+              https: 32443
+              tcp:
+                8080: 32808
+          admissionWebhooks:
+            enabled: true
+            patch:
+              enabled: true
+              image:
+                registry: m.daocloud.io
+                image: registry.k8s.io/ingress-nginx/kube-webhook-certgen
+                tag: v20231011-8b53cabe0
+                pullPolicy: IfNotPresent
+        defaultBackend:
+          enabled: false
   destination:
-    server: "https://kubernetes.default.svc"
-    namespace: "basic-components"
+    server: https://kubernetes.default.svc
+    namespace: basic-components

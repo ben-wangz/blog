@@ -1,22 +1,22 @@
 ---
-apiVersion: "apps/v1"
-kind: "Deployment"
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: "nginx-deployment"
+  name: nginx-deployment
   labels:
-    app: "nginx"
+    app: nginx
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: "nginx"
+      app: nginx
   template:
     metadata:
       labels:
-        app: "nginx"
+        app: nginx
     spec:
       containers:
-      - name: "nginx"
-        image: "m.daocloud.io/docker.io/library/nginx:1.24.0-alpine"
+      - name: nginx
+        image: m.daocloud.io/docker.io/library/nginx:1.24.0-alpine
         ports:
         - containerPort: 80

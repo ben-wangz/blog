@@ -1,17 +1,17 @@
 ---
 image:
-  repository: "insecure.docker.registry.local:80/docker.io/sonatype/nexus3"
-  tag: "3.37.3"
-  pullPolicy: "IfNotPresent"
+  repository: insecure.docker.registry.local:80/docker.io/sonatype/nexus3
+  tag: 3.37.3
+  pullPolicy: IfNotPresent
 imagePullSecrets: []
 nexus:
   docker:
     enabled: false
   env:
-  - name: "INSTALL4J_ADD_VM_PARAMS"
-    value: "-Xms1200M -Xmx1200M -XX:MaxDirectMemorySize=2G -XX:+UnlockExperimentalVMOptions\
-      \ -XX:+UseCGroupMemoryLimitForHeap"
-  - name: "NEXUS_SECURITY_RANDOMPASSWORD"
+  - name: INSTALL4J_ADD_VM_PARAMS
+    value: -Xms1200M -Xmx1200M -XX:MaxDirectMemorySize=2G -XX:+UnlockExperimentalVMOptions
+      -XX:+UseCGroupMemoryLimitForHeap
+  - name: NEXUS_SECURITY_RANDOMPASSWORD
     value: "true"
   properties:
     override: false
@@ -19,11 +19,11 @@ nexus:
       nexus.scripts.allowCreation: true
   resources:
     requests:
-      cpu: "100m"
-      memory: "512Mi"
+      cpu: 100m
+      memory: 512Mi
     limits:
-      cpu: "1000m"
-      memory: "4800Mi"
+      cpu: 1000m
+      memory: 4800Mi
   nexusPort: 8081
 deployment:
   annotations: {}
@@ -37,28 +37,28 @@ deployment:
   additionalVolumeMounts: null
 ingress:
   enabled: true
-  ingressClassName: "nginx"
+  ingressClassName: nginx
   annotations:
-    cert-manager.io/issuer: "self-signed-issuer"
-    nginx.ingress.kubernetes.io/proxy-body-size: "200m"
-    nginx.org/client-max-body-size: "200m"
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-  hostPath: "/"
-  hostRepo: "nexus-repository-manager.local"
+    cert-manager.io/issuer: self-signed-issuer
+    nginx.ingress.kubernetes.io/proxy-body-size: 200m
+    nginx.org/client-max-body-size: 200m
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: 600
+    nginx.ingress.kubernetes.io/proxy-send-timeout: 600
+    nginx.ingress.kubernetes.io/proxy-read-timeout: 600
+  hostPath: /
+  hostRepo: nexus-repository-manager.local
   tls:
-  - secretName: "nexus-repository-manager.local-tls"
+  - secretName: nexus-repository-manager.local-tls
     hosts:
-    - "nexus-repository-manager.local"
+    - nexus-repository-manager.local
 service:
-  name: "nexus3"
+  name: nexus3
   enabled: true
-  type: "ClusterIP"
+  type: ClusterIP
 persistence:
   enabled: true
-  accessMode: "ReadWriteOnce"
-  storageClass: "standard"
-  storageSize: "8Gi"
+  accessMode: ReadWriteOnce
+  storageClass: standard
+  storageSize: 8Gi
 serviceAccount:
   create: true

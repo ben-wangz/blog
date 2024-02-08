@@ -3,91 +3,91 @@ hub:
   config:
     Authenticator:
       admin_users:
-      - "admin"
+      - admin
       allowed_users:
-      - "user1"
-      - "user2"
+      - user1
+      - user2
     DummyAuthenticator:
-      password: "a-shared-secret-password"
+      password: a-shared-secret-password
     JupyterHub:
-      authenticator_class: "dummy"
+      authenticator_class: dummy
   service:
-    type: "ClusterIP"
-  baseUrl: "/"
+    type: ClusterIP
+  baseUrl: /
   db:
-    type: "sqlite-pvc"
+    type: sqlite-pvc
     pvc:
-      storage: "1Gi"
-      storageClassName: "standard"
+      storage: 1Gi
+      storageClassName: standard
   image:
-    name: "insecure.docker.registry.local:80/docker.io/jupyterhub/k8s-hub"
-    tag: "1.2.0"
+    name: insecure.docker.registry.local:80/docker.io/jupyterhub/k8s-hub
+    tag: 1.2.0
 proxy:
   service:
-    type: "ClusterIP"
+    type: ClusterIP
   chp:
     image:
-      name: "insecure.docker.registry.local:80/docker.io/jupyterhub/configurable-http-proxy"
-      tag: "4.5.0"
+      name: insecure.docker.registry.local:80/docker.io/jupyterhub/configurable-http-proxy
+      tag: 4.5.0
   traefik:
     image:
-      name: "insecure.docker.registry.local:80/docker.io/traefik"
-      tag: "v2.4.11"
+      name: insecure.docker.registry.local:80/docker.io/traefik
+      tag: v2.4.11
   secretSync:
     image:
-      name: "insecure.docker.registry.local:80/docker.io/jupyterhub/k8s-secret-sync"
-      tag: "1.2.0"
+      name: insecure.docker.registry.local:80/docker.io/jupyterhub/k8s-secret-sync
+      tag: 1.2.0
 singleuser:
   storage:
-    type: "dynamic"
+    type: dynamic
     dynamic:
-      storageClass: "standard"
+      storageClass: standard
       pvcNameTemplate: "claim-{username}{servername}"
       volumeNameTemplate: "volume-{username}{servername}"
       storageAccessModes:
-      - "ReadWriteOnce"
+      - ReadWriteOnce
   image:
-    name: "insecure.docker.registry.local:80/docker.io/jupyterhub/k8s-singleuser-sample"
-    tag: "1.2.0"
+    name: insecure.docker.registry.local:80/docker.io/jupyterhub/k8s-singleuser-sample
+    tag: 1.2.0
   cpu:
     limit: 1
     guarantee: 0.5
   memory:
-    limit: "4G"
-    guarantee: "512M"
-  defaultUrl: "/lab"
+    limit: 4G
+    guarantee: 512M
+  defaultUrl: /lab
   extraEnv:
-    JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
+    JUPYTERHUB_SINGLEUSER_APP: jupyter_server.serverapp.ServerApp
 scheduling:
   userScheduler:
     enabled: true
     replicas: 2
     logLevel: 4
     image:
-      name: "insecure.docker.registry.local:80/docker.io/k8s.gcr.io/kube-scheduler"
-      tag: "v1.19.13"
+      name: insecure.docker.registry.local:80/docker.io/k8s.gcr.io/kube-scheduler
+      tag: v1.19.13
   userPlaceholder:
     enabled: true
     image:
-      name: "insecure.docker.registry.local:80/docker.io/k8s.gcr.io/pause"
-      tag: "3.5"
+      name: insecure.docker.registry.local:80/docker.io/k8s.gcr.io/pause
+      tag: 3.5
 prePuller:
   hook:
     enabled: true
     pullOnlyOnChanges: true
     image:
-      name: "insecure.docker.registry.local:80/docker.io/jupyterhub/k8s-image-awaiter"
-      tag: "1.2.0"
+      name: insecure.docker.registry.local:80/docker.io/jupyterhub/k8s-image-awaiter
+      tag: 1.2.0
   continuous:
     enabled: true
   pause:
     image:
-      name: "insecure.docker.registry.local:80/docker.io/k8s.gcr.io/pause"
-      tag: "3.5"
+      name: insecure.docker.registry.local:80/docker.io/k8s.gcr.io/pause
+      tag: 3.5
 ingress:
   enabled: true
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/issuer: "self-signed-issuer"
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/issuer: self-signed-issuer
   hosts:
-  - "jupyterhub.local"
+  - jupyterhub.local

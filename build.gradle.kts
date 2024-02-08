@@ -17,7 +17,8 @@ configure<com.diffplug.gradle.spotless.SpotlessExtension> {
         target("**/*.yaml")
         targetExclude("**/.gradle/**")
         jackson()
-            .feature("ORDER_MAP_ENTRIES_BY_KEYS", true)
+            .feature("ORDER_MAP_ENTRIES_BY_KEYS", false)
+            .yamlFeature("MINIMIZE_QUOTES", true)
     }
     json {
         target("**/*.json")

@@ -1,23 +1,32 @@
 ---
-apiVersion: "argoproj.io/v1alpha1"
-kind: "Application"
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  name: "nfs-provisioner-application"
+  name: nfs-provisioner-application
 spec:
   syncPolicy:
     syncOptions:
-    - "CreateNamespace=true"
-  project: "default"
+    - CreateNamespace=true
+  project: default
   source:
-    repoURL: "https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner"
-    chart: "nfs-subdir-external-provisioner"
-    targetRevision: "4.0.18"
+    repoURL: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
+    chart: nfs-subdir-external-provisioner
+    targetRevision: 4.0.18
     helm:
-      releaseName: "basic-nfs-provisioner"
-      values: "image:\n  repository: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner\n\
-        \  tag: v4.0.2\n  pullPolicy: IfNotPresent\nnfs:\n  server: nfs.services.geekcity.tech\n\
-        \  path: /\n  mountOptions:\nstorageClass:\n  create: true\n  defaultClass:\
-        \ true\n  name: nfs-external\n"
+      releaseName: basic-nfs-provisioner
+      values: |
+        image:
+          repository: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner
+          tag: v4.0.2
+          pullPolicy: IfNotPresent
+        nfs:
+          server: nfs.services.geekcity.tech
+          path: /
+          mountOptions:
+        storageClass:
+          create: true
+          defaultClass: true
+          name: nfs-external
   destination:
-    server: "https://kubernetes.default.svc"
-    namespace: "basic-components"
+    server: https://kubernetes.default.svc
+    namespace: basic-components

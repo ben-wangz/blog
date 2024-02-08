@@ -1,37 +1,37 @@
 ---
-kind: "Service"
-apiVersion: "v1"
+kind: Service
+apiVersion: v1
 metadata:
-  name: "nexus-repository-manager-service-external"
+  name: nexus-repository-manager-service-external
 spec:
-  type: "ExternalName"
-  externalName: "my-nexus-repository-manager.application.svc.cluster.local"
+  type: ExternalName
+  externalName: my-nexus-repository-manager.application.svc.cluster.local
   ports:
   - port: 8081
 ---
-apiVersion: "networking.k8s.io/v1"
-kind: "Ingress"
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: "insecure-nexus-repository-manager-ingress"
+  name: insecure-nexus-repository-manager-ingress
   labels:
-    app.kubernetes.io/name: "nexus-repository-manager-ingress"
-    app.kubernetes.io/instance: "my-nexus-repository-manager-ingress"
+    app.kubernetes.io/name: nexus-repository-manager-ingress
+    app.kubernetes.io/instance: my-nexus-repository-manager-ingress
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/proxy-body-size: "200m"
-    nginx.org/client-max-body-size: "200m"
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 200m
+    nginx.org/client-max-body-size: 200m
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: 600
+    nginx.ingress.kubernetes.io/proxy-send-timeout: 600
+    nginx.ingress.kubernetes.io/proxy-read-timeout: 600
 spec:
   rules:
-  - host: "insecure.nexus.repository.manager.local"
+  - host: insecure.nexus.repository.manager.local
     http:
       paths:
-      - path: "/"
-        pathType: "ImplementationSpecific"
+      - path: /
+        pathType: ImplementationSpecific
         backend:
           service:
-            name: "nexus-repository-manager-service-external"
+            name: nexus-repository-manager-service-external
             port:
               number: 8081

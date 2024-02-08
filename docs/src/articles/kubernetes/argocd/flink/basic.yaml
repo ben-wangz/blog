@@ -1,27 +1,27 @@
 ---
-apiVersion: "flink.apache.org/v1beta1"
-kind: "FlinkDeployment"
+apiVersion: flink.apache.org/v1beta1
+kind: FlinkDeployment
 metadata:
-  name: "basic"
+  name: basic
 spec:
-  image: "flink:1.17"
-  flinkVersion: "v1_17"
+  image: flink:1.17
+  flinkVersion: v1_17
   ingress:
     template: "flink.k8s.io/{{namespace}}/{{name}}(/|$)(.*)"
-    className: "nginx"
+    className: nginx
     annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
   flinkConfiguration:
-    taskmanager.numberOfTaskSlots: "2"
-  serviceAccount: "flink"
+    taskmanager.numberOfTaskSlots: 2
+  serviceAccount: flink
   jobManager:
     resource:
-      memory: "1024m"
+      memory: 1024m
       cpu: 0.5
   taskManager:
     resource:
-      memory: "1024m"
+      memory: 1024m
       cpu: 0.5
   job:
-    jarURI: "local:///opt/flink/examples/streaming/StateMachineExample.jar"
+    jarURI: local:///opt/flink/examples/streaming/StateMachineExample.jar
     parallelism: 2

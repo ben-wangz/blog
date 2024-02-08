@@ -1,20 +1,21 @@
 ---
-kind: "Cluster"
-apiVersion: "kind.x-k8s.io/v1alpha4"
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
 featureGates:
   CSIMigration: true
 nodes:
-- role: "control-plane"
+- role: control-plane
   extraPortMappings:
   - containerPort: 80
     hostPort: 8080
-    protocol: "TCP"
+    protocol: TCP
   - containerPort: 443
     hostPort: 8443
-    protocol: "TCP"
-- role: "worker"
-- role: "worker"
-- role: "worker"
+    protocol: TCP
+- role: worker
+- role: worker
+- role: worker
 containerdConfigPatches:
-- "[plugins.\"io.containerd.grpc.v1.cri\".registry.mirrors.\"localhost:5000\"]\n \
-  \ endpoint = [\"http://kind-registry:5000\"]"
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:5000"]
+    endpoint = ["http://kind-registry:5000"]
