@@ -64,9 +64,9 @@ mindmap
 ## implementation pieces
 1. storage layer
     * use `s3-compatible storage`, such as minio, to store files
-        + minio: [docker](../docker/software/minio.md) | [k8s](../kubernetes/argocd/minio/)
+        + minio: [docker](../docker/software/storage/minio.md) | [k8s](../kubernetes/argocd/storage/minio/README.md)
     * use `clickhouse` to store tables
-        + [docker](../docker/software/clickhouse.md) | [k8s](../kubernetes/argocd/clickhouse/)
+        + [docker](../docker/software/database/clickhouse.md) | [k8s](../kubernetes/argocd/database/clickhouse/README.md)
         + why clickhouse?
             1. it's a column-oriented database management system
             2. merge tree engine is powerful to store and query time series data

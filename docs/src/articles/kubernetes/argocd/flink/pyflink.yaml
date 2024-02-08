@@ -7,7 +7,7 @@ spec:
   image: m.daocloud.io/ghcr.io/ben.wangz/blog-pyflink:main
   flinkVersion: v1_17
   flinkConfiguration:
-    taskmanager.numberOfTaskSlots: 1
+    taskmanager.numberOfTaskSlots: "1"
   serviceAccount: flink
   jobManager:
     resource:

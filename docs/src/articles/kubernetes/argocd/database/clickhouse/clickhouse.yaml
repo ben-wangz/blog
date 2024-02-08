@@ -35,7 +35,7 @@ spec:
           annotations:
             cert-manager.io/cluster-issuer: alidns-webhook-letsencrypt
             nginx.ingress.kubernetes.io/rewrite-target: /$1
-          hostname: clickhouse.geekcity.tech
+          hostname: clickhouse.dev.geekcity.tech
           ingressClassName: nginx
           path: /?(.*)
           tls: true
@@ -43,4 +43,4 @@ spec:
           enabled: false
   destination:
     server: https://kubernetes.default.svc
-    namespace: application
+    namespace: database

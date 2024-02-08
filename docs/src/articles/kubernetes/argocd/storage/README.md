@@ -1,5 +1,5 @@
 ---
-title: installation
+title: storage
 icon: folder
 category:
   - k8s

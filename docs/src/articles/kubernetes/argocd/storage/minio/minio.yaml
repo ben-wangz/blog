@@ -1,0 +1,52 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://ben-wangz.github.io/helm-chart-mirror/charts
+    chart: minio
+    targetRevision: 5.0.15
+    helm:
+      releaseName: minio
+      values: |
+        image:
+          repository: m.daocloud.io/quay.io/minio/minio
+        mcImage:
+          repository: m.daocloud.io/quay.io/minio/mc
+        mode: standalone
+        persistence: 
+          enabled: false
+        ingress:
+          enabled: true
+          ingressClassName: nginx
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /$1
+          path: /?(.*)
+          hosts:
+            - minio-api.dev.geekcity.tech
+        consoleIngress:
+          enabled: true
+          ingressClassName: nginx
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /$1
+          path: /?(.*)
+          hosts:
+            - minio-console.dev.geekcity.tech
+        replicas: 1
+        resources:
+          requests:
+            memory: 512Mi
+            cpu: 250m
+          limits:
+            memory: 512Mi
+            cpu: 250m
+        existingSecret: minio-secret
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: storage

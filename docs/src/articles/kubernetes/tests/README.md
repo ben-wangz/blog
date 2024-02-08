@@ -1,17 +1,16 @@
 ---
-title: database
+title: tests
 icon: folder
 category:
   - k8s
 tag:
   - linux
   - k8s
-  - argocd
-  - database
+  - tests
 index: false
 ---
 
-## what
-* databases managed by argocd
+### what
+* tools for troubleshooting in k8s
 
 <AutoCatalog />

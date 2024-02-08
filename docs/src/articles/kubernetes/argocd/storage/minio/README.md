@@ -1,5 +1,5 @@
 ---
-title: database
+title: minio
 icon: folder
 category:
   - k8s
@@ -7,11 +7,12 @@ tag:
   - linux
   - k8s
   - argocd
-  - database
+  - storage
+  - minio
 index: false
 ---
 
 ## what
-* databases managed by argocd
+* minio managed by argocd
 
 <AutoCatalog />

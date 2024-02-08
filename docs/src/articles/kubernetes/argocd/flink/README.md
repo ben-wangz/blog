@@ -32,6 +32,7 @@
       ```
 2. apply to k8s
     * ```shell
+      kubectl get namespaces flink > /dev/null 2>&1 || kubectl create namespace flink
       kubectl -n flink apply -f basic.yaml
       ```
 3. check status with web ui
@@ -62,6 +63,7 @@
       ```
 3. apply to k8s
     * ```shell
+      kubectl get namespaces flink > /dev/null 2>&1 || kubectl create namespace flink
       kubectl -n flink apply -f pyflink.yaml
       ```
 4. check status with web ui

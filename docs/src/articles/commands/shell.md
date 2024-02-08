@@ -161,3 +161,9 @@ curl -sL 'https://www.ip.cn/api/index?ip&type=0' | jq -r '.ip'
       lvextend /dev/mapper/fedora-root -l+100%FREE
       xfs_growfs /dev/mapper/fedora-root
       ```
+
+## generate random string
+
+```shell
+tr -dc A-Za-z0-9 </dev/urandom | head -c 16
+```

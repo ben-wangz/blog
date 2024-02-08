@@ -22,4 +22,4 @@ spec:
       version: v3
   destination:
     server: https://kubernetes.default.svc
-    namespace: flink-operator
+    namespace: flink
