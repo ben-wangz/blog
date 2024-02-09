@@ -14,23 +14,26 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    implementation("org.apache.flink:flink-s3-fs-hadoop:$flinkVersion")
+    implementation("org.apache.flink:flink-parquet:$flinkVersion")
+    implementation("org.apache.parquet:parquet-avro:1.12.2") {
+        exclude(group = "org.apache.hadoop", module = "hadoop-client")
+        exclude(group = "it.unimi.dsi", module = "fastutil")
+    }
 
     shadow(lombokDependency)
     shadow("org.slf4j:slf4j-simple:$slf4jVersion")
     shadow("org.apache.flink:flink-streaming-java:$flinkVersion")
     shadow("org.apache.flink:flink-clients:$flinkVersion")
-    implementation("org.apache.flink:flink-s3-fs-presto:$flinkVersion")
+    shadow("org.apache.flink:flink-connector-datagen:$flinkVersion")
+    shadow("org.apache.flink:flink-connector-files:$flinkVersion")
+    shadow("org.apache.flink:flink-runtime-web:$flinkVersion")
+    // shadow("org.apache.flink:flink-file-sink-common:$flinkVersion")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    // implementation("org.apache.flink:flink-file-sink-common:$flinkVersion")
-    // implementation("org.apache.flink:flink-connector-files:$flinkVersion")
-    // implementation("org.apache.flink:flink-parquet:$flinkVersion")
     // implementation("org.apache.flink:flink-walkthrough-common:$flinkVersion")
-    // implementation("org.apache.flink:flink-streaming-java:$flinkVersion")
-    // implementation("org.apache.flink:flink-clients:$flinkVersion")
-    // implementation("org.apache.flink:flink-connector-datagen:$flinkVersion")
 }
 
 java {
