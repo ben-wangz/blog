@@ -9,8 +9,7 @@ nexus:
     enabled: false
   env:
   - name: INSTALL4J_ADD_VM_PARAMS
-    value: -Xms1200M -Xmx1200M -XX:MaxDirectMemorySize=2G -XX:+UnlockExperimentalVMOptions
-      -XX:+UseCGroupMemoryLimitForHeap
+    value: -Xms1200M -Xmx1200M -XX:MaxDirectMemorySize=2G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
   - name: NEXUS_SECURITY_RANDOMPASSWORD
     value: "true"
   properties:

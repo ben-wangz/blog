@@ -20,7 +20,7 @@ spec:
         mcImage:
           repository: m.daocloud.io/quay.io/minio/mc
         mode: standalone
-        persistence: 
+        persistence:
           enabled: false
         ingress:
           enabled: true

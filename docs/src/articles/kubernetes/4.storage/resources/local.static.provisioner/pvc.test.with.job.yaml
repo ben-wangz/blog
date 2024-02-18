@@ -30,8 +30,7 @@ spec:
         command:
         - /bin/sh
         - -c
-        - test -e /scrub && echo test > /scrub/test.txt && rm /scrub/test.txt || exit
-          1
+        - test -e /scrub && echo test > /scrub/test.txt && rm /scrub/test.txt || exit 1
         volumeMounts:
         - name: volume
           mountPath: /scrub

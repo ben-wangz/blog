@@ -13,13 +13,11 @@ spec:
     type: string
     default: main
   - name: sslVerify
-    description: defines if http.sslVerify should be set to true or false in the global
-      git config
+    description: defines if http.sslVerify should be set to true or false in the global git config
     type: string
     default: "true"
   - name: deleteExisting
-    description: clean out the contents of the repo's destination directory (if it
-      already exists)
+    description: clean out the contents of the repo's destination directory (if it already exists)
     type: string
     default: "false"
   - name: image-registry

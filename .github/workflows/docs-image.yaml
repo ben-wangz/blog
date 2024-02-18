@@ -28,7 +28,7 @@ jobs:
     - name: build and push container image
       uses: docker/build-push-action@v5
       with:
-        context: .
+        context: "."
         file: docs/Dockerfile
         push: true
         tags: "${{ steps.meta.outputs.tags }}"

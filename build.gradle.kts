@@ -20,6 +20,8 @@ configure<com.diffplug.gradle.spotless.SpotlessExtension> {
             .feature("ORDER_MAP_ENTRIES_BY_KEYS", false)
             .yamlFeature("MINIMIZE_QUOTES", true)
             .yamlFeature("ALWAYS_QUOTE_NUMBERS_AS_STRINGS", true)
+            .yamlFeature("SPLIT_LINES", false)
+            .yamlFeature("LITERAL_BLOCK_STYLE", true)
     }
     json {
         target("**/*.json")
