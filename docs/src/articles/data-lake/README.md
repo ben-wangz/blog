@@ -73,6 +73,10 @@ mindmap
             3. support a lot of different engines to connect to other storage systems, such as s3, kafka, postgresql, etc.
 2. processing layer
     * flink
+        + basic tutorials
+        + examples of core features for data lake
+            1. [sink to s3 with parquet format](https://github.com/ben-wangz/blog/blob/main/flink/s3-connectors/src/main/java/tech/geekcity/flink/SinkToS3WithParquet.java)
+            2. [source from s3 with parquet format](https://github.com/ben-wangz/blog/blob/main/flink/s3-connectors/src/main/java/tech/geekcity/flink/SourceFromS3WithParquet.java)
 3. metadata layer
     * datahub
 4. workflow and scheduling

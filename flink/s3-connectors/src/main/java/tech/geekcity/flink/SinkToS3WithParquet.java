@@ -19,11 +19,11 @@ import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.
 import tech.geekcity.flink.pojo.Person;
 
 public class SinkToS3WithParquet {
-  private static final String BUCKET = "test";
   private static final String ENDPOINT = "http://localhost:9000";
   private static final String ACCESS_KEY = "minioadmin";
   private static final String ACCESS_SECRET = "minioadmin";
-  private static final String JOB_NAME = "sink-to-s3-with-parquet";
+  protected static final String BUCKET = "test";
+  protected static final String JOB_NAME = "sink-to-s3-with-parquet";
 
   public static void main(String[] args) throws Exception {
     Configuration pluginConfiguration = new Configuration();
@@ -55,6 +55,6 @@ public class SinkToS3WithParquet {
                     AvroParquetWriters.forReflectRecord(Person.class))
                 .withRollingPolicy(OnCheckpointRollingPolicy.build())
                 .build());
-    env.execute("sink-to-s3-with-parquet");
+    env.execute(JOB_NAME);
   }
 }
