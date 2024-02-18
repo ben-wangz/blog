@@ -15,14 +15,21 @@ import org.apache.flink.core.fs.Path;
 import org.apache.flink.core.plugin.PluginUtils;
 import org.apache.flink.formats.parquet.avro.AvroParquetWriters;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy;
 import tech.geekcity.flink.pojo.Person;
 
-public class App {
+public class SinkToS3WithParquet {
+  private static final String BUCKET = "test";
+  private static final String ENDPOINT = "http://localhost:9000";
+  private static final String ACCESS_KEY = "minioadmin";
+  private static final String ACCESS_SECRET = "minioadmin";
+  private static final String JOB_NAME = "sink-to-s3-with-parquet";
+
   public static void main(String[] args) throws Exception {
     Configuration pluginConfiguration = new Configuration();
-    pluginConfiguration.setString("s3.access-key", "minioadmin");
-    pluginConfiguration.setString("s3.secret-key", "minioadmin");
-    pluginConfiguration.setString("s3.endpoint", "http://localhost:9000");
+    pluginConfiguration.setString("s3.access-key", ACCESS_KEY);
+    pluginConfiguration.setString("s3.secret-key", ACCESS_SECRET);
+    pluginConfiguration.setString("s3.endpoint", ENDPOINT);
     pluginConfiguration.setBoolean("s3.path.style.access", Boolean.TRUE);
     FileSystem.initialize(
         pluginConfiguration, PluginUtils.createPluginManagerFromRootFolder(pluginConfiguration));
@@ -40,13 +47,14 @@ public class App {
             generateCount,
             RateLimiterStrategy.perSecond(recordsPerSecond),
             Types.TUPLE(Types.STRING, Types.INT));
-    env.fromSource(source, WatermarkStrategy.noWatermarks(), "Generator Source")
+    env.fromSource(source, WatermarkStrategy.noWatermarks(), "data-generator-source")
         .map(tuple2 -> Person.builder().name(tuple2.f0).age(tuple2.f1).build())
         .sinkTo(
             FileSink.<Person>forBulkFormat(
-                    new Path("s3://test/flink-s3"),
+                    new Path(String.format("s3://%s/%s", BUCKET, JOB_NAME)),
                     AvroParquetWriters.forReflectRecord(Person.class))
+                .withRollingPolicy(OnCheckpointRollingPolicy.build())
                 .build());
-    env.execute("Flink S3 Connector Example");
+    env.execute("sink-to-s3-with-parquet");
   }
 }

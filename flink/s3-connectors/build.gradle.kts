@@ -21,6 +21,7 @@ dependencies {
         exclude(group = "it.unimi.dsi", module = "fastutil")
     }
 
+    implementation("org.apache.hadoop:hadoop-mapreduce-client-core:3.3.6")
     shadow(lombokDependency)
     shadow("org.slf4j:slf4j-simple:$slf4jVersion")
     shadow("org.apache.flink:flink-streaming-java:$flinkVersion")
@@ -28,12 +29,9 @@ dependencies {
     shadow("org.apache.flink:flink-connector-datagen:$flinkVersion")
     shadow("org.apache.flink:flink-connector-files:$flinkVersion")
     shadow("org.apache.flink:flink-runtime-web:$flinkVersion")
-    // shadow("org.apache.flink:flink-file-sink-common:$flinkVersion")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    // implementation("org.apache.flink:flink-walkthrough-common:$flinkVersion")
 }
 
 java {
