@@ -2,33 +2,27 @@
 
 1. remove all `<none>` images
     * ```shell
-      docker rmi `docker images | grep  '<none>' | awk '{print $3}'`
+      podman rmi `docker images | grep  '<none>' | awk '{print $3}'`
       ```
-2. docker container with `host.docker.internal` point to host machine
+2. remove all stopped containers
     * ```shell
-      docker run \
-          ... \
-          --add-host host.docker.internal:host-gateway \
-          ...
+      podman container prune
+      # podman container prune -a
       ```
-3. remove all stopped containers
+3. remove all docker images not used
     * ```shell
-      docker container prune
-      ```
-4. remove all docker images not used
-    * ```shell
-      docker image prune
+      podman image prune
       #crictl rmi --prune
       ```
-5. remove all docker images not referenced by any container
+4. remove all docker images not referenced by any container
     * ```shell
-      docker image prune -a
+      podman image prune -a
       ```
-6. generate htpasswd file
+5. generate htpasswd file
     * ```shell
       docker run --rm wangz2019/jiuying-htpasswd:1.2.0 my-username my-password > htpasswd
       ```
-7. generate gradle projects
+6. generate gradle projects
     * ```shell
       docker run --rm \
           -v $(pwd):/app \
@@ -41,7 +35,7 @@
               --package com.example.helloworld \
               --test-framework junit-jupiter
       ```
-8. find ip address of a container
+7. find ip address of a container
     * ```shell
       podman inspect --format='{{.NetworkSettings.IPAddress}}' minio-server
       ```

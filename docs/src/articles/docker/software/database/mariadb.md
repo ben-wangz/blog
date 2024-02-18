@@ -1,4 +1,27 @@
-# mysqldump
+# mairadb
+
+## server
+
+* ```shell
+  mkdir -p mariadb/data
+  podman run --rm \
+      -p 3306:3306 \
+      -e MARIADB_ROOT_PASSWORD=mysql \
+      -v $(pwd)/mariadb/data:/var/lib/mysql \
+      -d docker.io/library/mariadb:11.2.2-jammy
+  ```
+
+### web console
+
+* ```shell
+  podman run --rm -p 8080:80 \
+      -e PMA_ARBITRARY=1 \
+      -d docker.io/library/phpmyadmin:5.1.1-apache
+  ```
+
+* visit http://localhost:8080
+
+### mysqldump
 
 * backup database
     + ```shell
