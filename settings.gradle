@@ -1,2 +1,3 @@
 include("docs")
-include("flink:s3-connectors")
+include("flink:connectors:s3")
+include("flink:connectors:jdbc")

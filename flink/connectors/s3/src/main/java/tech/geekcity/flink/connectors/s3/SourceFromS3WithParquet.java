@@ -1,4 +1,4 @@
-package tech.geekcity.flink;
+package tech.geekcity.flink.connectors.s3;
 
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.java.utils.ParameterTool;
@@ -10,7 +10,7 @@ import org.apache.flink.core.plugin.PluginUtils;
 import org.apache.flink.formats.parquet.avro.AvroParquetReaders;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.PrintSinkFunction;
-import tech.geekcity.flink.pojo.Person;
+import tech.geekcity.flink.connectors.s3.pojo.Person;
 
 public class SourceFromS3WithParquet {
   private static final String S3_BUCKET = "app.source.s3.bucket";

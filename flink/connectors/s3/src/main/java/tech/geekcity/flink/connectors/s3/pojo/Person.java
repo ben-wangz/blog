@@ -1,4 +1,4 @@
-package tech.geekcity.flink.pojo;
+package tech.geekcity.flink.connectors.s3.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

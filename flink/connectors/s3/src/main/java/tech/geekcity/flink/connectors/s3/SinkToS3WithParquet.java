@@ -1,4 +1,4 @@
-package tech.geekcity.flink;
+package tech.geekcity.flink.connectors.s3;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
@@ -16,7 +16,7 @@ import org.apache.flink.core.plugin.PluginUtils;
 import org.apache.flink.formats.parquet.avro.AvroParquetWriters;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy;
-import tech.geekcity.flink.pojo.Person;
+import tech.geekcity.flink.connectors.s3.pojo.Person;
 
 public class SinkToS3WithParquet {
   private static final String ENDPOINT = "http://localhost:9000";
