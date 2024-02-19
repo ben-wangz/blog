@@ -5,13 +5,28 @@
 * ```shell
   mkdir -p mariadb/data
   podman run --rm \
+      --name mariadb \
       -p 3306:3306 \
       -e MARIADB_ROOT_PASSWORD=mysql \
       -v $(pwd)/mariadb/data:/var/lib/mysql \
       -d docker.io/library/mariadb:11.2.2-jammy
   ```
 
-### web console
+## client
+
+* ```shell
+  podman run --rm \
+      -e MYSQL_PWD=mysql \
+      -it docker.io/library/mariadb:11.2.2-jammy \
+      mariadb \
+      --host host.containers.internal \
+      --port 3306 \
+      --user root \
+      --database mysql \
+      --execute 'select version()'
+  ```
+
+## web console
 
 * ```shell
   podman run --rm -p 8080:80 \
@@ -21,7 +36,7 @@
 
 * visit http://localhost:8080
 
-### mysqldump
+## mysqldump
 
 * backup database
     + ```shell

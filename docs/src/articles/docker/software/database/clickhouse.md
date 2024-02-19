@@ -9,6 +9,8 @@ podman run --rm \
     --name clickhouse-server \
     -p 18123:8123 \
     -p 19000:9000 \
+    -p 19005:9005 \
+    -p 19004:9004 \
     -v $(pwd)/clickhouse/data:/var/lib/clickhouse \
     -v $(pwd)/clickhouse/logs:/var/log/clickhouse-server \
     -e CLICKHOUSE_DB=my_database \
@@ -67,3 +69,31 @@ podman run --rm \
   ```
 * http://localhost:8080/
 * ref: https://github.com/tabixio/tabix
+
+## postgresql client
+
+* ```shell
+  podman run --rm \
+      --env PGPASSWORD=123456 \
+      --entrypoint psql \
+      -it docker.io/library/postgres:15.2-alpine3.17 \
+      --host host.containers.internal \
+      --port 19005 \
+      --username ben \
+      --dbname default \
+      --command 'select version()'
+  ```
+
+## mysql client
+
+* ```shell
+  podman run --rm \
+      -e MYSQL_PWD=123456 \
+      -it docker.io/library/mariadb:11.2.2-jammy \
+      mariadb \
+      --host host.containers.internal \
+      --port 19004 \
+      --user ben \
+      --database default \
+      --execute 'select version()'
+  ```
