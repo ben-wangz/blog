@@ -3,5 +3,4 @@
 build/
 .gradletasknamecache
 .idea/
-.vscode/
 *.iml

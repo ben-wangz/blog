@@ -63,6 +63,9 @@ mindmap
 
 ## implementation pieces
 1. storage layer
+    * features
+        + store binary files with s3-compatible storage
+        + store tables with s3-compatible storage or databases
     * use `s3-compatible storage`, such as minio, to store files
         + minio: [docker](../docker/software/storage/minio.md) | [k8s](../kubernetes/argocd/storage/minio/README.md)
     * use `clickhouse` to store tables
@@ -71,20 +74,41 @@ mindmap
             1. it's a column-oriented database management system
             2. merge tree engine is powerful to store and query time series data
             3. support a lot of different engines to connect to other storage systems, such as s3, kafka, postgresql, etc.
+            4. support multiple interfaces to pretend it as another (common) database, such as PostgreSQL interface and MySQL interface
+            5. easy to integrate with flink cdc to capture changes from other databases/systems through jdbc
 2. processing layer
-    * flink
+    * features
+        + views through other databases or systems
+            * logical views
+            * timely updated physical views
+            * real-time physical views
+        + easy to analyze data between multiple data(across files and tables)
+        + easy to integrate with algorithms
+            * with remote calls: grpc or rest api
+            * with local invokes: apache arrow
+    * use `flink` as the processing engine
         + basic tutorials
         + [flink on k8s](../kubernetes/argocd/flink/README.md)
-        + examples of core features for data lake
-            1. [sink to s3 with parquet format](https://github.com/ben-wangz/blog/blob/main/flink/connectors/s3/src/main/java/tech/geekcity/flink/connectors/s3/SinkToS3WithParquet.java)
-            2. [source from s3 with parquet format](https://github.com/ben-wangz/blog/blob/main/flink/connectors/s3/src/main/java/tech/geekcity/flink/connectors/s3/SourceFromS3WithParquet.java)
-            3. [sink to jdbc]()
-            4. [source from jdbc]()
-            5. both clickhouse, cockroach, cassandra support jdbc
+        + basic connectors
+            1. [s3 filesystem connector(source/sink) with parquet format](https://github.com/ben-wangz/blog/blob/main/flink/connectors/s3/README.md)
+            2. [jdbc connector(source/sink)](https://github.com/ben-wangz/blog/blob/main/flink/connectors/jdbc/README.md)
+                * NOTE: source is implemented by `InputFormat`
+        + cdc connectors
+            1. [postgresql connector(source/sink)]()
+            2. [kafka connector(source/sink)]()
 3. metadata layer
+    * features
+        + auto-discovery
+        + auto-tagging(including classification)
+        + data-lineage
+        + user-customization
+        + easy to search data
+        + easy to fetch data
+        + easy to analyse data
     * datahub
 4. workflow and scheduling
     * argo workflow
+    * easy to construct a pipeline through yaml, flink jobs and container images
 5. api and sdk
     * self developed
 6. machine learning and ai
