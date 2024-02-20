@@ -19,3 +19,14 @@
     * ```shell
       argocd app sync argocd/cert-manager
       ```
+
+## bootstrapping self-signed CA cluster issuer
+
+1. prepare `self-signed.yaml`
+    * ```yaml
+      <!-- @include: self-signed.yaml -->
+      ```
+2. apply to k8s
+    * ```shell
+      kubectl apply -f self-signed.yaml
+      ```
