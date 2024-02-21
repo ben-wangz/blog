@@ -20,12 +20,12 @@ I am an experienced coder with a focus on Java development. Over the past 8 year
 ## Experience
 ### Senior Engineer in ZhejiangLab
 * time: 2023 - now
-* belongs to big data center
+* belongs to astronomy center
     + TODO serving for projects
 
 ### Senior Engineer in ZhejiangLab
 * time: 2021 - 2023
-* belongs to astronomy center
+* belongs to big data center
 * leading a team of 5-10 people
 * main job 1: maintaining old data processing platform and designing a new one with pluggable architecture
     + TODO features
