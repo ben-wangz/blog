@@ -23,8 +23,10 @@
 ## bootstrapping self-signed CA cluster issuer
 
 1. prepare `self-signed.yaml`
+    <!-- may be a bug: cannot import the whole file of self-signed.yaml -->
     * ```yaml
-      <!-- @include: self-signed.yaml -->
+      <!-- @include: self-signed.yaml{1-8} -->
+      <!-- @include: self-signed.yaml{9-} -->
       ```
 2. apply to k8s
     * ```shell
