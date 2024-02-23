@@ -1,0 +1,47 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: postgresql
+    targetRevision: 14.2.2
+    helm:
+      releaseName: postgresql
+      values: |
+        architecture: standalone
+        auth:
+          database: geekcity
+          username: ben.wangz
+          existingSecret: postgresql-credentials
+        primary:
+          persistence:
+            enabled: false
+        readReplicas:
+          replicaCount: 1
+          persistence:
+            enabled: false
+        backup:
+          enabled: false
+        image:
+          registry: m.daocloud.io/docker.io
+          pullPolicy: IfNotPresent
+        volumePermissions:
+          enabled: false
+          image:
+            registry: m.daocloud.io/docker.io
+            pullPolicy: IfNotPresent
+        metrics:
+          enabled: false
+          image:
+            registry: m.daocloud.io/docker.io
+            pullPolicy: IfNotPresent
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: database

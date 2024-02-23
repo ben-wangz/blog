@@ -1,0 +1,52 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis-cluster
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: redis-cluster
+    targetRevision: 9.6.1
+    helm:
+      releaseName: redis-cluster
+      values: |
+        architecture: replication
+        usePassword: true
+        existingSecret: redis-cluster-credentials
+        existingSecretPasswordKey: redis-password
+        cluster:
+          init: true
+          nodes: 6
+          replica: 1
+          update:
+            addNodes: false
+            currentNumberOfNodes: 6
+            currentNumberOfReplicas: 1
+        image:
+          registry: m.daocloud.io/docker.io
+          pullPolicy: IfNotPresent
+        metrics:
+          enabled: false
+          image:
+            registry: m.daocloud.io/docker.io
+            pullPolicy: IfNotPresent
+        volumePermissions:
+          enabled: false
+          image:
+            registry: m.daocloud.io/docker.io
+            pullPolicy: IfNotPresent
+        sysctlImage:
+          enabled: false
+          registry: m.daocloud.io/docker.io
+          pullPolicy: IfNotPresent
+        persistence:
+          enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: database

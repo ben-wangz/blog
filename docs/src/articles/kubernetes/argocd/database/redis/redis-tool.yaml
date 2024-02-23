@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-tool
+  labels:
+    app.kubernetes.io/name: redis-tool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redis-tool
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: redis-tool
+    spec:
+      containers:
+      - name: redis-tool
+        image: m.daocloud.io/docker.io/bitnami/redis:7.2.4-debian-12-r8
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: REDISCLI_AUTH
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: redis-credentials
+        - name: TZ
+          value: Asia/Shanghai
+        command:
+        - tail
+        - -f
+        - /etc/hosts

@@ -12,7 +12,7 @@ export default hopeTheme({
   },
   iconAssets: "fontawesome-with-brands",
   logo: "https://theme-hope-assets.vuejs.press/logo.svg",
-  repo: "ben.wangz/blog",
+  repo: "ben-wangz/blog",
   docsDir: "src",
   navbar,
   sidebar,
