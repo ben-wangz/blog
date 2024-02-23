@@ -49,7 +49,7 @@
           --host host.containers.internal \
           --port 32543 \
           --username postgres \
-          --dbname geekcity \
+          --dbname postgres \
           --command 'SELECT datname FROM pg_database;'
       ```
 2. with normal user
