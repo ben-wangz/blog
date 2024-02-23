@@ -1,5 +1,5 @@
 ---
-title: database
+title: redis
 icon: folder
 category:
   - k8s
