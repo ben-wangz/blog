@@ -46,7 +46,6 @@ spec:
           pullPolicy: IfNotPresent
         persistence:
           enabled: false
-
   destination:
     server: https://kubernetes.default.svc
     namespace: database
