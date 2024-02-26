@@ -1,0 +1,38 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: phpmyadmin
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: phpmyadmin
+    targetRevision: 14.5.2
+    helm:
+      releaseName: phpmyadmin
+      values: |
+        image:
+          registry: m.daocloud.io/docker.io
+          pullPolicy: IfNotPresent
+        replicas: 1
+        ingress:
+          enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: self-signed-ca-issuer
+            nginx.ingress.kubernetes.io/rewrite-target: /$1
+          hostname: phpmyadmin.dev.geekcity.tech
+          ingressClassName: nginx
+          path: /?(.*)
+          tls: true
+        metrics:
+          enabled: false
+          image:
+            registry: m.daocloud.io/docker.io
+            pullPolicy: IfNotPresent
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: database

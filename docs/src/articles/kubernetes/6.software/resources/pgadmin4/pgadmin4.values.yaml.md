@@ -1,1 +1,0 @@
-[pgadmin4.values.yaml](pgadmin4.values.yaml ':include')

@@ -1,1 +1,0 @@
-[resource.nginx.pvc.yaml](resource.nginx.pvc.yaml ':include')

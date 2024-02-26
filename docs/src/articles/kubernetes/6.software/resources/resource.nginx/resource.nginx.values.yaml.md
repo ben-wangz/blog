@@ -1,1 +1,0 @@
-[resource.nginx.values.yaml](resource.nginx.values.yaml ':include')

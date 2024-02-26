@@ -65,3 +65,44 @@
           --dbname geekcity \
           --command 'SELECT datname FROM pg_database;'
       ```
+## test with pgadmin4
+
+1. prepare `pgadmin4.yaml`
+    * ```yaml
+      <!-- @include: pgadmin4.yaml -->
+      ```
+2. prepare credentials secret
+    * ```shell
+      kubectl -n database create secret generic pgadmin4-credentials \
+          --from-literal=password=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
+      ```
+3. apply to k8s
+    * ```shell
+      kubectl -n argocd apply -f pgadmin4.yaml
+      ```
+4. sync by argocd
+    * ```shell
+      argocd app sync argocd/pgadmin4
+      ```
+5. open with browser: https://pgadmin4.dev.geekcity.tech:32443
+    * pgadmin4.dev.geekcity.tech should be resolved to nginx-ingress
+        + for example, add `$K8S_MASTER_IP pgadmin4.dev.geekcity.tech` to `/etc/hosts`
+6. login
+    * email: `pgadmin@mail.geekcity.tech`
+    * password
+        + ```shell
+          kubectl -n database get secret pgadmin4-credentials -o jsonpath='{.data.password}' | base64 -d
+          ```
+    * connecting to postgresql database
+        + host: `postgresql.database`
+        + port: 5432
+        + username: `postgres`
+            * password
+                * ```shell
+                  kubectl -n database get secret postgresql-credentials -o jsonpath='{.data.postgres-password}' | base64 -d
+                  ```
+        + username: `ben.wangz`
+            + password
+                * ```shell
+                  kubectl -n database get secret postgresql-credentials -o jsonpath='{.data.password}' | base64 -d
+                  ```

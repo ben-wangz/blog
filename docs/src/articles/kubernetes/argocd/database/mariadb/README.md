@@ -4,6 +4,8 @@
 
 1. k8s is ready
 2. argocd is ready and logged in
+3. cert-manager is ready and the clusterissuer named `self-signed-ca-issuer` is ready
+    * only required by `phpmyadmin` in the tests
 
 ## installation
 
@@ -37,7 +39,7 @@
           kubectl -n database apply -f mariadb-expose.yaml
           ```
 
-## tests
+## tests with cli
 
 1. with root user
     * ```shell
@@ -65,3 +67,33 @@
           --database geekcity \
           --execute 'show databases'
       ```
+
+## test with phpmyadmin
+
+1. prepare `phpmyadmin.yaml`
+    * ```yaml
+      <!-- @include: phpmyadmin.yaml -->
+      ```
+2. apply to k8s
+    * ```shell
+      kubectl -n argocd apply -f phpmyadmin.yaml
+      ```
+3. sync by argocd
+    * ```shell
+      argocd app sync argocd/phpmyadmin
+      ```
+4. open with browser: https://phpmyadmin.dev.geekcity.tech:32443
+    * phpmyadmin.dev.geekcity.tech should be resolved to nginx-ingress
+        + for example, add `$K8S_MASTER_IP phpmyadmin.dev.geekcity.tech` to `/etc/hosts`
+5. login
+    * server: `mariadb.database:3306`
+    * username: `root`
+        + password
+            * ```shell
+              kubectl -n database get secret mariadb-credentials -o jsonpath='{.data.mariadb-root-password}' | base64 -d
+              ```
+    * username: `ben.wangz`
+        + password
+            * ```shell
+              kubectl -n database get secret mariadb-credentials -o jsonpath='{.data.mariadb-password}' | base64 -d
+              ```

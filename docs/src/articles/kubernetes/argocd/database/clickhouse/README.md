@@ -52,6 +52,8 @@
       PASSWORD=$(kubectl -n database get secret clickhouse-admin-credentials -o jsonpath='{.data.password}' | base64 -d)
       ```
 2. with http
+    * clickhouse.dev.geekcity.tech should be resolved to nginx-ingress
+        + for example, add `$K8S_MASTER_IP clickhouse.dev.geekcity.tech` to `/etc/hosts`
     * ```shell
       echo 'SELECT version()' | curl -k "https://admin:${PASSWORD}@clickhouse.dev.geekcity.tech:32443/" --data-binary @-
       ```

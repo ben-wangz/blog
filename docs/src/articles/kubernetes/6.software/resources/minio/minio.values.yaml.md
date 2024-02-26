@@ -1,1 +1,0 @@
-[minio.values.yaml](minio.values.yaml ':include')

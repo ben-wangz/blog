@@ -1,1 +1,0 @@
-[redis.values.yaml](redis.values.yaml ':include')
