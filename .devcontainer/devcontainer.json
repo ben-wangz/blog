@@ -1,6 +1,21 @@
 {
-  "features": {
-    "ghcr.io/jungaretti/features/vim:1": { }
+  "build": {
+    "dockerfile": "Dockerfile"
   },
-  "image": "mcr.microsoft.com/devcontainers/universal:2"
+  "containerEnv": {
+    "DEV_CONTAINER": "true",
+    "HOME": "/home/vscode"
+  },
+  "customizations": {
+    "settings": {
+      "java.compile.nullAnalysis.mode": "automatic",
+      "java.configuration.updateBuildConfiguration": "automatic",
+      "java.gradle.buildServer.enabled": "on"
+    },
+    "vscode": {
+      "extensions": [ "vscodevim.vim", "streetsidesoftware.code-spell-checker", "redhat.vscode-yaml", "vscjava.vscode-gradle", "vue.volar" ]
+    }
+  },
+  "remoteUser": "vscode",
+  "runArgs": [ "--userns=keep-id" ]
 }
