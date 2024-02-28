@@ -25,7 +25,7 @@ configure<com.diffplug.gradle.spotless.SpotlessExtension> {
     }
     json {
         target("**/*.json")
-        targetExclude(".vscode/settings.json", "**/.gradle/**")
+        targetExclude("**/.gradle/**")
         jackson()
             .feature("ORDER_MAP_ENTRIES_BY_KEYS", true)
     }
