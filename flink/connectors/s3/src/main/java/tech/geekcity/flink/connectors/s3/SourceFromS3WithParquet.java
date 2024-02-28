@@ -1,5 +1,6 @@
 package tech.geekcity.flink.connectors.s3;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.configuration.Configuration;
@@ -15,7 +16,10 @@ import tech.geekcity.flink.connectors.s3.pojo.Person;
 public class SourceFromS3WithParquet {
   private static final String S3_BUCKET = "app.source.s3.bucket";
   private static final String S3_PATH = "app.source.s3.path";
-  private static final String ENDPOINT = "http://localhost:9000";
+  private static final String ENDPOINT =
+      StringUtils.equals("true", System.getenv("DEV_CONTAINER"))
+          ? "http://host.containers.internal:9000"
+          : "http://localhost:9000";
   private static final String ACCESS_KEY = "minioadmin";
   private static final String ACCESS_SECRET = "minioadmin";
   private static final String JOB_NAME = "source-from-s3-with-parquet";

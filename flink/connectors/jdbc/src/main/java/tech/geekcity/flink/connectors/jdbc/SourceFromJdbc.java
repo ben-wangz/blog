@@ -1,6 +1,7 @@
 package tech.geekcity.flink.connectors.jdbc;
 
 import java.io.Serializable;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.typeutils.RowTypeInfo;
@@ -19,12 +20,16 @@ public class SourceFromJdbc {
       new Integer[][] {new Integer[] {0}, new Integer[] {1}};
 
   public static void main(String[] args) throws Exception {
+    String host =
+        StringUtils.equals("true", System.getenv("DEV_CONTAINER"))
+            ? "host.containers.internal"
+            : "localhost";
     // specify flink configuration from args, e.g., --restPort 8081
     ParameterTool parameterTool = ParameterTool.fromArgs(args);
     String username = parameterTool.get("username", "ben");
     String password = parameterTool.get("password", "123456");
     String database = parameterTool.get("database", SinkToJdbc.JOB_NAME.replaceAll("-", "_"));
-    String url = String.format(SinkToJdbc.URL_TEMPLATE, username, password, database);
+    String url = String.format(SinkToJdbc.URL_TEMPLATE, username, password, host, database);
     StreamExecutionEnvironment env =
         StreamExecutionEnvironment.getExecutionEnvironment(parameterTool.getConfiguration());
     TypeInformation<?>[] fieldTypes =

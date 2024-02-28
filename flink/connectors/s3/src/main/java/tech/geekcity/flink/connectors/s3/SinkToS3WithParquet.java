@@ -1,6 +1,7 @@
 package tech.geekcity.flink.connectors.s3;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.connector.source.util.ratelimit.RateLimiterStrategy;
@@ -19,7 +20,10 @@ import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.
 import tech.geekcity.flink.connectors.s3.pojo.Person;
 
 public class SinkToS3WithParquet {
-  private static final String ENDPOINT = "http://localhost:9000";
+  private static final String ENDPOINT =
+      StringUtils.equals("true", System.getenv("DEV_CONTAINER"))
+          ? "http://host.containers.internal:9000"
+          : "http://localhost:9000";
   private static final String ACCESS_KEY = "minioadmin";
   private static final String ACCESS_SECRET = "minioadmin";
   protected static final String BUCKET = "test";
