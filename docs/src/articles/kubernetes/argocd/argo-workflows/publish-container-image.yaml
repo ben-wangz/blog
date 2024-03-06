@@ -110,3 +110,6 @@ spec:
             -t ${IMAGE_TO_PUBLISH} /workspace/src \
             && docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
             && docker push ${IMAGE_TO_PUBLISH} 
+      volumeMounts:
+      - name: workspace
+        mountPath: /workspace
