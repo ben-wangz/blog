@@ -25,6 +25,7 @@
 4. sync by argocd
     * ```shell
       argocd app sync argocd/minio
+      ```
 5. visit minio console
     * minio-console.dev.geekcity.tech should be resolved to nginx-ingress
         + for example, add `$K8S_MASTER_IP minio-console.dev.geekcity.tech` to `/etc/hosts`
