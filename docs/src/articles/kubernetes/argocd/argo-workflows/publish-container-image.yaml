@@ -1,0 +1,112 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: publish-container-image-
+spec:
+  entrypoint: entry
+  serviceAccountName: argo-workflow
+  volumeClaimTemplates:
+  - metadata:
+      name: workspace
+    spec:
+      accessModes: 
+      - ReadWriteOnce
+      storageClassName: local-disks
+      resources:
+        requests:
+          storage: 1Gi
+  templates:
+  - name: entry
+    dag:
+      tasks:
+      - name: dind
+        template: dind
+      - name: wait-for-dind
+        dependencies:
+        - dind
+        template: wait-for-dind
+        arguments:
+          parameters:
+          - name: docked-host
+            value: "{{tasks.dind.ip}}"
+      - name: publish
+        dependencies:
+        - wait-for-dind
+        template: publish
+        arguments:
+          parameters:
+          - name: docked-host
+            value: "{{tasks.dind.ip}}"
+  - name: dind
+    daemon: true
+    container:
+      image: m.daocloud.io/docker.io/library/docker:25.0.3-dind-alpine3.19
+      env:
+      - name: DOCKER_TLS_CERTDIR
+        value: ""
+      command:
+      - dockerd-entrypoint.sh
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: workspace
+        mountPath: /workspace
+  - name: wait-for-dind
+    inputs:
+      parameters:
+      - name: docked-host
+    container:
+      image: m.daocloud.io/docker.io/library/docker:25.0.3-cli-alpine3.19
+      env:
+      - name: DOCKER_HOST
+        value: "{{inputs.parameters.docked-host}}"
+      command:
+      - sh
+      - -c
+      args: 
+      - |
+        until docker ps; do sleep 3; done;
+  - name: publish
+    inputs:
+      artifacts:
+      - name: source
+        path: /workspace/src
+        git:
+          repo: https://github.com/ben-wangz/blog.git
+          revision: "main"
+      parameters:
+      - name: docked-host
+      - name: image-to-publish
+        value: docker.io/wangz2019/blog-docs:argo-test
+      - name: registry
+        value: m.daocloud.io/docker.io
+    container:
+      image: m.daocloud.io/docker.io/library/docker:25.0.3-cli-alpine3.19
+      env:
+      - name: DOCKER_HOST
+        value: "{{inputs.parameters.docked-host}}"
+      - name: DOCKER_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: docker-login-credentials
+            key: username
+      - name: DOCKER_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: docker-login-credentials
+            key: password
+      command:
+      - sh
+      - -c
+      args: 
+      - |
+        export REGISTRY={{inputs.parameters.registry}}
+        export IMAGE_TO_PUBLISH={{inputs.parameters.image-to-publish}}
+        docker build \
+            --ulimit nofile=4096:4096 \
+            -f /workspace/src/docs/Dockerfile \
+            --build-arg REGISTRY=${REGISTRY} \
+            -t ${IMAGE_TO_PUBLISH} /workspace/src \
+            && docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
+            && docker push ${IMAGE_TO_PUBLISH} 
