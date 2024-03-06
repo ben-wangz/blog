@@ -1,0 +1,40 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: local-static-provisioner
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://kubernetes-sigs.github.io/sig-storage-local-static-provisioner
+    chart: local-static-provisioner
+    targetRevision: 2.0.0
+    helm:
+      releaseName: local-static-provisioner
+      values: |
+        rbac:
+          create: true
+        serviceAccount:
+          create: true
+        setPVOwnerRef: true
+        mountDevVolume: false
+        image: m.daocloud.io/registry.k8s.io/sig-storage/local-volume-provisioner:v2.6.0
+        classes:
+        - name: local-disks
+          hostDir: /data/local-static-provisioner
+          volumeMode: Filesystem
+          fsType: ext4
+          namePattern: '*'
+          blockCleanerCommand:
+          - /scripts/shred.sh
+          - 2
+          storageClass:
+            isDefaultClass: true
+        serviceMonitor:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: provisioner
