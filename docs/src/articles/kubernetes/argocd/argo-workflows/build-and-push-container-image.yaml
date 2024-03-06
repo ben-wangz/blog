@@ -1,0 +1,44 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: build-and-push-container-image-
+spec:
+  entrypoint: build
+  serviceAccountName: argo-workflow
+  templates:
+  - name: build
+    inputs:
+      artifacts:
+      - name: source
+        path: /src
+        git:
+          repo: https://github.com/ben-wangz/blog.git
+          revision: "main"
+      parameters:
+      - name: image
+        value: docker.io/wangz2019/blog-docs:argo-test
+      - name: registry-mirror
+        value: m.daocloud.io/docker.io
+    container:
+      image: m.daocloud.io/docker.io/library/docker:25.0.3-cli-alpine3.19
+      env:
+      - name: DOCKER_HOST
+        value: 127.0.0.1
+      command:
+      - sh
+      - -c
+      args: 
+      - |
+        until docker ps; do sleep 3; done; docker build --ulimit nofile=4096:4096 -f /src/docs/Dockerfile --build-arg REGISTRY={{inputs.parameters.registry-mirror}} -t {{inputs.parameters.image}} /src
+    sidecars:
+    - name: dind
+      image: m.daocloud.io/docker.io/library/docker:25.0.3-dind-alpine3.19
+      env:
+      - name: DOCKER_TLS_CERTDIR
+        value: ""
+      command:
+      - dockerd-entrypoint.sh
+      securityContext:
+        privileged: true
+      mirrorVolumeMounts: true

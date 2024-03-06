@@ -104,8 +104,8 @@ mindmap
         + user-customization
         + easy to search data
         + easy to fetch data
-        + easy to analyse data
-    * datahub
+        + easy to analyze data
+    * use `datahub` as meta data backend
 4. workflow and scheduling
     * argo workflow
     * easy to construct a pipeline through yaml, flink jobs and container images
