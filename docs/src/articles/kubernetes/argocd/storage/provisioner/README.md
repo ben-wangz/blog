@@ -1,5 +1,5 @@
 ---
-title: storage
+title: provisioner
 icon: folder
 category:
   - k8s
