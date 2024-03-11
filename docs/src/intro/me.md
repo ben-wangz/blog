@@ -7,10 +7,14 @@ cover: /assets/images/black-hole-hero-f872641.jpg
 ## Wang Zhi 
 
 * email: ben.wangz@foxmail.com
+* blog: https://blog.geekcity.tech
 
 ## Summary
 
-I am an experienced coder with a focus on Java development. Over the past 8 years, I have developed many data processing platforms at various companies, including Alibaba and ZhejiangLab and tianrang-inc. My expertise lies in designing and implementing scalable and efficient systems that can handle very large volumes of data.
+* experienced Java developer with 8+ years of expertise in designing and implementing scalable data processing platforms. 
+* proficient in Apache Flink, Kubernetes, and handling large volumes of data. 
+* proven ability to lead teams and deliver high-performance systems.
+* achieved developing data processing platforms for various companies, including Alibaba Group, ZhejiangLab and tianrang-inc.
 
 ## Technical Skills
 
@@ -20,20 +24,16 @@ I am an experienced coder with a focus on Java development. Over the past 8 year
 
 ## Experience
 
-### Senior Engineer in ZhejiangLab
-* time: 2023 - now
+### astronomy center of ZhejiangLab, Senior Engineer(2023 - now)
 * leading a team of 5 people
-* belongs to astronomy center
-    + designing and developing a data platform
-        + to support CSST(China Space Station Telescope)
-        + to support Cosmic Antenna
-        + related techniques: check datalake in my blog for details
+* designing and developing a data platform
+    + to support CSST(China Space Station Telescope)
+    + to support Cosmic Antenna
+    + related techniques: check [data-lake](https://blog.geekcity.tech/articles/data-lake/) in my blog for details
 
-### Senior Engineer in ZhejiangLab
-* time: 2021 - 2023
-* belongs to big data center
+### big data center of ZhejiangLab, Senior Engineer(2021 - 2023)
 * leading a team of 5-10 people
-* main job 1: maintaining old data processing platform and designing a new one with pluggable architecture
+* maintaining old data processing platform and designing a new one with pluggable architecture
     + data formats
         * old platform: csv uploaded and tables from database
         * new platform: driven by calcite framework which support csv from s3, tables from common relational databases, graphs from neo4j/jena/rdf(TURTLE), etc.
@@ -43,62 +43,45 @@ I am an experienced coder with a focus on Java development. Over the past 8 year
     + algorithms
         * old platform: only built-in algorithms
         * new platform: pluggable and custom algorithms, which can be written in java, python, etc.
-    + next features for new platform
+    + next(not finished) features for new platform
         * executing engines to support flink jobs which can be compatible with current calcite framework
-        * applications can be pluggable
+        * pluggable applications 
     + open source codes
         * old platform: https://gitee.com/zhijiangtianshu/nebula
         * new platform: https://github.com/lab-zj/data-hub
-* main job 3: maintaining old k8s cluster and designing a new one which is ready for production
+* maintaining old k8s cluster and designing a new one which is ready for production
     + all softwares managed by helm charts
     + less than one person per month for maintaining three clusters, which contains more than 300 services
 
-### Professional Data Processing Engineer in 天壤智能
-* time: 2019 - 2021
+### 天壤智能, Professional Data Processing Engineer(2019 - 2021)
 * leading a team of 3-5 people
-* main job
-    + designing and implementing a data processing platform named pandora, which based on flink, for advertisement putting data analysis
-        * table and sql api of flink to refactor business logic into small pieces for better maintainability
-        * flink on k8s
-        * oss and kafka as the storage to handle both batch and stream data
-    + refactor the pipelines and the code for feature extracting pipelines and predicting algorithms for a recommendation system at China Merchants Bank
-        * optimization for spark jobs
-        * designing interfaces for algorithms
+* designing and implementing a data processing platform named pandora, which based on flink, for analyzing advertisement putting data
+    + refactoring business logic into small pieces with table and sql api of flink for better maintainability
+    + reducing costs with flink on k8s
+    + handling both batch and stream data with oss and kafka as the storage 
+* refactoring pipelines and code of feature extracting and predicting algorithms for a recommendation system at China Merchants Bank
+    + optimization for spark jobs
+    + designing interfaces for algorithms
 * main reasons to leave: my lovely daughter was coming, the business was given up and my boss left this company
 
-### Senior Java Developer in Alibaba Group
-* time: 2015 - 2019
-* belongs to search dump team at Search Department
-* main job: data processing platform for search engine
-* owned business
-    + designing and implementing an image data processing platform for image searching in Taobao: pailitao is the main user of this platform
-        * standards for c++ image processing modules, which based on protobuf, JNI, cmake, etc.
-        * make standalone image processing modules to be a distributed system
-        * image feature extraction, image similarity calculation, clustering, etc.
-        * loading data into search engine
-        * no online fault for more than 3 years after the platform was put into use
-    + maintaining a data processing platform for Taobao/Tmall main search
-        * online fault not larger than P3
-        * only two people, including me, handled the whole taobao/tmall data for searching for nearly 2 years
-    + maintaining data processing platforms for 1688, aliexpress, etc.
-        * no online fault
+### search dump team at Search Department Alibaba Group, Senior Java Developer(2015 - 2019)
+* maintaining and developing data processing platforms for search engine
+* designing and implementing an image data processing platform for image searching in Taobao: pailitao is the main user of this platform
+    + establishing standards for c++ image processing modules, which based on protobuf, JNI, cmake, etc.
+    + making standalone image processing modules, provided by algorithm engineers, to be a distributed system
+    + handling modules like image feature extraction, image similarity calculation, clustering, etc.
+    + keeping no online fault for more than 3 years after the platform was put into use
+* maintaining a data processing platform for Taobao/Tmall main search
+    + online fault not larger than P3
+    + only two people, including me, handled the whole taobao/tmall data for searching for nearly 2 years
+* maintaining data processing platforms for 1688, aliexpress, etc.
+    + keeping no online fault
 * kpi: 3.75 all the time except 3.5+(once)
 * main reason to leave: deep dive into stream processing and k8s
 
-### intern at Alibaba Group
-* time: 2014.07 - 2015.04
-* belongs to search dump team at Search Department
-* main job: data processing platform for search engine
-* owned business
-    + Independently developed a distributed data synchronization tool, from MySQL to HBase, which was secure, high performance and widely used for more than 4 years
-
-## Education
-
-### Bachelor's degree of Software Engineering
-** NorthEastern University ** (2009 - 2013)
-
-### Master's degree of Software Engineering
-** NorthEastern University ** (2013 - 2015)
+### search dump team at Search Department Alibaba Group, intern(2014.07 - 2015.04)
+* maintaining data processing platform for search engine
+* Independently developed a distributed data synchronization tool, from MySQL to HBase, which was secure, high performance and widely used for more than 4 years
 
 ## papers published
 
@@ -109,7 +92,13 @@ I am an experienced coder with a focus on Java development. Over the past 8 year
 * 郭朝鹏, 王智, 韩峰, 张一川, and 宋杰. "HaoLap: 基于 Hadoop 的海量数据 OLAP 系统." 计算机研究与发展 S1 (2013): 378-383.
 * 宋杰, 侯泓颖, 王智, and 朱志良. "云计算环境下改进的能效度量模型." 浙江大学学报: 工学版 1 (2013): 44-52.
 
-## projects outside class
+## Education
+
+### Bachelor's degree of Software Engineering
+** NorthEastern University ** (2009 - 2013)
+
+### Master's degree of Software Engineering
+** NorthEastern University ** (2013 - 2015)
 
 ## Certifications
 
