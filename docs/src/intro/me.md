@@ -16,7 +16,7 @@ I am an experienced coder with a focus on Java development. Over the past 8 year
 
 * Java is my primary language for coding.
 * familiar with Kubernetes, especially for storages, ci/cd workflows, flink on k8s and so on. please check my blog for details.
-* familiar with stream processing, especially for Apache Flink
+* familiar with stream processing, especially for Apache Flink.
 
 ## Experience
 
@@ -46,6 +46,9 @@ I am an experienced coder with a focus on Java development. Over the past 8 year
     + next features for new platform
         * executing engines to support flink jobs which can be compatible with current calcite framework
         * applications can be pluggable
+    + open source codes
+        * old platform: https://gitee.com/zhijiangtianshu/nebula
+        * new platform: https://github.com/lab-zj/data-hub
 * main job 3: maintaining old k8s cluster and designing a new one which is ready for production
     + all softwares managed by helm charts
     + less than one person per month for maintaining three clusters, which contains more than 300 services
@@ -54,7 +57,7 @@ I am an experienced coder with a focus on Java development. Over the past 8 year
 * time: 2019 - 2021
 * leading a team of 3-5 people
 * main job
-    + designed and implemented a data processing platform named pandora, which based on flink, for advertisement putting data analysis
+    + designing and implementing a data processing platform named pandora, which based on flink, for advertisement putting data analysis
         * table and sql api of flink to refactor business logic into small pieces for better maintainability
         * flink on k8s
         * oss and kafka as the storage to handle both batch and stream data
@@ -67,16 +70,16 @@ I am an experienced coder with a focus on Java development. Over the past 8 year
 * belongs to search dump team at Search Department
 * main job: data processing platform for search engine
 * owned business
-    + designed and implemented an image data processing platform for image searching in Taobao: pailitao is the main user of this platform
+    + designing and implementing an image data processing platform for image searching in Taobao: pailitao is the main user of this platform
         * standards for c++ image processing modules, which based on protobuf, JNI, cmake, etc.
         * make standalone image processing modules to be a distributed system
         * image feature extraction, image similarity calculation, clustering, etc.
         * loading data into search engine
         * no online fault for more than 3 years after the platform was put into use
-    + maintained a data processing platform for Taobao/Tmall main search
+    + maintaining a data processing platform for Taobao/Tmall main search
         * online fault not larger than P3
         * only two people, including me, handled the whole taobao/tmall data for searching for nearly 2 years
-    + maintained data processing platforms for 1688, aliexpress, etc.
+    + maintaining data processing platforms for 1688, aliexpress, etc.
         * no online fault
 * kpi: 3.75 all the time except 3.5+(once)
 
