@@ -64,6 +64,7 @@ I am an experienced coder with a focus on Java development. Over the past 8 year
     + refactor the pipelines and the code for feature extracting pipelines and predicting algorithms for a recommendation system at China Merchants Bank
         * optimization for spark jobs
         * designing interfaces for algorithms
+* main reasons to leave: my lovely daughter was coming, the business was given up and my boss left this company
 
 ### Senior Java Developer in Alibaba Group
 * time: 2015 - 2019
@@ -82,6 +83,7 @@ I am an experienced coder with a focus on Java development. Over the past 8 year
     + maintaining data processing platforms for 1688, aliexpress, etc.
         * no online fault
 * kpi: 3.75 all the time except 3.5+(once)
+* main reason to leave: deep dive into stream processing and k8s
 
 ### intern at Alibaba Group
 * time: 2014.07 - 2015.04
