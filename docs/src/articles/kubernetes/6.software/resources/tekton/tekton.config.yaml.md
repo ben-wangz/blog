@@ -1,1 +1,0 @@
-[tekton.config.yaml](tekton.config.yaml ':include')

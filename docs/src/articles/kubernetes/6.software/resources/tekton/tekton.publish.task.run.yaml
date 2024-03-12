@@ -1,8 +1,0 @@
----
-apiVersion: tekton.dev/v1beta1
-kind: TaskRun
-metadata:
-  generateName: publish-task-run-
-spec:
-  taskRef:
-    name: publish-task
