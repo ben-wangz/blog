@@ -94,11 +94,8 @@ cover: /assets/images/black-hole-hero-f872641.jpg
 
 ## Education
 
-### Bachelor's degree of Software Engineering
-** NorthEastern University ** (2009 - 2013)
-
-### Master's degree of Software Engineering
-** NorthEastern University ** (2013 - 2015)
+* NorthEastern University (2009 - 2013), Bachelor's degree of Software Engineering
+* NorthEastern University (2013 - 2015), Master's degree of Software Engineering
 
 ## Certifications
 
