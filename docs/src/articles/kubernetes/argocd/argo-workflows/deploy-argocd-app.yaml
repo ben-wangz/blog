@@ -86,7 +86,7 @@ spec:
       artifacts:
       - name: argocd-binary
         path: /tmp/argocd
-        mode: "0755"
+        mode: 755
         http:
           url: https://files.m.daocloud.io/github.com/argoproj/argo-cd/releases/download/v2.9.3/argocd-linux-amd64
     outputs:

@@ -37,7 +37,8 @@
           ```
 6. test with `mc`
     * ```shell
-      #K8S_MASTER_IP=192.168.1.107
+      # change K8S_MASTER_IP to your k8s master ip
+      K8S_MASTER_IP=192.168.1.107
       ACCESS_SECRET=$(kubectl -n storage get secret minio-secret -o jsonpath='{.data.rootPassword}' | base64 -d)
       podman run --rm \
       --entrypoint bash \

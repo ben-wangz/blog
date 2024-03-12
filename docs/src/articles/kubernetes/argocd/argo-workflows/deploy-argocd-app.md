@@ -46,15 +46,22 @@
           --from-literal=username=${ARGOCD_USERNAME} \
           --from-literal=password=${ARGOCD_PASSWORD}
       ```
-5. prepare `deploy-argocd-app.yaml`
+5. prepare `deploy-argocd-app-rbac.yaml` and apply it to k8s
+    * ```yaml
+      <!-- @include: deploy-argocd-app-rbac.yaml -->
+      ```
+    * ```shell
+      kubectl -n argocd apply -f deploy-argocd-app-rbac.yaml
+      ```
+6. prepare `deploy-argocd-app.yaml`
     * ```yaml
       <!-- @include: deploy-argocd-app.yaml -->
       ```
-6. submit with argo workflow client
+7. submit with argo workflow client
     * ```shell
       argo -n business-workflows submit deploy-argocd-app.yaml
       ```
-7. check status
+8. check status
     * ```shell
       argo -n business-workflows list
       ```

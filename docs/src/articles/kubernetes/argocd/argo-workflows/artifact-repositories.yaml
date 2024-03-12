@@ -8,7 +8,8 @@ metadata:
 data:
   default-artifact-repository: |
     s3:
-      endpoint: http://minio.storage:9000
+      endpoint: minio.storage:9000
+      insecure: true
       accessKeySecret:
         name: s3-artifact-repository-credentials
         key: accessKey
