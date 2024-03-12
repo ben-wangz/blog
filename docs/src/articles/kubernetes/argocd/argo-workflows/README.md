@@ -21,11 +21,18 @@
     * ```shell
       kubectl get namespace business-workflows > /dev/null 2>&1 || kubectl create namespace business-workflows
       ```
-3. apply to k8s
+4. prepare `artifact-repositories.yaml` and apply it to k8s
+    * ```yaml
+      <!-- @include: artifact-repositories.yaml -->
+      ```
+    * ```shell
+      kubectl -n business-workflows apply -f artifact-repositories.yaml
+      ```
+5. apply to k8s
     * ```shell
       kubectl -n argocd apply -f argo-workflows.yaml
       ```
-4. sync by argocd
+6. sync by argocd
     * ```shell
       argocd app sync argocd/argo-workflows
       ```
@@ -55,7 +62,7 @@
       argo -n business-workflows logs @latest
       ```
 
-## others
+### others
 
 1. [publish container image](publish-container-image.md)
 2. [deploy argocd app](deploy-argocd-app.md)

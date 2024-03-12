@@ -35,6 +35,20 @@
         + ```shell
           kubectl -n storage get secret minio-secret -o jsonpath='{.data.rootPassword}' | base64 -d
           ```
+6. test with `mc`
+    * ```shell
+      #K8S_MASTER_IP=192.168.1.107
+      ACCESS_SECRET=$(kubectl -n storage get secret minio-secret -o jsonpath='{.data.rootPassword}' | base64 -d)
+      podman run --rm \
+      --entrypoint bash \
+      --add-host=minio-api.dev.geekcity.tech:${K8S_MASTER_IP} \
+      -it docker.io/minio/mc:latest \
+      -c "mc alias set minio http://minio-api.dev.geekcity.tech:32080 admin ${ACCESS_SECRET} \
+          && mc ls minio \
+          && mc mb --ignore-existing minio/test \
+          && mc cp /etc/hosts minio/test/etc/hosts \
+          && mc ls --recursive minio"
+      ```
 
 ## references
 * https://github.com/minio/minio/tree/master/helm/minio

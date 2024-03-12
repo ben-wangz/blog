@@ -54,8 +54,6 @@ spec:
             - server
           sso:
             enabled: false
-          artifactRepository:
-            s3: {}
   destination:
     server: https://kubernetes.default.svc
     namespace: workflows
