@@ -10,7 +10,7 @@ spec:
   - metadata:
       name: workspace
     spec:
-      accessModes: 
+      accessModes:
       - ReadWriteOnce
       storageClassName: local-disks
       resources:
@@ -64,7 +64,7 @@ spec:
       command:
       - sh
       - -c
-      args: 
+      args:
       - |
         until docker ps; do sleep 3; done;
   - name: publish
@@ -74,7 +74,7 @@ spec:
         path: /workspace/src
         git:
           repo: https://github.com/ben-wangz/blog.git
-          revision: "main"
+          revision: main
       parameters:
       - name: docked-host
       - name: image-to-publish
@@ -99,7 +99,7 @@ spec:
       command:
       - sh
       - -c
-      args: 
+      args:
       - |
         export REGISTRY={{inputs.parameters.registry}}
         export IMAGE_TO_PUBLISH={{inputs.parameters.image-to-publish}}
@@ -109,7 +109,7 @@ spec:
             --build-arg REGISTRY=${REGISTRY} \
             -t ${IMAGE_TO_PUBLISH} /workspace/src \
             && docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
-            && docker push ${IMAGE_TO_PUBLISH} 
+            && docker push ${IMAGE_TO_PUBLISH}
       volumeMounts:
       - name: workspace
         mountPath: /workspace

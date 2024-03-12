@@ -10,5 +10,7 @@ spec:
   - name: whalesay
     container:
       image: m.daocloud.io/docker.io/docker/whalesay:latest
-      command: [cowsay]
-      args: ["hello world"]
+      command:
+      - cowsay
+      args:
+      - hello world

@@ -16,7 +16,7 @@ spec:
       - name: argocd-server
         value: argo-cd-argocd-server.argocd:443
       - name: insecure-option
-        value: "--insecure"
+        value: --insecure
     dag:
       tasks:
       - name: apply
@@ -86,7 +86,7 @@ spec:
       artifacts:
       - name: argocd-binary
         path: /tmp/argocd
-        mode: 0755
+        mode: "0755"
         http:
           url: https://files.m.daocloud.io/github.com/argoproj/argo-cd/releases/download/v2.9.3/argocd-linux-amd64
     outputs:
@@ -98,7 +98,7 @@ spec:
       command:
       - sh
       - -c
-      args: 
+      args:
       - |
         ls -l {{inputs.artifacts.argocd-binary.path}}
   - name: sync
@@ -124,11 +124,11 @@ spec:
             name: argocd-login-credentials
             key: password
       - name: WITH_PRUNE_OPTION
-        value: "--prune"
+        value: --prune
       command:
       - sh
       - -c
-      args: 
+      args:
       - |
         set -e
         export ARGOCD_SERVER={{inputs.parameters.argocd-server}}
@@ -161,7 +161,7 @@ spec:
       command:
       - sh
       - -c
-      args: 
+      args:
       - |
         set -e
         export ARGOCD_SERVER={{inputs.parameters.argocd-server}}
