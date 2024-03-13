@@ -47,8 +47,10 @@
           --from-literal=password=${ARGOCD_PASSWORD}
       ```
 5. prepare `deploy-argocd-app-rbac.yaml` and apply it to k8s
+    <!-- may be a bug: cannot import the whole file of deploy-argocd-app-rbac.yaml -->
     * ```yaml
-      <!-- @include: deploy-argocd-app-rbac.yaml -->
+      <!-- @include: deploy-argocd-app-rbac.yaml{1-12} -->
+      <!-- @include: deploy-argocd-app-rbac.yaml{13-} -->
       ```
     * ```shell
       kubectl -n argocd apply -f deploy-argocd-app-rbac.yaml
