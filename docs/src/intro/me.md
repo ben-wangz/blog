@@ -65,7 +65,7 @@ cover: /assets/images/black-hole-hero-f872641.jpg
 * main reasons to leave: my lovely daughter was coming, the business was given up and my boss left this company
 
 ### search dump team at Search Department Alibaba Group, Senior Java Developer(2015 - 2019)
-* maintaining and developing data processing platforms for search engine
+* maintaining and developing data processing logic and search engine dump systems for multiple business lines
 * designing and implementing an image data processing platform for image searching in Taobao: pailitao is the main user of this platform
     + establishing standards for c++ image processing modules, which based on protobuf, JNI, cmake, etc.
     + making standalone image processing modules, provided by algorithm engineers, to be a distributed system
@@ -102,3 +102,11 @@ cover: /assets/images/black-hole-hero-f872641.jpg
 * English: Certificate VI
 * [Red Hat Certified Engineer](RHCE_Zhi_Wang.pdf.md)
     + early in my high school: 2010.08.31
+
+## additional
+
+* Adept at solving problems in large-scale/distributed data processing systems
+* Capable of designing and building search dump data processing platforms, CI/CD automation workflows, etc.
+* Able to lead/mentor small product research and development team
+* Can also develop microservice architectures using Spring Boot, but not an expert
+* Can also use simple algorithm models, but not proficient
