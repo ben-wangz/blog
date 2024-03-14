@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nfs-provisioner-application
+  name: nfs-provisioner
 spec:
   syncPolicy:
     syncOptions:
@@ -13,11 +13,10 @@ spec:
     chart: nfs-subdir-external-provisioner
     targetRevision: 4.0.18
     helm:
-      releaseName: basic-nfs-provisioner
+      releaseName: nfs-provisioner
       values: |
         image:
-          repository: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner
-          tag: v4.0.2
+          repository: m.daocloud.io/registry.k8s.io/sig-storage/nfs-subdir-external-provisioner
           pullPolicy: IfNotPresent
         nfs:
           server: nfs.services.geekcity.tech
