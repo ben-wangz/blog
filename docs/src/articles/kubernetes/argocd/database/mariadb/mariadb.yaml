@@ -21,6 +21,7 @@ spec:
           username: ben.wangz
           existingSecret: mariadb-credentials
         primary:
+          extraFlags: "--character-set-server=utf8mb4 --collation-server=utf8mb4_bin"
           persistence:
             enabled: false
         secondary:
