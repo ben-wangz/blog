@@ -10,6 +10,7 @@ spec:
     template: "flink.k8s.io/{{namespace}}/{{name}}(/|$)(.*)"
     className: nginx
     annotations:
+      cert-manager.io/cluster-issuer: self-signed-ca-issuer
       nginx.ingress.kubernetes.io/rewrite-target: /$2
   flinkConfiguration:
     taskmanager:numberOfTaskSlots: "2"

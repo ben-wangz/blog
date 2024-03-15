@@ -4,7 +4,9 @@
 
 1. k8s is ready
 2. argocd is ready and logged in
-3. cert-manager is ready and the clusterissuer named `self-signed-ca-issuer` is ready
+3. ingress is ready
+4. cert-manager is ready
+    * the clusterissuer named `self-signed-ca-issuer` is ready
 
 ## installation
 

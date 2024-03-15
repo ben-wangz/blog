@@ -8,6 +8,7 @@
 
 1. k8s is ready
 2. argocd is ready and logged in
+3. cert-manager is ready
 
 ## installation
 

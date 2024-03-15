@@ -2,9 +2,8 @@
 
 ## prepare
 
-1. k8s is ready
-2. argo workflows is ready
-3. the storage class named `local-disks` is ready
+1. argo workflows is ready
+2. the storage class named `local-disks` is ready
 
 ## demo
 

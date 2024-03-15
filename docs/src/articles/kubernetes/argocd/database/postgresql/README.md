@@ -4,6 +4,11 @@
 
 1. k8s is ready
 2. argocd is ready and logged in
+3. ingress is ready
+    * only required by `pgadmin4` in the tests
+4. cert-manager is ready
+    * the clusterissuer named `self-signed-ca-issuer` is ready
+    * only required by `pgadmin4` in the tests
 
 ## installation
 

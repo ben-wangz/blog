@@ -2,9 +2,8 @@
 
 ## prepare
 
-1. k8s is ready
-2. argo workflows is ready
-3. minio is ready for artifact repository
+1. argo workflows is ready
+2. minio is ready for artifact repository
     * endpoint: minio.storage:9000
 
 ## demo
