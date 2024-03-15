@@ -1,0 +1,109 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: neo4j
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://helm.neo4j.com/neo4j
+    chart: neo4j
+    targetRevision: 5.17.0
+    helm:
+      releaseName: neo4j
+      values: |
+        # This should be set to true when using ArgoCD
+        # since ArgoCD uses helm template and the helm lookups will fail
+        disableLookups: true
+        neo4j:
+          name: "neo4j"
+          passwordFromSecret: "neo4j-credentials"
+          edition: "community"
+          minimumClusterSize: 1
+          acceptLicenseAgreement: "yes"
+          resources:
+            cpu: "500m"
+            memory: "2Gi"
+        volumes:
+          data:
+            mode: "volume"
+            dynamic:
+              storageClassName: "nfs-external"
+              accessModes:
+                - ReadWriteOnce
+              requests:
+                storage: 8Gi
+            volume:
+              setOwnerAndGroupWritableFilePermissions: false
+              emptyDir:
+                sizeLimit: 8Gi
+          backups:
+            disableSubPathExpr: false
+            mode: "share"
+            share:
+              name: "data"
+          logs:
+            disableSubPathExpr: false
+            mode: "share"
+            share:
+              name: "data"
+          metrics:
+            disableSubPathExpr: false
+            mode: "share"
+            share:
+              name: "data"
+          import:
+            disableSubPathExpr: false
+            mode: "share"
+            share:
+              name: "data"
+          licenses:
+            labels: {}
+            disableSubPathExpr: false
+            mode: "share"
+            share:
+              name: "data"
+        services:
+          neo4j:
+            enabled: true
+            spec:
+              type: ClusterIP
+            ports:
+              http:
+                enabled: true
+              https:
+                enabled: true
+              bolt:
+                enabled: true
+              backup:
+                enabled: false
+            multiCluster: false
+            cleanup:
+              enabled: true
+              image:
+                registry: m.daocloud.io/docker.io
+                repository: bitnami/kubectl
+                imagePullPolicy: IfNotPresent
+          admin:
+            enabled: true
+            spec:
+              type: ClusterIP
+          internals:
+            enabled: false
+        config:
+          server.config.strict_validation.enabled: "false"
+        image:
+          imagePullPolicy: IfNotPresent
+          customImage: m.daocloud.io/docker.io/library/neo4j:5.18.0-community-bullseye
+        env:
+          NEO4J_PLUGINS: '["apoc"]'
+        analytics:
+          enabled: false
+          type:
+            name: primary
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: database

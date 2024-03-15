@@ -1,0 +1,36 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: neo4j-reverse-proxy
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://helm.neo4j.com/neo4j
+    chart: neo4j-reverse-proxy
+    targetRevision: 5.17.0
+    helm:
+      releaseName: neo4j-reverse-proxy
+      values: |
+        reverseProxy:
+          image: "m.daocloud.io/docker.io/neo4j/helm-charts-reverse-proxy:5.17.0"
+          serviceName: "neo4j-lb-neo4j"
+          domain: "cluster.local"
+          ingress:
+            enabled: true
+            className: nginx
+            annotations:
+              cert-manager.io/cluster-issuer: self-signed-ca-issuer
+            host: neo4j.dev.geekcity.tech
+            tls:
+              enabled: true
+              config:
+              - secretName: "neo4j.dev.geekcity.tech-tls"
+                hosts:
+                - neo4j.dev.geekcity.tech
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: database
