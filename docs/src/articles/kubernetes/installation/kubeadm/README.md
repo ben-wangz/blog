@@ -94,7 +94,9 @@
       ```
 8. prepare `kubeadm.conf.yaml`
     * ```yaml
-      <!-- @include: @src/articles/kubernetes/installation/kubeadm/kubeadm.conf.yaml -->
+      <!-- @include: @src/articles/kubernetes/installation/kubeadm/kubeadm.conf.yaml{1,9} -->
+      <!-- @include: @src/articles/kubernetes/installation/kubeadm/kubeadm.conf.yaml{10,22} -->
+      <!-- @include: @src/articles/kubernetes/installation/kubeadm/kubeadm.conf.yaml{23-} -->
       ```
 9. initialize the cluster
     * ::: code-tabs#shell
