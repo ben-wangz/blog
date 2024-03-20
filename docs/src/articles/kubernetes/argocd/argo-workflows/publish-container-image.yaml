@@ -28,7 +28,7 @@ spec:
         template: wait-for-dind
         arguments:
           parameters:
-          - name: docked-host
+          - name: dockerd-host
             value: "{{tasks.dind.ip}}"
       - name: publish
         dependencies:
@@ -36,7 +36,7 @@ spec:
         template: publish
         arguments:
           parameters:
-          - name: docked-host
+          - name: dockerd-host
             value: "{{tasks.dind.ip}}"
   - name: dind
     daemon: true
@@ -55,12 +55,12 @@ spec:
   - name: wait-for-dind
     inputs:
       parameters:
-      - name: docked-host
+      - name: dockerd-host
     container:
       image: m.daocloud.io/docker.io/library/docker:25.0.3-cli-alpine3.19
       env:
       - name: DOCKER_HOST
-        value: "{{inputs.parameters.docked-host}}"
+        value: "{{inputs.parameters.dockerd-host}}"
       command:
       - sh
       - -c
@@ -76,16 +76,18 @@ spec:
           repo: https://github.com/ben-wangz/blog.git
           revision: main
       parameters:
-      - name: docked-host
+      - name: dockerd-host
+      - name: registry-to-push
+        value: docker.io
       - name: image-to-publish
-        value: docker.io/wangz2019/blog-docs:argo-test
+        value: wangz2019/blog-docs:argo-test
       - name: registry
         value: m.daocloud.io/docker.io
     container:
       image: m.daocloud.io/docker.io/library/docker:25.0.3-cli-alpine3.19
       env:
       - name: DOCKER_HOST
-        value: "{{inputs.parameters.docked-host}}"
+        value: "{{inputs.parameters.dockerd-host}}"
       - name: DOCKER_USERNAME
         valueFrom:
           secretKeyRef:
@@ -102,13 +104,14 @@ spec:
       args:
       - |
         export REGISTRY={{inputs.parameters.registry}}
-        export IMAGE_TO_PUBLISH={{inputs.parameters.image-to-publish}}
+        export REGISTRY_TO_PUSH={{inputs.parameters.registry-to-push}}
+        export IMAGE_TO_PUBLISH=${REGISTRY_TO_PUSH}/{{inputs.parameters.image-to-publish}}
         docker build \
             --ulimit nofile=4096:4096 \
             -f /workspace/src/docs/Dockerfile \
             --build-arg REGISTRY=${REGISTRY} \
             -t ${IMAGE_TO_PUBLISH} /workspace/src \
-            && docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
+            && docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" ${REGISTRY_TO_PUSH} \
             && docker push ${IMAGE_TO_PUBLISH}
       volumeMounts:
       - name: workspace
