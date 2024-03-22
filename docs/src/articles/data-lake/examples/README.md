@@ -22,5 +22,8 @@ index: false
 
 1. [fastText](fasttext/README.md)
 2. [compress_fasttext](compress_fasttext/README.md)
+3. [CLIP](clip/README.md#text-vectorization)
 
 ## image vectorization
+
+1. [CLIP](clip/README.md#image-vectorization)
