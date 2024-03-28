@@ -27,3 +27,7 @@ index: false
 ## image vectorization
 
 1. [CLIP](clip/README.md#image-vectorization)
+
+## similarity with text and image
+
+1. [sentence transformers](sentence-transformers/README.md)

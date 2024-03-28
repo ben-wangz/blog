@@ -113,4 +113,6 @@ mindmap
     * self developed
 6. machine learning and ai
 
+7. [other examples](examples/README.md)
+
 <AutoCatalog />
