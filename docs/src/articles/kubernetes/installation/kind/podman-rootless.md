@@ -28,6 +28,11 @@
       podman pull ${MIRROR}${IMAGE}
       podman tag ${MIRROR}${IMAGE} ${IMAGE}
       ```
+7. (optional) disable aegis service and reboot system for aliyun
+    * https://bugzilla.openanolis.cn/show_bug.cgi?id=5437
+    * ```shell
+      systemctl disable aegis && reboot
+      ```
 
 ## configure for rootless
 1. The host needs to be running with cgroup v2

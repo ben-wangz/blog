@@ -4,7 +4,7 @@ kind: FlinkDeployment
 metadata:
   name: python-example
 spec:
-  image: m.daocloud.io/ghcr.io/ben.wangz/blog-pyflink:main
+  image: m.daocloud.io/ghcr.io/ben-wangz/blog-pyflink:main
   flinkVersion: v1_17
   ingress:
     template: "flink.k8s.io/{{namespace}}/{{name}}(/|$)(.*)"

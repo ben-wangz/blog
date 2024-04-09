@@ -4,7 +4,7 @@ kind: FlinkDeployment
 metadata:
   name: basic
 spec:
-  image: flink:1.17
+  image: docker.io/library/flink:1.17
   flinkVersion: v1_17
   ingress:
     template: "flink.k8s.io/{{namespace}}/{{name}}(/|$)(.*)"
