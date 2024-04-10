@@ -13,24 +13,42 @@
     * ```shell
       dnf -y install iptables iproute-tc
       ```
-    * ```shell
-      KUBE_VERSION=1.27
-      dnf -y module enable cri-o:${KUBE_VERSION}
-      dnf -y install cri-o
+    * enable cri-o repo
+        + ::: code-tabs#shell
+          @tab for-fedora-38
+          ```shell
+          dnf -y module enable cri-o:${KUBE_VERSION}
+          ```
+          @tab for rhel-8
+          ```shell
+          KUBE_VERSION=1.28
+          cat <<EOF | tee /etc/yum.repos.d/cri-o.repo
+          [cri-o]
+          name=CRI-O
+          baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/v${KUBE_VERSION}/rpm/
+          enabled=1
+          gpgcheck=1
+          gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/v${KUBE_VERSION}/rpm/repodata/repomd.xml.key
+          EOF
+          ```
+          :::
+    * enable kubernetes repo
+        + ```shell
+          KUBE_VERSION=1.28
+          cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+          [kubernetes]
+          name=Kubernetes
+          baseurl=https://pkgs.k8s.io/core:/stable:/v${KUBE_VERSION}/rpm/
+          enabled=1
+          gpgcheck=1
+          gpgkey=https://pkgs.k8s.io/core:/stable:/v${KUBE_VERSION}/rpm/repodata/repomd.xml.key
+          exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+          EOF
       ```
-    * ```shell
-      KUBE_VERSION=1.27
-      cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
-      [kubernetes]
-      name=Kubernetes
-      baseurl=https://pkgs.k8s.io/core:/stable:/v${KUBE_VERSION}/rpm/
-      enabled=1
-      gpgcheck=1
-      gpgkey=https://pkgs.k8s.io/core:/stable:/v${KUBE_VERSION}/rpm/repodata/repomd.xml.key
-      exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
-      EOF
-      dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
-      ```
+    * install components
+        + ```shell
+          dnf -y install cri-o kubeadm kubelet kubectl --disableexcludes=kubernetes
+          ```
 
 ## configure node
 
@@ -40,6 +58,7 @@
       ```
 2. configure `/etc/hosts`
     * ```shell
+      # change ip according to your own machine
       cat >> /etc/hosts <<EOF
       192.168.1.109 k8s-master
       EOF

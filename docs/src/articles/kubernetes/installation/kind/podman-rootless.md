@@ -31,7 +31,7 @@
 7. (optional) disable aegis service and reboot system for aliyun
     * https://bugzilla.openanolis.cn/show_bug.cgi?id=5437
     * ```shell
-      systemctl disable aegis && reboot
+      sudo systemctl disable aegis && sudo reboot
       ```
 
 ## configure for rootless
