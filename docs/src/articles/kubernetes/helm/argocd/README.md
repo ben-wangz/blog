@@ -43,7 +43,7 @@
 6. login with argocd cli
     * ```shell
       # you may need to port-forward by kubectl
-      kubectl -n argocd port-forward --address 0.0.0.0 service/argocd-server-external 30443:443
+      #kubectl -n argocd port-forward --address 0.0.0.0 service/argocd-server-external 30443:443
       # you need to typein the password
       argocd login --insecure --username admin localhost:30443
       ```
