@@ -57,7 +57,7 @@
           -e BOOTSTRAP_SERVER=host.containers.internal:9094 \
           -e TOPIC=test-topic \
           -it docker.io/bitnami/kafka:3.6.2 bash \
-              -c 'for message in $(seq 0 10); do echo $message |kafka-console-producer.sh --bootstrap-server $BOOTSTRAP_SERVER --topic $TOPIC; done'
+              -c 'for message in $(seq 0 10); do echo $message | kafka-console-producer.sh --bootstrap-server $BOOTSTRAP_SERVER --topic $TOPIC; done'
       ```
 * consume message
     + ```shell
