@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-client-tools
+  labels:
+    app: kafka-client-tools
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-client-tools
+  template:
+    metadata:
+      labels:
+        app: kafka-client-tools
+    spec:
+      volumes:
+      - name: client-properties
+        secret:
+          secretName: client-properties
+      containers:
+      - name: kafka-client-tools
+        image: docker.io/bitnami/kafka:3.6.2
+        volumeMounts:
+        - name: client-properties
+          mountPath: /bitnami/custom/client.properties
+          subPath: client.properties
+          readOnly: true
+        env:
+        - name: BOOTSTRAP_SERVER
+          value: kafka.database.svc.cluster.local:9092
+        - name: CLIENT_CONFIG_FILE
+          value: /bitnami/custom/client.properties
+        command:
+        - tail
+        - -f
+        - /etc/hosts
+        imagePullPolicy: IfNotPresent
