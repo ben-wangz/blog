@@ -32,6 +32,8 @@ spec:
           value: kafka.database.svc.cluster.local:9092
         - name: CLIENT_CONFIG_FILE
           value: /bitnami/custom/client.properties
+        - name: ZOOKEEPER_CONNECT
+          value: kafka-zookeeper.database.svc.cluster.local:2181
         command:
         - tail
         - -f

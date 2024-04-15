@@ -1,0 +1,64 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: kafka
+    targetRevision: 28.0.3
+    helm:
+      releaseName: kafka
+      values: |
+        image:
+          registry: m.daocloud.io/docker.io
+        controller:
+          replicaCount: 3
+          persistence:
+            enabled: false
+          logPersistence:
+            enabled: false
+        broker:
+          replicaCount: 3
+          persistence:
+            enabled: false
+          logPersistence:
+            enabled: false
+          extraConfig: |
+            message.max.bytes=5242880
+            default.replication.factor=3
+            offsets.topic.replication.factor=3
+            transaction.state.log.replication.factor=3
+        externalAccess:
+          enabled: false
+          autoDiscovery:
+            enabled: false
+            image:
+              registry: m.daocloud.io/docker.io
+        volumePermissions:
+          enabled: false
+          image:
+            registry: m.daocloud.io/docker.io
+        metrics:
+          kafka:
+            enabled: false
+            image:
+              registry: m.daocloud.io/docker.io
+          jmx:
+            enabled: false
+            image:
+              registry: m.daocloud.io/docker.io
+        provisioning:
+          enabled: false
+        kraft:
+          enabled: true
+        zookeeper:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: database

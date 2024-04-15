@@ -1,4 +1,4 @@
-# kafka-with-craft
+# kafka
 
 ## prepare
 
@@ -8,9 +8,16 @@
 ## installation
 
 1. prepare `kafka.yaml`
-    * ```yaml
+    * ::: code-tabs#shell
+      @tab kafka-with-kraft
+      ```yaml
       <!-- @include: kafka.yaml -->
       ```
+      @tab kafka-with-zookeeper
+      ```yaml
+      <!-- @include: kafka-with-zookeeper.yaml -->
+      ```
+      :::
 2. apply to k8s
     * ```shell
       kubectl -n argocd apply -f kafka.yaml
@@ -26,7 +33,7 @@
     * ```shell
       kubectl -n database \
           create secret generic client-properties \
-          --from-literal=client.properties="$(printf "sasl.mechanism=SCRAM-SHA-256\nsasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username=\"user1\" password=\"$(kubectl get secret kafka-user-passwords --namespace database -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)\";\n")"
+          --from-literal=client.properties="$(printf "security.protocol=SASL_PLAINTEXT\nsasl.mechanism=SCRAM-SHA-256\nsasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username=\"user1\" password=\"$(kubectl get secret kafka-user-passwords --namespace database -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)\";\n")"
       ```
 2. prepare `kafka-client-tools.yaml`
     + ```yaml

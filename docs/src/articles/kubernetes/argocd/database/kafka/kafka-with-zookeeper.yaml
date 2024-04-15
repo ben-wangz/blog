@@ -18,13 +18,14 @@ spec:
         image:
           registry: m.daocloud.io/docker.io
         controller:
-          replicaCount: 3
+          replicaCount: 0
           persistence:
             enabled: false
           logPersistence:
             enabled: false
         broker:
           replicaCount: 3
+          minId: 0
           persistence:
             enabled: false
           logPersistence:
@@ -56,15 +57,30 @@ spec:
         provisioning:
           enabled: false
         kraft:
-          enabled: true
-        zookeeper:
           enabled: false
+        zookeeper:
+          enabled: true
+          image:
+            registry: m.daocloud.io/docker.io
           replicaCount: 1
           auth:
             client:
               enabled: false
+            quorum:
+              enabled: false
           persistence:
             enabled: false
+          volumePermissions:
+            enabled: false
+            image:
+              registry: m.daocloud.io/docker.io
+            metrics:
+              enabled: false
+          tls:
+            client:
+              enabled: false
+            quorum:
+              enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: database
