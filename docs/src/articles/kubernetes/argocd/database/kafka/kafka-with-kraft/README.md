@@ -1,4 +1,4 @@
-# kafka
+# kafka-with-craft
 
 ## prepare
 
