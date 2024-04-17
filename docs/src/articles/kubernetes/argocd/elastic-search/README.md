@@ -11,9 +11,16 @@
 ## installation
 
 1. prepare `elastic-search.yaml`
-    * ```yaml
+    * ::: code-tabs#shell
+      @tab minimal
+      ```yaml
       <!-- @include: elastic-search.yaml -->
       ```
+      @tab normal
+      ```yaml
+      <!-- @include: elastic-search-minimal.yaml -->
+      ```
+      :::
 2. apply to k8s
     * ```shell
       kubectl -n argocd apply -f elastic-search.yaml
