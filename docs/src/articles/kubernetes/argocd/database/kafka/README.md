@@ -9,6 +9,14 @@
 
 1. prepare `kafka.yaml`
     * ::: code-tabs#shell
+      @tab kafka-with-kraft-minimal
+      ```yaml
+      <!-- @include: kafka-minimal.yaml -->
+      ```
+      @tab kafka-with-zookeeper-minimal
+      ```yaml
+      <!-- @include: kafka-with-zookeeper-minimal.yaml -->
+      ```
       @tab kafka-with-kraft
       ```yaml
       <!-- @include: kafka.yaml -->

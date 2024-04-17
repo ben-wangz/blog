@@ -23,6 +23,11 @@ spec:
             enabled: false
           logPersistence:
             enabled: false
+          extraConfig: |
+            message.max.bytes=5242880
+            default.replication.factor=3
+            offsets.topic.replication.factor=3
+            transaction.state.log.replication.factor=3
         broker:
           replicaCount: 3
           minId: 0
