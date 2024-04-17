@@ -15,7 +15,14 @@
       "remote.autoForwardPortsSource": "process"
     },
     "vscode": {
-      "extensions": [ "vscodevim.vim", "streetsidesoftware.code-spell-checker", "redhat.vscode-yaml", "vscjava.vscode-gradle", "vue.volar" ]
+      "extensions": [
+        "vscodevim.vim",
+        "streetsidesoftware.code-spell-checker",
+        "redhat.vscode-yaml",
+        "vscjava.vscode-gradle",
+        "vue.volar",
+        "GitHub.copilot"
+      ]
     }
   },
   "mounts": [ "type=bind,source=${localWorkspaceFolder},target=/work", "type=bind,source=/home/${localEnv:USER}/.ssh,target=/home/vscode/.ssh,readonly" ],
