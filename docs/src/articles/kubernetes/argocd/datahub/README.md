@@ -32,3 +32,16 @@
     * ```shell
       argocd app sync argocd/datahub
       ```
+
+## visit with browser
+
+1. extract neo4j credentials
+    * ```shell
+      kubectl -n application get secret datahub-user-secret -o jsonpath='{.data.user\.props}' | base64 -d
+      ```
+2. with http
+    * datahub.dev.geekcity.tech should be resolved to nginx-ingress
+        + for example, add `$K8S_MASTER_IP datahub.dev.geekcity.tech` to `/etc/hosts`
+    * open browser and visit `https://datahub.dev.geekcity.tech:32443`
+
+## ingest metadata from s3
