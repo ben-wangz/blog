@@ -14,11 +14,11 @@
     * ::: code-tabs#shell
       @tab minimal
       ```yaml
-      <!-- @include: elastic-search.yaml -->
+      <!-- @include: elastic-search-minimal.yaml -->
       ```
       @tab normal
       ```yaml
-      <!-- @include: elastic-search-minimal.yaml -->
+      <!-- @include: elastic-search.yaml -->
       ```
       :::
 2. apply to k8s
