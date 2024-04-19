@@ -42,6 +42,7 @@
 2. with http
     * datahub.dev.geekcity.tech should be resolved to nginx-ingress
         + for example, add `$K8S_MASTER_IP datahub.dev.geekcity.tech` to `/etc/hosts`
-    * open browser and visit `https://datahub.dev.geekcity.tech:32443`
+    * datahub frontend: `https://datahub.dev.geekcity.tech:32443`
+    * api: https://datahub.dev.geekcity.tech:32443/openapi/swagger-ui/index.html
 
 ## ingest metadata from s3
