@@ -1,8 +1,9 @@
-#include "include/math.hpp"
+#include "include/geekmath.hpp"
 #include <iostream>
 
 int main() {
+    geekmath::Simple simple;
     std::cout << "hello world: "
-        << "1 + 2 = " << math::add(1, 2) << std::endl;
+        << "1 + 2 = " << simple.add(1, 2) << std::endl;
     return 0;
 }

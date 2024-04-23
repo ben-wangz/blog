@@ -4,7 +4,7 @@ project(
     VERSION 1.0
     LANGUAGES CXX)
 
-add_library(HelloWorldLib src/include/ src/math.cpp )
+add_subdirectory(lib/geekmath)
 add_executable(HelloWorld src/main.cpp)
 
-target_link_libraries(HelloWorld PRIVATE HelloWorldLib)
+target_link_libraries(HelloWorld PRIVATE geekmathLib)

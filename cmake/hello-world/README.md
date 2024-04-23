@@ -4,7 +4,11 @@
 
 1. compile
     * ```shell
-      mkdir -p build && cd build && cmake .. && make && cd -
+      mkdir -p build \
+        && cd build \
+        && cmake .. \
+        && make \
+        && cd -
       ```
 2. run
     * ```shell
