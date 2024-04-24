@@ -1,3 +1,7 @@
 include("docs")
 include("flink:connectors:s3")
 include("flink:connectors:jdbc")
+include("arrow:hello-world")
+include(":arrow:javacpp:geekmath")
+include("arrow:javacpp:app")
+// include("arrow:invokeCpp")

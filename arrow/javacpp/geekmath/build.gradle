@@ -1,0 +1,54 @@
+plugins {
+    id "java-library"
+    id "org.bytedeco.gradle-javacpp-build"  version "1.5.10"
+}
+
+version = "0.1.0"
+
+def javacppVersion = "1.5.10"
+dependencies {
+    api "org.bytedeco:javacpp:$javacppVersion"
+
+    testRuntimeOnly "org.bytedeco:javacpp:$javacppVersion:$javacppPlatform"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.9.3"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+tasks.withType(org.bytedeco.gradle.javacpp.BuildTask) {
+    includePath = ["$buildDir/$javacppPlatform/include"]
+    linkPath = ["$buildDir/$javacppPlatform/lib"]
+}
+
+javacppBuildCommand {
+    buildCommand = ["bash", project.file("build.sh").absolutePath]
+    dependsOn javacppPomProperties
+}
+
+javacppBuildParser {
+    classOrPackageNames = ["tech.geekcity.javacpp.*"]
+    outputDirectory = file("$buildDir/generated/sources/javacpp/")
+}
+
+javacppBuildCompiler {
+    copyLibs = true
+    deleteJniFiles = true
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
+
+jar {
+    manifest {
+        attributes "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(" "),
+                   "Implementation-Title": "JavaCPP Presets for custom cpp",
+                   "Implementation-Vendor": "ben.wangz",
+                   "Implementation-Version": project.version,
+                   "Specification-Title": "JavaCPP Presets for custom cpp",
+                   "Specification-Vendor": "ben.wangz",
+                   "Specification-Version": project.version,
+                   "Main-Class": "tech.geekcity.javacpp.Simple"
+    }
+}
