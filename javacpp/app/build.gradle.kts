@@ -9,7 +9,7 @@ val lombokDependency = "org.projectlombok:lombok:1.18.22"
 val jacksonVersion = "2.13.4"
 val slf4jVersion = "2.0.9"
 dependencies {
-    implementation(project(":arrow:javacpp:geekmath"))
+    implementation(project(":javacpp:geekmath"))
 
     annotationProcessor(lombokDependency)
     implementation("com.google.guava:guava:32.1.1-jre")
