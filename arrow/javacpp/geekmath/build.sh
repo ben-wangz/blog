@@ -2,6 +2,7 @@
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+rm -rf $SCRIPT_DIR/cpp/build
 mkdir -p $SCRIPT_DIR/cpp/build
 cd $SCRIPT_DIR/cpp/build
 cmake ..

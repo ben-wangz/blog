@@ -25,7 +25,7 @@ javacppBuildCommand {
 }
 
 javacppBuildParser {
-    classOrPackageNames = ["tech.geekcity.javacpp.*"]
+    classOrPackageNames = ["tech.geekcity.javacpp.geekmath.*"]
     outputDirectory = file("$buildDir/generated/sources/javacpp/")
 }
 
@@ -48,7 +48,6 @@ jar {
                    "Implementation-Version": project.version,
                    "Specification-Title": "JavaCPP Presets for custom cpp",
                    "Specification-Vendor": "ben.wangz",
-                   "Specification-Version": project.version,
-                   "Main-Class": "tech.geekcity.javacpp.Simple"
+                   "Specification-Version": project.version
     }
 }
