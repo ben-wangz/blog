@@ -7,9 +7,16 @@
 ## installation
 
 1. prepare `busybox.yaml`
-    * ```yaml
+    * ::: code-tabs#shell
+      @tab fedora
+      ```yaml
+      <!-- @include: fedora.yaml -->
+      ```
+      @tab busybox
+      ```yaml
       <!-- @include: busybox.yaml -->
       ```
+      :::
 2. apply to k8s
     * ```shell
       kubectl apply -f busybox.yaml
