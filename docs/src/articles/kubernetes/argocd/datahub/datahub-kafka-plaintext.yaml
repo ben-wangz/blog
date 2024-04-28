@@ -1,0 +1,125 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: datahub
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://helm.datahubproject.io
+    chart: datahub
+    targetRevision: 0.4.8
+    helm:
+      releaseName: datahub
+      values: |
+        global:
+          elasticsearch:
+            host: elastic-search-elasticsearch.application.svc.cluster.local
+            port: 9200
+            skipcheck: "false"
+            insecure: "false"
+            useSSL: "false"
+          kafka:
+            bootstrap:
+              server: kafka.database.svc.cluster.local:9092
+            zookeeper:
+              server: kafka-zookeeper.database.svc.cluster.local:2181
+          neo4j:
+            host: neo4j.database.svc.cluster.local:7474
+            uri: bolt://neo4j.database.svc.cluster.local
+            username: neo4j
+            password:
+              secretRef: datahub-credentials
+              secretKey: neo4j-password
+          sql:
+            datasource:
+              host: mariadb.database.svc.cluster.local:3306
+              hostForMysqlClient: mariadb.database.svc.cluster.local
+              port: 3306
+              url: jdbc:mysql://mariadb.database.svc.cluster.local:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2
+              driver: com.mysql.cj.jdbc.Driver
+              username: root
+              password:
+                secretRef: datahub-credentials
+                secretKey: mysql-root-password
+        datahub-gms:
+          enabled: true
+          replicaCount: 1
+          image:
+            repository: m.daocloud.io/docker.io/acryldata/datahub-gms
+          service:
+            type: ClusterIP
+          ingress:
+            enabled: false
+        datahub-frontend:
+          enabled: true
+          replicaCount: 1
+          image:
+            repository: m.daocloud.io/docker.io/acryldata/datahub-frontend-react
+          defaultUserCredentials:
+            randomAdminPassword: true
+          service:
+            type: ClusterIP
+          ingress:
+            enabled: true
+            className: nginx
+            annotations:
+              cert-manager.io/cluster-issuer: self-signed-ca-issuer
+            hosts:
+            - host: datahub.dev.geekcity.tech
+              paths:
+              - /
+            tls:
+            - secretName: "datahub.dev.geekcity.tech-tls"
+              hosts:
+              - datahub.dev.geekcity.tech
+        acryl-datahub-actions:
+          enabled: true
+          replicaCount: 1
+          image:
+            repository: m.daocloud.io/docker.io/acryldata/datahub-actions
+        datahub-mae-consumer:
+          replicaCount: 1
+          image:
+            repository: m.daocloud.io/docker.io/acryldata/datahub-mae-consumer
+          ingress:
+            enabled: false
+        datahub-mce-consumer:
+          replicaCount: 1
+          image:
+            repository: m.daocloud.io/docker.io/acryldata/datahub-mce-consumer
+          ingress:
+            enabled: false
+        datahub-ingestion-cron:
+          enabled: false
+          image:
+            repository: m.daocloud.io/docker.io/acryldata/datahub-ingestion
+        elasticsearchSetupJob:
+          enabled: true
+          image:
+            repository: m.daocloud.io/docker.io/acryldata/datahub-elasticsearch-setup
+        kafkaSetupJob:
+          enabled: true
+          image:
+            repository: m.daocloud.io/docker.io/acryldata/datahub-kafka-setup
+        mysqlSetupJob:
+          enabled: true
+          image:
+            repository: m.daocloud.io/docker.io/acryldata/datahub-mysql-setup
+        postgresqlSetupJob:
+          enabled: false
+          image:
+            repository: m.daocloud.io/docker.io/acryldata/datahub-postgres-setup
+        datahubUpgrade:
+          enabled: true
+          image:
+            repository: m.daocloud.io/docker.io/acryldata/datahub-upgrade
+        datahubSystemUpdate:
+          image:
+            repository: m.daocloud.io/docker.io/acryldata/datahub-upgrade
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: application
