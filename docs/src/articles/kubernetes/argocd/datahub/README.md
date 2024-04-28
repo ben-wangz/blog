@@ -14,7 +14,6 @@
     * ```shell
       kubectl -n application \
           create secret generic datahub-credentials \
-          --from-literal=neo4j-password="$(kubectl get secret neo4j-credentials --namespace database -o jsonpath='{.data.NEO4J_AUTH}' | base64 -d | cut -d/ -f2)" \
           --from-literal=mysql-root-password="$(kubectl get secret mariadb-credentials --namespace database -o jsonpath='{.data.mariadb-root-password}' | base64 -d)" \
           --from-literal=security.protocol="SASL_PLAINTEXT" \
           --from-literal=sasl.mechanism="SCRAM-SHA-256" \
