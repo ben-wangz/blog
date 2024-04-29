@@ -6,8 +6,16 @@ plugins {
 version = "0.1.0"
 
 def javacppVersion = "1.5.10"
+def arrowVersion = "15.0.2"
+
+
 dependencies {
     api "org.bytedeco:javacpp:$javacppVersion"
+    implementation "org.apache.arrow:arrow-c-data:${arrowVersion}"
+    implementation "org.apache.arrow:arrow-vector:${arrowVersion}"
+    implementation "org.apache.arrow:arrow-memory-core:${arrowVersion}"
+    implementation "org.apache.arrow:arrow-memory-netty:${arrowVersion}"
+    implementation "org.apache.arrow:arrow-format:${arrowVersion}"
 
     testRuntimeOnly "org.bytedeco:javacpp:$javacppVersion:$javacppPlatform"
     testImplementation "org.junit.jupiter:junit-jupiter:5.9.3"
@@ -25,7 +33,7 @@ javacppBuildCommand {
 }
 
 javacppBuildParser {
-    classOrPackageNames = ["tech.geekcity.javacpp.geekmath.*"]
+    classOrPackageNames = ["tech.geekcity.javacpp.cppbrige.*"]
     outputDirectory = file("$buildDir/generated/sources/javacpp/")
 }
 
@@ -52,12 +60,15 @@ jar {
     }
 }
 
+// 定义 customJar 任务
 task customJar(type: Jar) {
-    from sourceSets.main.output
+    from sourceSets.main.output // 获取主代码输出
 
+    // 依赖于 jar 任务确保它首先执行
     dependsOn jar
 }
 
+// 将 customJar 任务的输出添加到项目的构建工件中
 artifacts {
     archives customJar
 }
