@@ -69,9 +69,9 @@
       ```
 3. better solution with kubectl port-forward
     * ```shell
-      kubectl port-forward -n basic-components service/ 30443:30443
-      kubectl port-forward -n basic-components service/ 32443:32443
-      kubectl port-forward -n basic-components service/ 32080:32080
+      kubectl port-forward -n argocd --address 0.0.0.0 service/argocd-server-external 30443:30443
+      kubectl port-forward -n basic-components --address 0.0.0.0 service/ingress-nginx-controller 32443:32443
+      kubectl port-forward -n basic-components --address 0.0.0.0 service/ingress-nginx-controller 32080:32080
       ```
 
 ## uninstall

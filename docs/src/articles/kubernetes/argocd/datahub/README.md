@@ -11,19 +11,34 @@
 ## installation
 
 1. create secret `datahub-credentials`
-    * ```shell
+    * ::: code-tabs#shell
+      @tab kafka-sasl-plaintext
+      ```shell
       kubectl -n application \
           create secret generic datahub-credentials \
-          --from-literal=neo4j-password="$(kubectl get secret neo4j-credentials --namespace database -o jsonpath='{.data.NEO4J_AUTH}' | base64 -d | cut -d/ -f2)" \
           --from-literal=mysql-root-password="$(kubectl get secret mariadb-credentials --namespace database -o jsonpath='{.data.mariadb-root-password}' | base64 -d)" \
           --from-literal=security.protocol="SASL_PLAINTEXT" \
           --from-literal=sasl.mechanism="SCRAM-SHA-256" \
           --from-literal=sasl.jaas.config="org.apache.kafka.common.security.scram.ScramLoginModule required username=\"user1\" password=\"$(kubectl get secret kafka-user-passwords --namespace database -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)\";"
       ```
+      @tab kafka-plaintext
+      ```shell
+      kubectl -n application \
+          create secret generic datahub-credentials \
+          --from-literal=mysql-root-password="$(kubectl get secret mariadb-credentials --namespace database -o jsonpath='{.data.mariadb-root-password}' | base64 -d)" \
+      ```
+      :::
 2. prepare `datahub.yaml`
-    * ```yaml
+    * ::: code-tabs#shell
+      @tab kafka-sasl-plaintext
+      ```yaml
       <!-- @include: datahub.yaml -->
       ```
+      @tab kafka-plaintext
+      ```yaml
+      <!-- @include: datahub-kafka-plaintext.yaml -->
+      ```
+      :::
 3. apply to k8s
     * ```shell
       kubectl -n argocd apply -f datahub.yaml

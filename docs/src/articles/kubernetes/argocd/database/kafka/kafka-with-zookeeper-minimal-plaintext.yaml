@@ -1,0 +1,96 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: kafka
+    targetRevision: 28.0.3
+    helm:
+      releaseName: kafka
+      values: |
+        image:
+          registry: m.daocloud.io/docker.io
+        listeners:
+          client:
+            protocol: PLAINTEXT
+          interbroker:
+            protocol: PLAINTEXT
+        controller:
+          replicaCount: 0
+          persistence:
+            enabled: false
+          logPersistence:
+            enabled: false
+          extraConfig: |
+            message.max.bytes=5242880
+            default.replication.factor=1
+            offsets.topic.replication.factor=1
+            transaction.state.log.replication.factor=1
+        broker:
+          replicaCount: 1
+          minId: 0
+          persistence:
+            enabled: false
+          logPersistence:
+            enabled: false
+          extraConfig: |
+            message.max.bytes=5242880
+            default.replication.factor=1
+            offsets.topic.replication.factor=1
+            transaction.state.log.replication.factor=1
+        externalAccess:
+          enabled: false
+          autoDiscovery:
+            enabled: false
+            image:
+              registry: m.daocloud.io/docker.io
+        volumePermissions:
+          enabled: false
+          image:
+            registry: m.daocloud.io/docker.io
+        metrics:
+          kafka:
+            enabled: false
+            image:
+              registry: m.daocloud.io/docker.io
+          jmx:
+            enabled: false
+            image:
+              registry: m.daocloud.io/docker.io
+        provisioning:
+          enabled: false
+        kraft:
+          enabled: false
+        zookeeper:
+          enabled: true
+          image:
+            registry: m.daocloud.io/docker.io
+          replicaCount: 1
+          auth:
+            client:
+              enabled: false
+            quorum:
+              enabled: false
+          persistence:
+            enabled: false
+          volumePermissions:
+            enabled: false
+            image:
+              registry: m.daocloud.io/docker.io
+            metrics:
+              enabled: false
+          tls:
+            client:
+              enabled: false
+            quorum:
+              enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: database

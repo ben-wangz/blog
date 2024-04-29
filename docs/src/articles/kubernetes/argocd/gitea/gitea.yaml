@@ -1,0 +1,126 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitea
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://dl.gitea.com/charts/
+    chart: gitea
+    targetRevision: 10.1.4
+    helm:
+      releaseName: gitea
+      values: |
+        image:
+          registry: m.daocloud.io/docker.io
+        service:
+          http:
+            type: ClusterIP
+          ssh:
+            type: NodePort
+            port: 22
+            nodePort: 32022
+        ingress:
+          enabled: true
+          annotations:
+            kubernetes.io/ingress.class: nginx
+            nginx.ingress.kubernetes.io/proxy-body-size: 1g
+            nginx.ingress.kubernetes.io/rewrite-target: /$1
+            cert-manager.io/issuer: self-signed-issuer
+          hosts:
+          - host: gitea.dev.geekcity.tech
+            paths:
+            - path: /?(.*)
+              pathType: ImplementationSpecific
+          tls:
+          - secretName: gitea.dev.geekcity.tech-tls
+            hosts:
+            - gitea.dev.geekcity.tech
+        persistence:
+          enabled: true
+          size: 8Gi
+          storageClass: standard
+        redis-cluster:
+          enabled: false
+        postgresql-ha:
+          enabled: false
+        postgresql:
+          enabled: true
+          architecture: standalone
+          image:
+            registry: m.daocloud.io/docker.io
+          primary:
+            persistence:
+              enabled: false
+              storageClass: standard
+              size: 8Gi
+          readReplicas:
+            replicaCount: 1
+            persistence:
+              enabled: true
+              storageClass: standard
+              size: 8Gi
+          backup:
+            enabled: false
+          volumePermissions:
+            enabled: false
+            image:
+              registry: m.daocloud.io/docker.io
+          metrics:
+            enabled: false
+            image:
+              registry: m.daocloud.io/docker.io
+        gitea:
+          admin:
+            existingSecret: gitea-admin-credentials
+            email: ben.wangz@foxmail.com
+          config:
+            database:
+              DB_TYPE: postgres
+            session:
+              PROVIDER: db
+            cache:
+              ADAPTER: memory
+            queue:
+              TYPE: level
+            indexer:
+              ISSUE_INDEXER_TYPE: bleve
+              REPO_INDEXER_ENABLED: true
+            repository:
+              MAX_CREATION_LIMIT: 10
+              DISABLED_REPO_UNITS: "repo.wiki,repo.ext_wiki,repo.projects"
+              DEFAULT_REPO_UNITS: "repo.code,repo.releases,repo.issues,repo.pulls"
+            server:
+              PROTOCOL: http
+              LANDING_PAGE: login
+              DOMAIN: gitea.dev.geekcity.tech
+              ROOT_URL: https://gitea.dev.geekcity.tech:32443/
+              SSH_DOMAIN: ssh.gitea.dev.geekcity.tech
+              SSH_PORT: 32022
+              SSH_AUTHORIZED_PRINCIPALS_ALLOW: email
+            admin:
+              DISABLE_REGULAR_ORG_CREATION: true
+            security:
+              INSTALL_LOCK: true
+            service:
+              REGISTER_EMAIL_CONFIRM: true
+              DISABLE_REGISTRATION: true
+              ENABLE_NOTIFY_MAIL: false
+              DEFAULT_ALLOW_CREATE_ORGANIZATION: false
+              SHOW_MILESTONES_DASHBOARD_PAGE: false
+            migrations:
+              ALLOW_LOCALNETWORKS: true
+            mailer:
+              ENABLED: false
+            i18n:
+              LANGS: "en-US,zh-CN"
+              NAMES: "English,简体中文"
+            oauth2:
+              ENABLE: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: application

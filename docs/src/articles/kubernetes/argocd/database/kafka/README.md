@@ -9,21 +9,25 @@
 
 1. prepare `kafka.yaml`
     * ::: code-tabs#shell
-      @tab kafka-with-kraft-minimal
+      @tab kraft-minimal
       ```yaml
       <!-- @include: kafka-minimal.yaml -->
       ```
-      @tab kafka-with-zookeeper-minimal
+      @tab zookeeper-minimal
       ```yaml
       <!-- @include: kafka-with-zookeeper-minimal.yaml -->
       ```
-      @tab kafka-with-kraft
+      @tab kraft
       ```yaml
       <!-- @include: kafka.yaml -->
       ```
-      @tab kafka-with-zookeeper
+      @tab zookeeper
       ```yaml
       <!-- @include: kafka-with-zookeeper.yaml -->
+      ```
+      @tab zookeeper-minimal-plaintext
+      ```yaml
+      <!-- @include: kafka-with-zookeeper-minimal-plaintext.yaml -->
       ```
       :::
 2. apply to k8s
@@ -38,11 +42,20 @@
 ## setup kafka-client-tools
 
 1. create `client-properties`
-    * ```shell
+    * ::: code-tabs#shell
+      @tab SASL_PLAINTEXT
+      ```shell
       kubectl -n database \
           create secret generic client-properties \
           --from-literal=client.properties="$(printf "security.protocol=SASL_PLAINTEXT\nsasl.mechanism=SCRAM-SHA-256\nsasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username=\"user1\" password=\"$(kubectl get secret kafka-user-passwords --namespace database -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)\";\n")"
       ```
+      @tab PLAINTEXT
+      ```shell
+      kubectl -n database \
+          create secret generic client-properties \
+          --from-literal=client.properties="security.protocol=PLAINTEXT"
+      ```
+      :::
 2. prepare `kafka-client-tools.yaml`
     + ```yaml
       <!-- @include: kafka-client-tools.yaml -->
