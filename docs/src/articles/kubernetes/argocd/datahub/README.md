@@ -25,7 +25,7 @@
       ```shell
       kubectl -n application \
           create secret generic datahub-credentials \
-          --from-literal=mysql-root-password="$(kubectl get secret mariadb-credentials --namespace database -o jsonpath='{.data.mariadb-root-password}' | base64 -d)" \
+          --from-literal=mysql-root-password="$(kubectl get secret mariadb-credentials --namespace database -o jsonpath='{.data.mariadb-root-password}' | base64 -d)"
       ```
       :::
 2. prepare `datahub.yaml`
@@ -50,7 +50,7 @@
 
 ## visit with browser
 
-1. extract neo4j credentials
+1. extract credentials
     * ```shell
       kubectl -n application get secret datahub-user-secret -o jsonpath='{.data.user\.props}' | base64 -d
       ```
