@@ -33,6 +33,13 @@ rsync -av --delete \
       lsof -i:8083
       ```
 
+## port forwarding with ssh tunnel
+
+* local port forwarding
+    + ```shell
+      ssh -L [local_port]:[remote_host]:[remote_port] [user]@[gateway] -N -f
+      ```
+
 ## sync clock
 
 ```shell
