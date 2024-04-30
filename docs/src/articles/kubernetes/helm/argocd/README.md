@@ -36,7 +36,7 @@
     * ```shell
       kubectl -n argocd apply -f argocd-server-external.yaml
       ```
-5. get argocd intial password
+5. get argocd initial password
     * ```shell
       kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
       ```
