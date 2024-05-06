@@ -3,14 +3,12 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-version = "0.1.0"
-
 val lombokDependency = "org.projectlombok:lombok:1.18.22"
 val jacksonVersion = "2.13.4"
 val slf4jVersion = "2.0.9"
 val arrowVersion = "15.0.2"
 dependencies {
-    implementation(project(":arrow:CDataCppBridge:CDataCppBridge"))
+    implementation(project(":arrow:c-data-interface:bridge"))
     implementation("org.apache.arrow:arrow-c-data:$arrowVersion")
     implementation("org.apache.arrow:arrow-vector:$arrowVersion")
     implementation("org.apache.arrow:arrow-memory-core:$arrowVersion")

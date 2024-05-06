@@ -3,11 +3,8 @@ plugins {
     id "org.bytedeco.gradle-javacpp-build"  version "1.5.10"
 }
 
-version = "0.1.0"
-
 def javacppVersion = "1.5.10"
 def arrowVersion = "15.0.2"
-
 
 dependencies {
     api "org.bytedeco:javacpp:$javacppVersion"
@@ -33,7 +30,7 @@ javacppBuildCommand {
 }
 
 javacppBuildParser {
-    classOrPackageNames = ["tech.geekcity.javacpp.cppbrige.*"]
+    classOrPackageNames = ["tech.geekcity.arrow.c.data.bridge.*"]
     outputDirectory = file("$buildDir/generated/sources/javacpp/")
 }
 
@@ -60,11 +57,8 @@ jar {
     }
 }
 
-// 定义 customJar 任务
 task customJar(type: Jar) {
     from sourceSets.main.output // 获取主代码输出
-
-    // 依赖于 jar 任务确保它首先执行
     dependsOn jar
 }
 

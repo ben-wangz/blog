@@ -1,6 +1,11 @@
 #! /bin/bash
 
+set -e
+set -x
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
+bash $SCRIPT_DIR/fedora-38-arrow-install.sh
 
 rm -rf $SCRIPT_DIR/cpp/build
 mkdir -p $SCRIPT_DIR/cpp/build
