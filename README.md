@@ -4,6 +4,14 @@
 
 * source code of [blog.geekcity.tech](https://blog.geekcity.tech)
 
+## develop with dev container and vscode
+
+* prepare mount point
+    + ```shell
+      mkdir -p $HOME/dev-container/blog/.gradle
+      ```
+* open with vscode which contains .devcontainer
+
 ## start locallly
 
 1. dev mode with gradlew
