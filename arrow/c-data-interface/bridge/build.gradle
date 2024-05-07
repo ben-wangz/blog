@@ -36,7 +36,6 @@ javacppBuildParser {
 
 javacppBuildCompiler {
     copyLibs = true
-    deleteJniFiles = true
 }
 
 java {
