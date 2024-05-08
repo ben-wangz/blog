@@ -46,7 +46,7 @@ spec:
           limits:
             memory: 512Mi
             cpu: 250m
-        existingSecret: minio-secret
+        existingSecret: minio-credentials
   destination:
     server: https://kubernetes.default.svc
     namespace: storage

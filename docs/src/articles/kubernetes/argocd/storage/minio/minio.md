@@ -13,7 +13,7 @@
 1. prepare secret for root user credentials
     * ```shell
       kubectl get namespaces storage > /dev/null 2>&1 || kubectl create namespace storage
-      kubectl -n storage create secret generic minio-secret \
+      kubectl -n storage create secret generic minio-credentials \
           --from-literal=rootUser=admin \
           --from-literal=rootPassword=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
       ```
@@ -36,7 +36,7 @@
     * access key: admin
     * access secret
         + ```shell
-          kubectl -n storage get secret minio-secret -o jsonpath='{.data.rootPassword}' | base64 -d
+          kubectl -n storage get secret minio-credentials -o jsonpath='{.data.rootPassword}' | base64 -d
           ```
 6. test with `mc`
     * ```shell
