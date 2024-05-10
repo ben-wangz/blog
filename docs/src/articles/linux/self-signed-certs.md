@@ -3,7 +3,7 @@
 ## extract certificate from server
 
 * ```shell
-  SERVER_NAME=cr.registry.res.cloud.zhejianglab.com
+  SERVER_NAME=minio-console.dev.geekcity.tech
   SERVER_IP=${SERVER_IP:-${SERVER_NAME}}
   SERVER_PORT=${SERVER_PORT:-443}
   openssl s_client \
