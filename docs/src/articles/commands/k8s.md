@@ -25,6 +25,11 @@ cp /etc/kubernetes/admin.conf ~/.kube/config
 kubectl get nodes -o jsonpath='{.items[*].spec.podCIDR}'
 ```
 
+## get first master node ip
+```shell
+kubectl get node -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}'
+```
+
 ## delete error pods
 
 * with awk
