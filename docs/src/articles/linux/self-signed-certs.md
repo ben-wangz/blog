@@ -13,6 +13,12 @@
       | sed -n '/^-----BEGIN CERT/,/^-----END CERT/p' > ${SERVER_NAME}-${SERVER_PORT}.crt
   ```
 
+## print certificate as text
+
+* ```shell
+  openssl x509 -in ${SERVER_NAME}-${SERVER_PORT}.crt -text -noout
+  ```
+
 ## import certificate to trust store
 
 1. for ubuntu
