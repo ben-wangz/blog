@@ -1,0 +1,229 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: mirror-container-image-
+spec:
+  entrypoint: entry
+  serviceAccountName: argo-workflow
+  templates:
+  - name: entry
+    dag:
+      tasks:
+      - name: prepare-registry
+        template: prepare-registry
+        arguments:
+          parameters:
+          - name: registry-credentials-secret-name
+            value: registry-credentials
+      - name: dind
+        dependencies:
+        - prepare-registry
+        template: dind
+        arguments:
+          parameters:
+          - name: insecure-option
+            value: "{{tasks.prepare-registry.outputs.parameters.insecure-option}}"
+          - name: insecure-registry
+            value: "{{tasks.prepare-registry.outputs.parameters.insecure-registry}}"
+      - name: wait-for-dind
+        dependencies:
+        - dind
+        template: wait-for-dind
+        arguments:
+          parameters:
+          - name: dockerd-host
+            value: "{{tasks.dind.ip}}"
+      - name: mirror
+        dependencies:
+        - wait-for-dind
+        template: mirror
+        arguments:
+          parameters:
+          - name: dockerd-host
+            value: "{{tasks.dind.ip}}"
+          - name: repository-prefix
+            value: "wangz2019/mirror_"
+          - name: keep-structure
+            value: "false"
+          - name: string-to-replace-slash
+            value: "_"
+          - name: registry-credentials-secret-name
+            value: registry-credentials
+          - name: dry-run-push
+            value: "false"
+          artifacts:
+          - name: images-to-mirror
+            raw:
+              data: |
+                - registry: docker.io
+                  repository: library/busybox
+                  tag: stable-glibc
+                - registry: docker.io
+                  repository: library/alpine
+                  tag: latest
+  - name: prepare-registry
+    inputs:
+      parameters:
+      - name: registry-credentials-secret-name
+    container:
+      image: m.daocloud.io/docker.io/library/alpine:3.19.1
+      env:
+      - name: REGISTRY_INSECURE
+        valueFrom:
+          secretKeyRef:
+            name: "{{inputs.parameters.registry-credentials-secret-name}}"
+            key: insecure
+      - name: REGISTRY
+        valueFrom:
+          secretKeyRef:
+            name: "{{inputs.parameters.registry-credentials-secret-name}}"
+            key: registry
+      command:
+      - sh
+      - -c
+      args:
+      - |
+        printf "--insecure-registry" > /tmp/insecure-option
+        if [ "${REGISTRY_INSECURE}" = "true" ]; then
+            echo "insecure registry ${REGISTRY}"
+            printf "%s" ${REGISTRY} > /tmp/insecure-registry
+        else
+            printf "127.0.0.1" > /tmp/insecure-registry
+        fi
+    outputs:
+      parameters:
+      - name: insecure-option
+        valueFrom:
+          path: /tmp/insecure-option
+      - name: insecure-registry
+        valueFrom:
+          path: /tmp/insecure-registry
+  - name: dind
+    daemon: true
+    inputs:
+      parameters:
+      - name: insecure-option
+      - name: insecure-registry
+    container:
+      image: m.daocloud.io/docker.io/library/docker:25.0.3-dind-alpine3.19
+      env:
+      - name: DOCKER_TLS_CERTDIR
+        value: ""
+      command:
+      - dockerd-entrypoint.sh
+      - "{{inputs.parameters.insecure-option}}"
+      - "{{inputs.parameters.insecure-registry}}"
+      securityContext:
+        privileged: true
+  - name: wait-for-dind
+    inputs:
+      parameters:
+      - name: dockerd-host
+    container:
+      image: m.daocloud.io/docker.io/library/docker:25.0.3-cli-alpine3.19
+      env:
+      - name: DOCKER_HOST
+        value: "{{inputs.parameters.dockerd-host}}"
+      command:
+      - sh
+      - -c
+      args:
+      - |
+        until docker ps; do sleep 3; done;
+  - name: mirror
+    inputs:
+      artifacts:
+      - name: images-to-mirror
+        path: /app/images.yaml
+      - name: mirror-scripts
+        path: /app/mirror.sh
+        raw:
+          data: |
+            #! /bin/bash
+            
+            set -e
+            SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+            
+            REGISTRY=${REGISTRY:-docker.io}
+            REGISTRY_USERNAME=${REGISTRY_USERNAME:-anonymous}
+            REGISTRY_PASSWORD=${REGISTRY_PASSWORD:-password4anonymous}
+            REPOSITORY_PREFIX=${REPOSITORY_PREFIX:-}
+            IMAGE_YAML_FILE=${IMAGE_YAML_FILE:-${SCRIPT_DIR}/images.yaml}
+            KEEP_STRUCTURE=${KEEP_STRUCTURE:-true}
+            STRING_TO_REPLACE_SLASH=${STRING_TO_REPLACE_SLASH:-_}
+            PUSH_WITH_TLS_VERIFY=${PUSH_WITH_TLS_VERIFY:-true}
+            if type podman > /dev/null 2>&1; then 
+                CONTAINER_MANAGER=podman
+            else
+                CONTAINER_MANAGER=docker
+            fi
+            if [ "${CONTAINER_MANAGER}" = "podman" ]; then
+                OPTIONS="--tls-verify=${PUSH_WITH_TLS_VERIFY}"
+            else
+                OPTIONS=""
+            fi
+            ${CONTAINER_MANAGER} login ${OPTIONS} -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${REGISTRY}
+            yq eval '.[] | ("registry=" + .registry + "; repository=" + .repository + "; tag=" + .tag)'  ${IMAGE_YAML_FILE} \
+              | while read -r EXPRESION
+                do
+                    eval $EXPRESION
+                    SOURCE_IMAGE=${registry}/${repository}:${tag}
+                    if [ "${KEEP_STRUCTURE}" = "true" ]; then
+                        TARGET_IMAGE=${REGISTRY}/${REPOSITORY_PREFIX}${SOURCE_IMAGE}
+                    else
+                        TARGET_IMAGE=${REGISTRY}/${REPOSITORY_PREFIX}$(echo ${SOURCE_IMAGE} | sed -e "s/\//${STRING_TO_REPLACE_SLASH}/g")
+                    fi
+                    ${CONTAINER_MANAGER} image pull ${SOURCE_IMAGE}
+                    ${CONTAINER_MANAGER} image tag ${SOURCE_IMAGE} ${TARGET_IMAGE}
+                    if [ "${DRY_RUN_PUSH:-true}" = "true" ]; then
+                        echo "dry run command: '${CONTAINER_MANAGER} push ${OPTIONS} ${TARGET_IMAGE}'"
+                    else
+                        ${CONTAINER_MANAGER} push ${OPTIONS} ${TARGET_IMAGE}
+                    fi
+                done
+      parameters:
+      - name: dockerd-host
+      - name: repository-prefix
+      - name: keep-structure
+      - name: string-to-replace-slash
+      - name: registry-credentials-secret-name
+      - name: dry-run-push
+    container:
+      image: m.daocloud.io/docker.io/library/docker:25.0.3-cli-alpine3.19
+      env:
+      - name: DOCKER_HOST
+        value: "{{inputs.parameters.dockerd-host}}"
+      - name: REPOSITORY_PREFIX
+        value: "{{inputs.parameters.repository-prefix}}"
+      - name: KEEP_STRUCTURE
+        value: "{{inputs.parameters.keep-structure}}"
+      - name: STRING_TO_REPLACE_SLASH
+        value: "{{inputs.parameters.string-to-replace-slash}}"
+      - name: IMAGE_YAML_FILE
+        value: "{{inputs.artifacts.images-to-mirror.path}}"
+      - name: REGISTRY
+        valueFrom:
+          secretKeyRef:
+            name: "{{inputs.parameters.registry-credentials-secret-name}}"
+            key: registry
+      - name: REGISTRY_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: "{{inputs.parameters.registry-credentials-secret-name}}"
+            key: username
+      - name: REGISTRY_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: "{{inputs.parameters.registry-credentials-secret-name}}"
+            key: password
+      - name: DRY_RUN_PUSH
+        value: "{{inputs.parameters.dry-run-push}}"
+      command:
+        - sh
+        - -c
+      args:
+        - |
+          apk update \
+              && apk add --no-cache bash yq \
+              && bash /app/mirror.sh
