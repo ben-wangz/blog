@@ -8,7 +8,7 @@
 
 ## demo
 
-1. [configure s3 artifact repository](configure-s3-artifact-repository/README.md)
+1. [configure s3 artifact repository](../configure-s3-artifact-repository/README.md)
 2. prepare secret `argocd-login-credentials` which stores argocd username and password
     * ```shell
       ARGOCD_USERNAME=admin
