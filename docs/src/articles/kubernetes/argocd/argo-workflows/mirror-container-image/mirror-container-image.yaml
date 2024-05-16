@@ -191,6 +191,7 @@ spec:
                         echo "dry run command: '${CONTAINER_MANAGER} push ${OPTIONS} ${TARGET_IMAGE}'"
                     else
                         ${CONTAINER_MANAGER} push ${OPTIONS} ${TARGET_IMAGE}
+                        echo "successfully pushed ${TARGET_IMAGE} to ${REGISTRY}"
                     fi
                 done
       parameters:
