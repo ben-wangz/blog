@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: images-to-mirror
+data:
+  images-to-mirror.yaml: |
+    - registry: docker.io
+      repository: library/busybox
+      tag: stable-glibc
+    - registry: docker.io
+      repository: library/alpine
+      tag: latest
