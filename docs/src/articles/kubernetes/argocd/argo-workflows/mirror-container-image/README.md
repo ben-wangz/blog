@@ -3,7 +3,6 @@
 ## prepare
 
 1. argo workflows is ready
-2. the storage class named `local-disks` is ready
 
 ## demo
 
