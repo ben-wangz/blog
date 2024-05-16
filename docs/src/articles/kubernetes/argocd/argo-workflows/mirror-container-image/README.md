@@ -6,7 +6,15 @@
 
 ## demo
 
-1. prepare `registry-credentials` secret
+1. prepare `images-to-mirror.yaml` which contains a configmap storing a list of images to mirror
+    * ```yaml
+      <!-- @include: images-to-mirror.yaml -->
+      ```
+2. apply `images-to-mirror.yaml` to k8s
+    * ```shell
+      kubectl -n business-workflows apply -f images-to-mirror.yaml
+      ```
+3. prepare `registry-credentials` secret
     * ```shell
       #REGISTRY_INSECURE=false
       #REGISTRY=REGISTRY
@@ -18,15 +26,15 @@
         --from-literal="username=${REGISTRY_USERNAME}" \
         --from-literal="password=${REGISTRY_PASSWORD}"
       ```
-2. prepare `mirror-container-image.yaml`
+4. prepare `mirror-container-image.yaml`
     * ```yaml
       <!-- @include: mirror-container-image.yaml -->
       ```
-3. submit with argo workflow client
+5. submit with argo workflow client
     * ```shell
       argo -n business-workflows submit mirror-container-image.yaml
       ```
-4. check status
+6. check status
     * ```shell
       argo -n business-workflows list
       ```

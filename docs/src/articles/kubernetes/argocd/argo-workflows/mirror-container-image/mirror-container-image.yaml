@@ -5,27 +5,32 @@ metadata:
   generateName: mirror-container-image-
 spec:
   entrypoint: entry
+  artifactRepositoryRef:
+    configmap: artifact-repositories
+    key: default-artifact-repository
   serviceAccountName: argo-workflow
   templates:
   - name: entry
     dag:
       tasks:
-      - name: prepare-registry
-        template: prepare-registry
+      - name: initialization
+        template: initialization
         arguments:
           parameters:
           - name: registry-credentials-secret-name
             value: registry-credentials
+          - name: images-to-mirror-configmap-name
+            value: images-to-mirror
       - name: dind
         dependencies:
-        - prepare-registry
+        - initialization
         template: dind
         arguments:
           parameters:
           - name: insecure-option
-            value: "{{tasks.prepare-registry.outputs.parameters.insecure-option}}"
+            value: "{{tasks.initialization.outputs.parameters.insecure-option}}"
           - name: insecure-registry
-            value: "{{tasks.prepare-registry.outputs.parameters.insecure-registry}}"
+            value: "{{tasks.initialization.outputs.parameters.insecure-registry}}"
       - name: wait-for-dind
         dependencies:
         - dind
@@ -54,20 +59,23 @@ spec:
             value: "false"
           artifacts:
           - name: images-to-mirror
-            raw:
-              data: |
-                - registry: docker.io
-                  repository: library/busybox
-                  tag: stable-glibc
-                - registry: docker.io
-                  repository: library/alpine
-                  tag: latest
-  - name: prepare-registry
+            from: "{{tasks.initialization.outputs.artifacts.images-to-mirror}}"
+  - name: initialization
     inputs:
       parameters:
       - name: registry-credentials-secret-name
+      - name: images-to-mirror-configmap-name
+    volumes:
+      - name: images-to-mirror
+        configMap:
+          name: "{{inputs.parameters.images-to-mirror-configmap-name}}"
     container:
       image: m.daocloud.io/docker.io/library/alpine:3.19.1
+      volumeMounts:
+      - name: images-to-mirror
+        mountPath: /app/images-to-mirror.yaml
+        subPath: images-to-mirror.yaml
+        readOnly: true
       env:
       - name: REGISTRY_INSECURE
         valueFrom:
@@ -99,6 +107,9 @@ spec:
       - name: insecure-registry
         valueFrom:
           path: /tmp/insecure-registry
+      artifacts:
+      - name: images-to-mirror
+        path: /app/images-to-mirror.yaml
   - name: dind
     daemon: true
     inputs:
