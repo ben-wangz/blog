@@ -3,10 +3,12 @@
 ## prepare
 
 1. argo workflows is ready
+2. minio is ready for artifact repository
+    * endpoint: minio.storage:9000
 
 ## demo
 
-1. [configure s3 artifact repository](configure-s3-artifact-repository/README.md)
+1. [configure s3 artifact repository](../configure-s3-artifact-repository/README.md)
 2. prepare `images-to-mirror.yaml` which contains a configmap storing a list of images to mirror
     * ```yaml
       <!-- @include: images-to-mirror.yaml -->
