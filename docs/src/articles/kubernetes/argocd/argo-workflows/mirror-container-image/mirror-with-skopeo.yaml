@@ -1,0 +1,156 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: mirror-with-skopeo-
+spec:
+  entrypoint: entry
+  artifactRepositoryRef:
+    configmap: artifact-repositories
+    key: default-artifact-repository
+  serviceAccountName: argo-workflow
+  templates:
+  - name: entry
+    dag:
+      tasks:
+      - name: initialization
+        template: initialization
+        arguments:
+          parameters:
+          - name: images-to-mirror-configmap-name
+            value: images-to-mirror
+      - name: mirror
+        dependencies:
+        - initialization
+        template: mirror
+        arguments:
+          parameters:
+          - name: repository-prefix
+            value: "wangz2019/mirror_"
+          - name: keep-structure
+            value: "false"
+          - name: string-to-replace-slash
+            value: "_"
+          - name: registry-credentials-secret-name
+            value: registry-credentials
+          - name: dry-run
+            value: "false"
+          artifacts:
+          - name: images-to-mirror
+            from: "{{tasks.initialization.outputs.artifacts.images-to-mirror}}"
+  - name: initialization
+    inputs:
+      parameters:
+      - name: images-to-mirror-configmap-name
+    volumes:
+      - name: images-to-mirror
+        configMap:
+          name: "{{inputs.parameters.images-to-mirror-configmap-name}}"
+    container:
+      image: m.daocloud.io/docker.io/library/alpine:3.19.1
+      volumeMounts:
+      - name: images-to-mirror
+        mountPath: /app/images-to-mirror.yaml
+        subPath: images-to-mirror.yaml
+        readOnly: true
+      command:
+      - cat
+      args:
+      - /app/images-to-mirror.yaml
+    outputs:
+      artifacts:
+      - name: images-to-mirror
+        path: /app/images-to-mirror.yaml
+  - name: mirror
+    inputs:
+      artifacts:
+      - name: images-to-mirror
+        path: /app/images.yaml
+      - name: mirror-scripts
+        path: /app/mirror.sh
+        raw:
+          data: |
+            #! /bin/bash
+            
+            set -e
+            SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+            
+            IMAGE_YAML_FILE=${IMAGE_YAML_FILE:-${SCRIPT_DIR}/images.yaml}
+            KEEP_STRUCTURE=${KEEP_STRUCTURE:-true}
+            STRING_TO_REPLACE_SLASH=${STRING_TO_REPLACE_SLASH:-_}
+            if [ "${REGISTRY_INSECURE}" = "true" ]; then
+                INSPECT_OPTIONS="--tls-verify=false"
+                COPY_OPTIONS="--dest-tls-verify=false"
+            else
+                INSPECT_OPTIONS=""
+                COPY_OPTIONS=""
+            fi
+            yq eval '.[] | ("registry=" + .registry + "; repository=" + .repository + "; tag=" + .tag)'  ${IMAGE_YAML_FILE} \
+              | while read -r EXPRESION
+                do
+                    eval $EXPRESION
+                    SOURCE_IMAGE=${registry}/${repository}:${tag}
+                    if [ "${KEEP_STRUCTURE}" = "true" ]; then
+                        TARGET_IMAGE=${REGISTRY}/${REPOSITORY_PREFIX}${SOURCE_IMAGE}
+                    else
+                        TARGET_IMAGE=${REGISTRY}/${REPOSITORY_PREFIX}$(echo ${SOURCE_IMAGE} | sed -e "s/\//${STRING_TO_REPLACE_SLASH}/g")
+                    fi
+                    if [ "${DRY_RUN:-true}" = "true" ]; then
+                        echo "dry run command: skopeo copy \
+                            docker://${SOURCE_IMAGE} \
+                            docker://${TARGET_IMAGE} \
+                            --dest-creds ${REGISTRY_USERNAME}:**********"
+                    else
+                        skopeo inspect ${INSPECT_OPTIONS} docker://${TARGET_IMAGE} > /dev/null 2>&1 \
+                          && echo "skip mirroring ${SOURCE_IMAGE} to ${TARGET_IMAGE}" \
+                          || (
+                              skopeo copy ${COPY_OPTIONS} \
+                                  docker://${SOURCE_IMAGE} \
+                                  docker://${TARGET_IMAGE} \
+                                  --dest-creds ${REGISTRY_USERNAME}:${REGISTRY_PASSWORD} \
+                              && echo "successfully mirrored ${SOURCE_IMAGE} to ${TARGET_IMAGE}")
+                    fi
+                done
+      parameters:
+      - name: repository-prefix
+      - name: keep-structure
+      - name: string-to-replace-slash
+      - name: registry-credentials-secret-name
+      - name: dry-run
+    container:
+      image: m.daocloud.io/quay.io/skopeo/stable:v1.15.0-immutable
+      env:
+      - name: REPOSITORY_PREFIX
+        value: "{{inputs.parameters.repository-prefix}}"
+      - name: KEEP_STRUCTURE
+        value: "{{inputs.parameters.keep-structure}}"
+      - name: STRING_TO_REPLACE_SLASH
+        value: "{{inputs.parameters.string-to-replace-slash}}"
+      - name: IMAGE_YAML_FILE
+        value: "{{inputs.artifacts.images-to-mirror.path}}"
+      - name: REGISTRY_INSECURE
+        valueFrom:
+          secretKeyRef:
+            name: "{{inputs.parameters.registry-credentials-secret-name}}"
+            key: insecure
+      - name: REGISTRY
+        valueFrom:
+          secretKeyRef:
+            name: "{{inputs.parameters.registry-credentials-secret-name}}"
+            key: registry
+      - name: REGISTRY_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: "{{inputs.parameters.registry-credentials-secret-name}}"
+            key: username
+      - name: REGISTRY_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: "{{inputs.parameters.registry-credentials-secret-name}}"
+            key: password
+      - name: DRY_RUN
+        value: "{{inputs.parameters.dry-run}}"
+      command:
+        - bash
+      args:
+        - /app/mirror.sh

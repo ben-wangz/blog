@@ -10,3 +10,6 @@ data:
     - registry: docker.io
       repository: library/alpine
       tag: latest
+    - registry: quay.io
+      repository: skopeo/stable
+      tag: v1.15.0-immutable

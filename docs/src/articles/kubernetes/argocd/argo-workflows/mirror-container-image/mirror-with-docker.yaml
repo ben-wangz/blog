@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: mirror-container-image-
+  generateName: mirror-with-docker-
 spec:
   entrypoint: entry
   artifactRepositoryRef:
@@ -156,21 +156,17 @@ spec:
             set -e
             SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
             
-            REGISTRY=${REGISTRY:-docker.io}
-            REGISTRY_USERNAME=${REGISTRY_USERNAME:-anonymous}
-            REGISTRY_PASSWORD=${REGISTRY_PASSWORD:-password4anonymous}
-            REPOSITORY_PREFIX=${REPOSITORY_PREFIX:-}
             IMAGE_YAML_FILE=${IMAGE_YAML_FILE:-${SCRIPT_DIR}/images.yaml}
             KEEP_STRUCTURE=${KEEP_STRUCTURE:-true}
             STRING_TO_REPLACE_SLASH=${STRING_TO_REPLACE_SLASH:-_}
-            PUSH_WITH_TLS_VERIFY=${PUSH_WITH_TLS_VERIFY:-true}
+            REGISTRY_INSECURE=${REGISTRY_INSECURE:-true}
             if type podman > /dev/null 2>&1; then 
                 CONTAINER_MANAGER=podman
             else
                 CONTAINER_MANAGER=docker
             fi
-            if [ "${CONTAINER_MANAGER}" = "podman" ]; then
-                OPTIONS="--tls-verify=${PUSH_WITH_TLS_VERIFY}"
+            if [ "${CONTAINER_MANAGER}" = "podman" ] && [ "${REGISTRY_INSECURE}" = "true" ]; then
+                OPTIONS="--tls-verify=${REGISTRY_INSECURE}"
             else
                 OPTIONS=""
             fi
@@ -214,6 +210,11 @@ spec:
         value: "{{inputs.parameters.string-to-replace-slash}}"
       - name: IMAGE_YAML_FILE
         value: "{{inputs.artifacts.images-to-mirror.path}}"
+      - name: REGISTRY_INSECURE
+        valueFrom:
+          secretKeyRef:
+            name: "{{inputs.parameters.registry-credentials-secret-name}}"
+            key: insecure
       - name: REGISTRY
         valueFrom:
           secretKeyRef:

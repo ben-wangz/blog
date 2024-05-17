@@ -1,4 +1,4 @@
-# mirror container image
+# mirror with docker
 
 ## prepare
 
@@ -29,23 +29,23 @@
         --from-literal="username=${REGISTRY_USERNAME}" \
         --from-literal="password=${REGISTRY_PASSWORD}"
       ```
-5. prepare `mirror-container-image.yaml`
+5. prepare `mirror-with-docker.yaml`
     * ```yaml
-      <!-- @include: mirror-container-image.yaml -->
+      <!-- @include: mirror-with-docker.yaml -->
       ```
 6. submit with argo workflow client
     * ```shell
-      argo -n business-workflows submit mirror-container-image.yaml
+      argo -n business-workflows submit mirror-with-docker.yaml
       ```
 7. check status
     * ```shell
       argo -n business-workflows list
       ```
     * ```shell
-      # argo -n business-workflows get mirror-container-image-2j5z2
+      # argo -n business-workflows get mirror-with-docker-2j5z2
       argo -n business-workflows get @lastest
       ```
     * ```shell
-      # argo -n business-workflows logs mirror-container-image-2j5z2
+      # argo -n business-workflows logs mirror-with-docker-2j5z2
       argo -n business-workflows logs @latest
       ```
