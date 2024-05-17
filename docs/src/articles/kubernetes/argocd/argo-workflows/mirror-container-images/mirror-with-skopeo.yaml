@@ -118,7 +118,7 @@ spec:
       - name: registry-credentials-secret-name
       - name: dry-run
     container:
-      image: m.daocloud.io/quay.io/skopeo/stable:v1.15.0-immutable
+      image: ghcr.io/ben-wangz/blog-skopeo:main
       env:
       - name: REPOSITORY_PREFIX
         value: "{{inputs.parameters.repository-prefix}}"
