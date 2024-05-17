@@ -59,6 +59,6 @@
 
 ### others
 
-1. [publish container image](publish-container-image.md)
-2. [deploy argocd app](deploy-argocd-app.md)
-3. [mirror container image](mirror-container-image/README.md)
+1. [publish container image](publish-container-image/README.md)
+2. [deploy argocd app](deploy-argocd-app/README.md)
+3. [mirror container image](mirror-container-images/README.md)
