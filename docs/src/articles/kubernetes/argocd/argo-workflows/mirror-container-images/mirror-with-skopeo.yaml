@@ -101,7 +101,7 @@ spec:
                             docker://${TARGET_IMAGE} \
                             --dest-creds ${REGISTRY_USERNAME}:**********"
                     else
-                        skopeo inspect ${INSPECT_OPTIONS} docker://${TARGET_IMAGE} > /dev/null 2>&1 \
+                        skopeo inspect ${INSPECT_OPTIONS} docker://${TARGET_IMAGE} --creds ${REGISTRY_USERNAME}:${REGISTRY_PASSWORD} > /dev/null 2>&1 \
                           && echo "skip mirroring ${SOURCE_IMAGE} to ${TARGET_IMAGE}" \
                           || (
                               skopeo copy ${COPY_OPTIONS} \
