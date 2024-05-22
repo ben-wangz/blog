@@ -8,7 +8,13 @@
       "java.configuration.updateBuildConfiguration": "automatic",
       "java.gradle.buildServer.enabled": "on",
       "remote.autoForwardPorts": false,
-      "remote.autoForwardPortsSource": "process"
+      "remote.autoForwardPortsSource": "process",
+      "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/.gradle/**": true,
+        "**/build/**": true
+      }
     },
     "vscode": {
       "extensions": [ "vscodevim.vim", "streetsidesoftware.code-spell-checker", "redhat.vscode-yaml", "vue.volar", "GitHub.copilot", "redhat.java", "vscjava.vscode-java-dependency", "vscjava.vscode-java-debug", "vscjava.vscode-gradle", "vscjava.vscode-java-test", "richardwillis.vscode-gradle-extension-pack" ]
