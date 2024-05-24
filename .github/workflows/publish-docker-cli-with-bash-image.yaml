@@ -1,0 +1,35 @@
+---
+name: publish-docker-cli-with-bash-image
+"on":
+  workflow_dispatch: null
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: "${{ github.repository }}-docker-cli-with-bash"
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - name: checkout-repository
+      uses: actions/checkout@v4
+    - name: log in to the container registry
+      uses: docker/login-action@v3
+      with:
+        registry: "${{ env.REGISTRY }}"
+        username: "${{ github.actor }}"
+        password: "${{ secrets.GITHUB_TOKEN }}"
+    - name: "extract metadata (tags, labels)"
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+    - name: build and push container image
+      uses: docker/build-push-action@v5
+      with:
+        context: tools/docker-cli-with-bash-image
+        file: tools/docker-cli-with-bash-image/Dockerfile
+        push: true
+        tags: "${{ steps.meta.outputs.tags }}"
+        labels: "${{ steps.meta.outputs.labels }}"

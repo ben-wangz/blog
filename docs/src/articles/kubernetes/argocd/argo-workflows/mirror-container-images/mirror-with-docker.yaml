@@ -132,7 +132,7 @@ spec:
       parameters:
       - name: dockerd-host
     container:
-      image: m.daocloud.io/docker.io/library/docker:25.0.3-cli-alpine3.19
+      image: m.daocloud.io/ghcr.io/ben-wangz/blog-docker-cli-with-bash:main
       env:
       - name: DOCKER_HOST
         value: "{{inputs.parameters.dockerd-host}}"
@@ -198,7 +198,7 @@ spec:
       - name: registry-credentials-secret-name
       - name: dry-run-push
     container:
-      image: m.daocloud.io/docker.io/library/docker:25.0.3-cli-alpine3.19
+      image: m.daocloud.io/ghcr.io/ben-wangz/blog-docker-cli-with-bash:main
       env:
       - name: DOCKER_HOST
         value: "{{inputs.parameters.dockerd-host}}"
@@ -233,10 +233,6 @@ spec:
       - name: DRY_RUN_PUSH
         value: "{{inputs.parameters.dry-run-push}}"
       command:
-        - sh
-        - -c
+        - bash
       args:
-        - |
-          apk update \
-              && apk add --no-cache bash yq \
-              && bash /app/mirror.sh
+        - /app/mirror.sh
