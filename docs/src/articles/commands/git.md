@@ -43,3 +43,9 @@ git remote -v
 ```shell
 git remote add ben git@github.com:ben-wangz/blog.git
 ```
+
+## log http git password
+
+```shell
+git config --global credential.helper store
+```
