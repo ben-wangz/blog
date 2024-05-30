@@ -20,7 +20,7 @@
       "extensions": [ "vscodevim.vim", "streetsidesoftware.code-spell-checker", "redhat.vscode-yaml", "vue.volar", "GitHub.copilot", "redhat.java", "vscjava.vscode-java-dependency", "vscjava.vscode-java-debug", "vscjava.vscode-gradle", "vscjava.vscode-java-test", "richardwillis.vscode-gradle-extension-pack" ]
     }
   },
-  "mounts": [ "type=bind,source=${localWorkspaceFolder},target=/work", "type=bind,source=${localEnv:HOME}/.ssh/id_rsa.pub,target=/root/.ssh/id_rsa.pub,readonly", "type=bind,source=${localEnv:HOME}/.ssh/id_rsa,target=/root/.ssh/id_rsa,readonly", "type=bind,source=${localEnv:HOME}/dev-container/blog/.gradle,target=/root/.gradle" ],
+  "mounts": [ "type=bind,source=${localWorkspaceFolder},target=/work" ],
   "name": "dev-container-for-blog",
   "remoteUser": "root"
 }
