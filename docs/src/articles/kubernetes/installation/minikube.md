@@ -48,6 +48,10 @@
     * ```shell
       alias kubectl="minikube kubectl --"
       ```
+    * it's recommended to download `kubectl` binary and use it directly
+        + ```shell
+          <!-- @include: @src/articles/kubernetes/binary/download_kubectl_binary.sh -->
+          ```
 3. may change memory(requires a restart)
     * ```shell
       minikube config set memory 6144
@@ -67,11 +71,21 @@
       ssh -i ~/.minikube/machines/minikube/id_rsa docker@$(minikube ip) -L '*:32443:0.0.0.0:32443' -N -f
       ssh -i ~/.minikube/machines/minikube/id_rsa docker@$(minikube ip) -L '*:32080:0.0.0.0:32080' -N -f
       ```
-3. better solution with kubectl port-forward
+3. use ssh tunnel to transport k8s api service to the machine which host minikube
     * ```shell
-      kubectl port-forward -n argocd --address 0.0.0.0 service/argocd-server-external 30443:30443
-      kubectl port-forward -n basic-components --address 0.0.0.0 service/ingress-nginx-controller 32443:32443
-      kubectl port-forward -n basic-components --address 0.0.0.0 service/ingress-nginx-controller 32080:32080
+      ssh -i ~/.minikube/machines/minikube/id_rsa docker@$(minikube ip) -L '*:8443:0.0.0.0:8443' -N -f
+      ```
+4. use ssh tunnel to transport k8s api service to local
+    * ```shell
+      #MACHINE_IP_ADDRESS=ip_address_of_your_machine_which_host_minikube
+      MINIKUBE_IP_ADDRESS=$(ssh -o 'UserKnownHostsFile /dev/null' ben.wangz@$MACHINE_IP_ADDRESS '$HOME/bin/minikube ip')
+      ssh -o 'UserKnownHostsFile /dev/null' $MACHINE_IP_ADDRESS -L "*:8443:$MINIKUBE_IP_ADDRESS:8443" -N -f
+      ```
+5. better solution with kubectl port-forward
+    * ```shell
+      kubectl port-forward -n argocd --address 0.0.0.0 service/argocd-server-external 443:30443
+      kubectl port-forward -n basic-components --address 0.0.0.0 service/ingress-nginx-controller 443:32443
+      kubectl port-forward -n basic-components --address 0.0.0.0 service/ingress-nginx-controller 80:32080
       ```
 
 ## uninstall
