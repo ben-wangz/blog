@@ -48,11 +48,11 @@ spec:
           - name: dockerd-host
             value: "{{tasks.dind.ip}}"
           - name: repository-prefix
-            value: "wangz2019/mirror_"
+            value: wangz2019/mirror_
           - name: keep-structure
             value: "false"
           - name: string-to-replace-slash
-            value: "_"
+            value: _
           - name: registry-credentials-secret-name
             value: registry-credentials
           - name: dry-run-push
@@ -66,9 +66,9 @@ spec:
       - name: registry-credentials-secret-name
       - name: images-to-mirror-configmap-name
     volumes:
-      - name: images-to-mirror
-        configMap:
-          name: "{{inputs.parameters.images-to-mirror-configmap-name}}"
+    - name: images-to-mirror
+      configMap:
+        name: "{{inputs.parameters.images-to-mirror-configmap-name}}"
     container:
       image: m.daocloud.io/docker.io/library/alpine:3.19.1
       volumeMounts:
@@ -152,15 +152,15 @@ spec:
         raw:
           data: |
             #! /bin/bash
-            
+
             set -e
             SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-            
+
             IMAGE_YAML_FILE=${IMAGE_YAML_FILE:-${SCRIPT_DIR}/images.yaml}
             KEEP_STRUCTURE=${KEEP_STRUCTURE:-true}
             STRING_TO_REPLACE_SLASH=${STRING_TO_REPLACE_SLASH:-_}
             REGISTRY_INSECURE=${REGISTRY_INSECURE:-true}
-            if type podman > /dev/null 2>&1; then 
+            if type podman > /dev/null 2>&1; then
                 CONTAINER_MANAGER=podman
             else
                 CONTAINER_MANAGER=docker
@@ -233,6 +233,6 @@ spec:
       - name: DRY_RUN_PUSH
         value: "{{inputs.parameters.dry-run-push}}"
       command:
-        - bash
+      - bash
       args:
-        - /app/mirror.sh
+      - /app/mirror.sh
