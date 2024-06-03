@@ -79,7 +79,7 @@
     * ```shell
       #MACHINE_IP_ADDRESS=ip_address_of_your_machine_which_host_minikube
       MINIKUBE_IP_ADDRESS=$(ssh -o 'UserKnownHostsFile /dev/null' ben.wangz@$MACHINE_IP_ADDRESS '$HOME/bin/minikube ip')
-      ssh -o 'UserKnownHostsFile /dev/null' $MACHINE_IP_ADDRESS -L "*:8443:$MINIKUBE_IP_ADDRESS:8443" -N -f
+      ssh -o 'UserKnownHostsFile /dev/null' ben.wangz@$MACHINE_IP_ADDRESS -L "*:8443:$MINIKUBE_IP_ADDRESS:8443" -N -f
       ```
 5. better solution with kubectl port-forward
     * ```shell
