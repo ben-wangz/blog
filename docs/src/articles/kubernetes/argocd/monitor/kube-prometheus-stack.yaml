@@ -1,0 +1,235 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 59.1.0
+    helm:
+      releaseName: kube-prometheus-stack
+      values: |
+        crds:
+          enabled: true
+        global:
+          rbac:
+            create: true
+        alertmanager:
+          enabled: true
+          ingress:
+            enabled: false
+          serviceMonitor:
+            selfMonitor: true
+          alertmanagerSpec:
+            image:
+              registry: m.daocloud.io/quay.io
+            storage:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: nfs-external
+                  accessModes:
+                  - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 20Gi
+        grafana:
+          enabled: true
+          image:
+            registry: m.daocloud.io/docker.io
+          testFramework:
+            enabled: true
+            image:
+              registry: m.daocloud.io/docker.io
+          downloadDashboardsImage:
+            registry: m.daocloud.io/docker.io
+          serviceMonitor:
+            enabled: true
+          ingress:
+            enabled: true
+            annotations:
+              cert-manager.io/clusterissuer: self-signed-issuer
+            ingressClassName: nginx
+            path: /
+            pathtype: ImplementationSpecific
+            hosts:
+            - grafana.dev.geekcity.tech
+            tls:
+            - secretName: grafana.dev.geekcity.tech-tls
+              hosts:
+              - grafana.dev.geekcity.tech
+          persistence:
+            enabled: true
+            storageClassName: nfs-external
+          initChownData:
+            enabled: true
+            image:
+              registry: m.daocloud.io/docker.io
+          admin:
+            existingSecret: kube-prometheus-stack-credentials
+            userKey: grafana-username
+            passwordKey: grafana-password
+          datasources: {}
+          dashboardProviders: {}
+          dashboards: {}
+          sidecar:
+            image:
+              registry: m.daocloud.io/quay.io
+            dashboards:
+              enabled: true
+            datasources:
+              enabled: true
+          imageRenderer:
+            enabled: false
+            image:
+              registry: m.daocloud.io/docker.io
+        kubernetesServiceMonitors:
+          enabled: true
+          sidecar:
+        kubeApiServer:
+          enabled: true
+        kubelet:
+          enabled: true
+          namespace: kube-system
+        kubeControllerManager:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+        coreDns:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+        kubeDns:
+          enabled: false
+        kubeEtcd:
+          enabled: true
+          service:
+            enabled: true
+          serviceMonitor:
+            enabled: true
+        kubeScheduler:
+          enabled: true
+          service:
+            enabled: true
+          serviceMonitor:
+            enabled: true
+            insecureSkipVerify: true
+        kubeProxy:
+          enabled: true
+          service:
+            enabled: true
+          serviceMonitor:
+            enabled: true
+        kubeStateMetrics:
+          enabled: true
+        kube-state-metrics:
+          image:
+            registry: m.daocloud.io/registry.k8s.io
+          prometheus:
+            monitor:
+              enabled: true
+          selfMonitor:
+            enabled: false
+        nodeExporter:
+          enabled: true
+        prometheus-node-exporter:
+          image:
+            registry: m.daocloud.io/quay.io
+          prometheus:
+            monitor:
+              enabled: true
+        prometheusOperator:
+          enabled: true
+          admissionWebhooks:
+            enabled: true
+            deployment:
+              enabled: false
+              image:
+                registry: m.daocloud.io/quay.io
+            patch:
+              enabled: true
+              image:
+                registry: m.daocloud.io/registry.k8s.io
+            certManager:
+              enabled: false
+          serviceAccount:
+            create: true
+          service:
+            type: ClusterIP
+          serviceMonitor:
+            selfMonitor: true
+        prometheus:
+          enabled: true
+          serviceAccount:
+            create: true
+          thanosService:
+            enabled: false
+          thanosServiceMonitor:
+            enabled: false
+          thanosServiceExternal:
+            enabled: false
+          service:
+            type: ClusterIP
+          servicePerReplica:
+            enabled: false
+          podDisruptionBudget:
+            enabled: false
+          thanosIngress:
+            enabled: false
+          ingress:
+            enabled: true
+            annotations:
+              cert-manager.io/clusterissuer: self-signed-issuer
+            ingressClassName: nginx
+            paths:
+            - /
+            pathtype: ImplementationSpecific
+            hosts:
+            - prometheus.dev.geekcity.tech
+            tls:
+            - secretName: prometheus.dev.geekcity.tech-tls
+              hosts:
+              - prometheus.dev.geekcity.tech
+          serviceMonitor:
+            selfMonitor: true
+          prometheusSpec:
+            image:
+              registry: m.daocloud.io/quay.io
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: nfs-external
+                  accessModes:
+                  - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 20Gi
+        thanosRuler:
+          enabled: false
+          ingress:
+            enabled: false
+          serviceMonitor:
+            selfMonitor: true
+          thanosRulerSpec:
+            image:
+              registry: m.daocloud.io/quay.io
+          storage:
+            volumeClaimTemplate:
+              spec:
+                storageClassName: nfs-external
+                accessModes:
+                - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 20Gi
+        windowsMonitoring:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitor

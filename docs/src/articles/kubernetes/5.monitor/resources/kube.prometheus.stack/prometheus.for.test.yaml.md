@@ -1,1 +1,0 @@
-[prometheus.for.test.yaml](prometheus.for.test.yaml ':include')
