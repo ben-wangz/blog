@@ -1,0 +1,57 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: publish-container-image-
+spec:
+  entrypoint: entry
+  serviceAccountName: argo-workflow
+  templates:
+  - name: entry
+    dag:
+      tasks:
+      - name: publish
+        template: publish
+  - name: publish
+    inputs:
+      artifacts:
+      - name: source
+        path: /workspace/code
+        git:
+          repo: https://github.com/ben-wangz/blog.git
+          revision: main
+      parameters:
+      - name: registry-to-push
+        value: docker.io
+      - name: image-to-publish
+        value: wangz2019/blog-docs:argo-buildah-test
+      - name: registry
+        value: m.daocloud.io/docker.io
+    container:
+      image: m.daocloud.io/quay.io/containers/buildah:v1.35.4
+      securityContext:
+        privileged: true
+      env:
+      - name: REGISTRY_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: docker-login-credentials
+            key: username
+      - name: REGISTRY_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: docker-login-credentials
+            key: password
+      command:
+      - sh
+      - -c
+      args:
+      - |
+        export REGISTRY={{inputs.parameters.registry}}
+        export REGISTRY_TO_PUSH={{inputs.parameters.registry-to-push}}
+        export IMAGE_TO_PUBLISH=${REGISTRY_TO_PUSH}/{{inputs.parameters.image-to-publish}}
+        buildah build \
+            --build-arg REGISTRY=${REGISTRY} \
+            -f /workspace/code/docs/Dockerfile \
+            -t ${IMAGE_TO_PUBLISH} /workspace/code \
+            && buildah push --creds ${REGISTRY_USERNAME}:${REGISTRY_PASSWORD} ${IMAGE_TO_PUBLISH}

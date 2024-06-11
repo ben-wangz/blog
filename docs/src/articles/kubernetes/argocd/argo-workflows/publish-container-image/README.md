@@ -8,9 +8,16 @@
 ## demo
 
 1. prepare `publish-container-image.yaml`
-    * ```yaml
-      <!-- @include: publish-container-image.yaml -->
+    * ::: code-tabs#shell
+      @tab dind
+      ```yaml
+      <!-- @include: publish-container-image-with-dind.yaml -->
       ```
+      @tab buildah
+      ```yaml
+      <!-- @include: publish-container-image-with-buildah.yaml -->
+      ```
+      :::
 2. prepare `docker-login-credentials` secret
     * ```shell
       kubectl -n business-workflows create secret generic docker-login-credentials \
