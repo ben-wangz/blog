@@ -5,23 +5,12 @@ metadata:
   generateName: mirror-with-skopeo-
 spec:
   entrypoint: entry
-  artifactRepositoryRef:
-    configmap: artifact-repositories
-    key: default-artifact-repository
   serviceAccountName: argo-workflow
   templates:
   - name: entry
     dag:
       tasks:
-      - name: initialization
-        template: initialization
-        arguments:
-          parameters:
-          - name: images-to-mirror-configmap-name
-            value: images-to-mirror
       - name: mirror
-        dependencies:
-        - initialization
         template: mirror
         arguments:
           parameters:
@@ -35,37 +24,11 @@ spec:
             value: registry-credentials
           - name: dry-run
             value: "false"
-          artifacts:
-          - name: images-to-mirror
-            from: "{{tasks.initialization.outputs.artifacts.images-to-mirror}}"
-  - name: initialization
-    inputs:
-      parameters:
-      - name: images-to-mirror-configmap-name
-    volumes:
-    - name: images-to-mirror
-      configMap:
-        name: "{{inputs.parameters.images-to-mirror-configmap-name}}"
-    container:
-      image: m.daocloud.io/docker.io/library/alpine:3.19.1
-      volumeMounts:
-      - name: images-to-mirror
-        mountPath: /app/images-to-mirror.yaml
-        subPath: images-to-mirror.yaml
-        readOnly: true
-      command:
-      - cat
-      args:
-      - /app/images-to-mirror.yaml
-    outputs:
-      artifacts:
-      - name: images-to-mirror
-        path: /app/images-to-mirror.yaml
+          - name: images-to-mirror-configmap-name
+            value: images-to-mirror
   - name: mirror
     inputs:
       artifacts:
-      - name: images-to-mirror
-        path: /app/images.yaml
       - name: mirror-scripts
         path: /app/mirror.sh
         raw:
@@ -75,7 +38,7 @@ spec:
             set -e
             SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-            IMAGE_YAML_FILE=${IMAGE_YAML_FILE:-${SCRIPT_DIR}/images.yaml}
+            IMAGE_YAML_FILE=${IMAGE_YAML_FILE:-/app/images-to-mirror.yaml}
             KEEP_STRUCTURE=${KEEP_STRUCTURE:-true}
             STRING_TO_REPLACE_SLASH=${STRING_TO_REPLACE_SLASH:-_}
             if [ "${REGISTRY_INSECURE}" = "true" ]; then
@@ -117,8 +80,18 @@ spec:
       - name: string-to-replace-slash
       - name: registry-credentials-secret-name
       - name: dry-run
+      - name: images-to-mirror-configmap-name
+    volumes:
+    - name: images-to-mirror
+      configMap:
+        name: "{{inputs.parameters.images-to-mirror-configmap-name}}"
     container:
       image: m.daocloud.io/ghcr.io/ben-wangz/blog-skopeo:main
+      volumeMounts:
+      - name: images-to-mirror
+        mountPath: /app/images-to-mirror.yaml
+        subPath: images-to-mirror.yaml
+        readOnly: true
       env:
       - name: REPOSITORY_PREFIX
         value: "{{inputs.parameters.repository-prefix}}"
@@ -126,8 +99,6 @@ spec:
         value: "{{inputs.parameters.keep-structure}}"
       - name: STRING_TO_REPLACE_SLASH
         value: "{{inputs.parameters.string-to-replace-slash}}"
-      - name: IMAGE_YAML_FILE
-        value: "{{inputs.artifacts.images-to-mirror.path}}"
       - name: REGISTRY_INSECURE
         valueFrom:
           secretKeyRef:
