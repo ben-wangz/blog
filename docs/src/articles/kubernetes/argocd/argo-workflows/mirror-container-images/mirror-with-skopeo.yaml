@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: mirror-with-skopeo-
+  generateName: mirror-container-images-
 spec:
   entrypoint: entry
   serviceAccountName: argo-workflow

@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: mirror-with-docker-
+  generateName: mirror-container-images-
 spec:
   entrypoint: entry
   artifactRepositoryRef:
