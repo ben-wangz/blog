@@ -30,9 +30,6 @@
       <!-- @include: mariadb-with-metrics.yaml -->
       ```
       :::
-    * ```yaml
-      <!-- @include: mariadb.yaml -->
-      ```
 2. prepare credentials secret
     * ```shell
       kubectl get namespaces database > /dev/null 2>&1 || kubectl create namespace database
