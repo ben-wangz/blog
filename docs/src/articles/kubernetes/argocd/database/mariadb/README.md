@@ -121,10 +121,7 @@
 ## dashboard from grafana
 
 * only for `with-metrics` feature
-* open with browser: https://grafana.dev.geekcity.tech:32443/
-    + grafana.dev.geekcity.tech should be resolved to nginx-ingress
-        * for example, add `$K8S_MASTER_IP grafana.dev.geekcity.tech` to `/etc/hosts`
-    + login [grafana](../../monitor/README.md#visit-grafana)
+* open with browser and [login grafana](../../monitor/README.md#visit-grafana)
 * import dashboard
     + https://grafana.dev.geekcity.tech:32443/dashboard/import
     + import dashboard with uid `14057`
