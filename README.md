@@ -6,10 +6,6 @@
 
 ## develop with dev container and vscode
 
-* prepare mount point
-    + ```shell
-      mkdir -p $HOME/dev-container/blog/.gradle
-      ```
 * open with vscode which contains .devcontainer
 
 ## start locallly
