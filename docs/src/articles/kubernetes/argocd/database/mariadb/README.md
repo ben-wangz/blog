@@ -9,8 +9,13 @@
 4. (optional) cert-manager is ready
     * the clusterissuer named `self-signed-ca-issuer` is ready
     * only required by `phpmyadmin` in the tests
-5. (optional) metrics-server is ready
+5. (optional) `kube-prometheus-stack` is ready
     * only required by `with-metrics` feature
+    * the `kube-prometheus-stack` is installed in the `monitor` namespace
+    * the `serviceMonitorNamespaceSelector` is `{}`
+    * the `matchLabels` of `serviceMonitorSelector` is `release: kube-prometheus-stack`
+    * grafana is exposed by ingress
+        + https://grafana.dev.geekcity.tech:32443/
 
 ## installation
 
@@ -112,3 +117,14 @@
             * ```shell
               kubectl -n database get secret mariadb-credentials -o jsonpath='{.data.mariadb-password}' | base64 -d
               ```
+
+## dashboard from grafana
+
+* only for `with-metrics` feature
+* open with browser: https://grafana.dev.geekcity.tech:32443/
+    + grafana.dev.geekcity.tech should be resolved to nginx-ingress
+        * for example, add `$K8S_MASTER_IP grafana.dev.geekcity.tech` to `/etc/hosts`
+    + login [grafana](../../monitor/README.md#visit-grafana)
+* import dashboard
+    + https://grafana.dev.geekcity.tech:32443/dashboard/import
+    + import dashboard with uid `14057`
