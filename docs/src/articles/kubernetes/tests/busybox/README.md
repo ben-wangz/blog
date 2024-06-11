@@ -22,9 +22,16 @@
       kubectl apply -f busybox.yaml
       ```
 3. exec
-    * ```shell
+    * ::: code-tabs#shell
+      @tab fedora
+      ```shell
       kubectl exec -it deployment/busybox -- sh
       ```
+      @tab busybox
+      ```shell
+      kubectl exec -it deployment/busybox -- sh
+      ```
+      :::
 4. use wget to test http service
     * ```shell
       wget -q -O - https://minio-console.storage:9001

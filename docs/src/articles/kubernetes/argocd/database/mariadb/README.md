@@ -4,15 +4,27 @@
 
 1. k8s is ready
 2. argocd is ready and logged in
-3. ingress is ready
+3. (optional) ingress is ready
     * only required by `phpmyadmin` in the tests
-4. cert-manager is ready
+4. (optional) cert-manager is ready
     * the clusterissuer named `self-signed-ca-issuer` is ready
     * only required by `phpmyadmin` in the tests
+5. (optional) metrics-server is ready
+    * only required by `with-metrics` feature
 
 ## installation
 
 1. prepare `mariadb.yaml`
+    * ::: code-tabs#shell
+      @tab simple
+      ```yaml
+      <!-- @include: mariadb.yaml -->
+      ```
+      @tab with-metrics
+      ```yaml
+      <!-- @include: mariadb-with-metrics.yaml -->
+      ```
+      :::
     * ```yaml
       <!-- @include: mariadb.yaml -->
       ```
