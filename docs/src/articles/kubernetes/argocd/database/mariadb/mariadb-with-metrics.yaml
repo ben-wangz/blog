@@ -49,12 +49,12 @@ spec:
             namespace: monitor
             jobLabel: mariadb
             interval: 30s
-            labels: 
+            labels:
               release: kube-prometheus-stack
           prometheusRule:
             enabled: true
             namespace: monitor
-            additionalLabels: 
+            additionalLabels:
               release: kube-prometheus-stack
             rules:
             - alert: MariaDB-Down
