@@ -13,4 +13,7 @@ else
     echo "no build tool found"
     exit 1
 fi
-$BUILD_TOOL build -f $SCRIPT_DIR/Dockerfile -t $IMAGE $SCRIPT_DIR
+$BUILD_TOOL build \
+    --build-arg BASE_IMAGE=m.daocloud.io/docker.io/library/alpine:3.20 \
+    -f $SCRIPT_DIR/Dockerfile \
+    -t $IMAGE $SCRIPT_DIR
