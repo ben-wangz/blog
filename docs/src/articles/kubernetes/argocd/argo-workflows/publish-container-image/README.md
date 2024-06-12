@@ -20,9 +20,7 @@
       :::
 2. prepare `registry-credentials` secret
     * ```shell
-      kubectl -n business-workflows create secret generic registry-credentials \
-        --from-literal="username=${REGISTRY_USERNAME:-wangz2019}" \
-        --from-literal="password=${REGISTRY_PASSWORD}"
+      <!-- @include: ../create-registry-credentials-secret.sh -->
       ```
 3. submit with argo workflow client
     * ```shell
