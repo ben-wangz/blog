@@ -23,13 +23,13 @@
       bash flink/connectors/jdbc/container/build.sh $IMAGE && podman push $IMAGE
       ```
 4. deploy flink job
-    * prepare [flink-job.template.yaml](../../flink-job-template.yaml)
+    * prepare [/tmp/flink-job.template.yaml](../../flink-job-template.yaml)
     * generate `/tmp/flink-job.yaml`
         + ```shell
-          IMAGE=docker.io/wangz2019/flink-connectors-jdbc-demo:latest
-          cp flink-job.template.yaml /tmp/flink-job.yaml \
+          export IMAGE=docker.io/wangz2019/flink-connectors-jdbc-demo:latest
+          cp /tmp/flink-job.template.yaml /tmp/flink-job.yaml \
               && yq eval ".spec.image = env(IMAGE)" -i /tmp/flink-job.yaml \
-              && yq eval ".metadata.name = flink-connectors-jdbc-demo" -i /tmp/flink-job.yaml
+              && yq eval ".metadata.name = \"flink-connectors-jdbc-demo\"" -i /tmp/flink-job.yaml
           ```
     * apply to k8s
         + ```shell
