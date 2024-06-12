@@ -1,7 +1,7 @@
 #! /bin/bash
 
 set -e
-IMAGE=${1:-publish-test:1.0.0}
+IMAGE=${1:-build-container-demo:1.0.0}
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 if type buildah > /dev/null 2>&1; then 
     BUILD_TOOL=buildah
