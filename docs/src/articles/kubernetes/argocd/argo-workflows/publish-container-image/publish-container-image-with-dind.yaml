@@ -91,12 +91,12 @@ spec:
       - name: DOCKER_USERNAME
         valueFrom:
           secretKeyRef:
-            name: docker-login-credentials
+            name: registry-credentials
             key: username
       - name: DOCKER_PASSWORD
         valueFrom:
           secretKeyRef:
-            name: docker-login-credentials
+            name: registry-credentials
             key: password
       command:
       - sh

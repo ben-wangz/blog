@@ -18,11 +18,11 @@
       <!-- @include: publish-container-image-with-buildah.yaml -->
       ```
       :::
-2. prepare `docker-login-credentials` secret
+2. prepare `registry-credentials` secret
     * ```shell
-      kubectl -n business-workflows create secret generic docker-login-credentials \
-        --from-literal="username=${DOCKER_LOGIN_USERNAME:-wangz2019}" \
-        --from-literal="password=${DOCKER_LOGIN_PASSWORD}"
+      kubectl -n business-workflows create secret generic registry-credentials \
+        --from-literal="username=${REGISTRY_USERNAME:-wangz2019}" \
+        --from-literal="password=${REGISTRY_PASSWORD}"
       ```
 3. submit with argo workflow client
     * ```shell
