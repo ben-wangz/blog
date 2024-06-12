@@ -71,7 +71,7 @@ spec:
     inputs:
       artifacts:
       - name: source
-        path: /workspace/src
+        path: /workspace/code
         git:
           repo: https://github.com/ben-wangz/blog.git
           revision: main
@@ -103,16 +103,13 @@ spec:
       - -c
       args:
       - |
+        set -e
         export REGISTRY={{inputs.parameters.registry}}
         export REGISTRY_TO_PUSH={{inputs.parameters.registry-to-push}}
         export IMAGE_TO_PUBLISH=${REGISTRY_TO_PUSH}/{{inputs.parameters.image-to-publish}}
-        docker build \
-            --ulimit nofile=4096:4096 \
-            -f /workspace/src/docs/Dockerfile \
-            --build-arg REGISTRY=${REGISTRY} \
-            -t ${IMAGE_TO_PUBLISH} /workspace/src \
-            && docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" ${REGISTRY_TO_PUSH} \
-            && docker push ${IMAGE_TO_PUBLISH}
+        bash /workspace/code/docs/src/articles/kubernetes/argocd/argo-workflows/publish-container-image/container/build.sh ${IMAGE_TO_PUBLISH}
+        docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" ${REGISTRY_TO_PUSH} \
+        docker push ${IMAGE_TO_PUBLISH}
       volumeMounts:
       - name: workspace
         mountPath: /workspace

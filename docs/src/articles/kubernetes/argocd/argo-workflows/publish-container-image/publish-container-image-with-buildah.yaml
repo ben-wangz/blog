@@ -47,11 +47,9 @@ spec:
       - -c
       args:
       - |
+        set -e
         export REGISTRY={{inputs.parameters.registry}}
         export REGISTRY_TO_PUSH={{inputs.parameters.registry-to-push}}
         export IMAGE_TO_PUBLISH=${REGISTRY_TO_PUSH}/{{inputs.parameters.image-to-publish}}
-        buildah build \
-            --build-arg REGISTRY=${REGISTRY} \
-            -f /workspace/code/docs/Dockerfile \
-            -t ${IMAGE_TO_PUBLISH} /workspace/code \
-            && buildah push --creds ${REGISTRY_USERNAME}:${REGISTRY_PASSWORD} ${IMAGE_TO_PUBLISH}
+        bash /workspace/code/docs/src/articles/kubernetes/argocd/argo-workflows/publish-container-image/container/build.sh ${IMAGE_TO_PUBLISH}
+        buildah push --creds ${REGISTRY_USERNAME}:${REGISTRY_PASSWORD} ${IMAGE_TO_PUBLISH}
