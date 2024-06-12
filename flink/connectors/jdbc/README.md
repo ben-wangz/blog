@@ -19,8 +19,12 @@
     * reference: https://blog.geekcity.tech/articles/kubernetes/argocd/flink/
 3. build image and push to docker hub
     * ```shell
+      #REGISTRY_USERNAME=your-registry-username
+      #REGISTRY_PASSWORD=your-registry-password
       IMAGE=docker.io/wangz2019/flink-connectors-jdbc-demo:latest
-      bash flink/connectors/jdbc/container/build.sh $IMAGE && podman push $IMAGE
+      bash flink/connectors/jdbc/container/build.sh $IMAGE \
+          && podman login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD ${REGISTRY:-docker.io} \
+          && podman push $IMAGE
       ```
 4. deploy flink job
     * prepare [/tmp/flink-job.template.yaml](../../flink-job-template.yaml)
