@@ -10,6 +10,8 @@ RUN dnf install -y java-11-openjdk-devel g++ gcc cmake vim curl zsh git procps-n
 RUN [ -d ~/.oh-my-zsh ] \
     || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ENV SHELL /bin/zsh
+ENV TZ Asia/Shanghai
+ENV DEV_CONTAINER true
 # download gradle package
 RUN mkdir -p /opt/gradle/packages \
     && curl -Lo /opt/gradle/packages/gradle-8.5-all.zip https://mirrors.cloud.tencent.com/gradle/gradle-8.5-all.zip

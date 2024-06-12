@@ -1,0 +1,28 @@
+apiVersion: flink.apache.org/v1beta1
+kind: FlinkDeployment
+metadata:
+  name: flink-application
+spec:
+  image: docker.io/library/flink:1.17
+  flinkVersion: v1_17
+  ingress:
+    template: "flink.k8s.io/{{namespace}}/{{name}}(/|$)(.*)"
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: self-signed-ca-issuer
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+  flinkConfiguration:
+    taskmanager:numberOfTaskSlots: "2"
+  serviceAccount: flink
+  jobManager:
+    resource:
+      memory: 1024m
+      cpu: 0.5
+  taskManager:
+    resource:
+      memory: 1024m
+      cpu: 0.5
+  job:
+    jarURI: local:///app/flink-application.jar
+    parallelism: 2
+

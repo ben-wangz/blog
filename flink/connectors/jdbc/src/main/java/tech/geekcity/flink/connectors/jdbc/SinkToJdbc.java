@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Random;
+import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,8 +40,10 @@ public class SinkToJdbc {
     Tuple2<String, Integer>[] records =
         IntStream.range(0, 100)
             .mapToObj(
-                index -> Tuple2.of(RandomStringUtils.randomAlphanumeric(8), RANDOM.nextInt(100)))
-            .toArray(Tuple2[]::new);
+                index ->
+                    Tuple2.<String, Integer>of(
+                        RandomStringUtils.randomAlphanumeric(8), RANDOM.nextInt(100)))
+            .toArray((IntFunction<Tuple2<String, Integer>[]>) Tuple2[]::new);
     env.fromElements(records)
         .addSink(
             JdbcSink.sink(
