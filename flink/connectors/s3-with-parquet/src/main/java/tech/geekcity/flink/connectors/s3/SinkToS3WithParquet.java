@@ -1,5 +1,7 @@
 package tech.geekcity.flink.connectors.s3;
 
+import java.util.Optional;
+import java.util.Random;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
@@ -20,31 +22,48 @@ import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.
 import tech.geekcity.flink.connectors.s3.pojo.Person;
 
 public class SinkToS3WithParquet {
-  private static final String ENDPOINT =
-      StringUtils.equals("true", System.getenv("DEV_CONTAINER"))
-          ? "http://host.containers.internal:9000"
-          : "http://localhost:9000";
-  private static final String ACCESS_KEY = "minioadmin";
-  private static final String ACCESS_SECRET = "minioadmin";
-  protected static final String BUCKET = "test";
   protected static final String JOB_NAME = "sink-to-s3-with-parquet";
+  private static final Random RANDOM = new Random();
 
   public static void main(String[] args) throws Exception {
+    String schema = Optional.ofNullable(System.getenv("S3_SCHEMA")).orElse("http");
+    String host =
+        Optional.ofNullable(System.getenv("S3_HOST"))
+            .orElseGet(
+                () ->
+                    StringUtils.equals("true", System.getenv("DEV_CONTAINER"))
+                        ? "host.containers.internal"
+                        : "localhost");
+    String port = Optional.ofNullable(System.getenv("S3_PORT")).orElse("9000");
+    String endpoint = String.format("%s://%s:%s", schema, host, port);
+    String accessKey = Optional.ofNullable(System.getenv("S3_ACCESS_KEY")).orElse("minioadmin");
+    String accessSecret =
+        Optional.ofNullable(System.getenv("S3_ACCESS_SECRET")).orElse("minioadmin");
+    String defaultBucket = Optional.ofNullable(System.getenv("S3_BUCKET")).orElse("test");
+    long defaultCheckpointInterval =
+        Optional.ofNullable(System.getenv("CHECKPOINT_INTERVAL"))
+            .map(Long::parseLong)
+            .orElse(10000L);
     Configuration pluginConfiguration = new Configuration();
-    pluginConfiguration.setString("s3.access-key", ACCESS_KEY);
-    pluginConfiguration.setString("s3.secret-key", ACCESS_SECRET);
-    pluginConfiguration.setString("s3.endpoint", ENDPOINT);
+    pluginConfiguration.setString("s3.access-key", accessKey);
+    pluginConfiguration.setString("s3.secret-key", accessSecret);
+    pluginConfiguration.setString("s3.endpoint", endpoint);
     pluginConfiguration.setBoolean("s3.path.style.access", Boolean.TRUE);
     FileSystem.initialize(
         pluginConfiguration, PluginUtils.createPluginManagerFromRootFolder(pluginConfiguration));
     // specify flink configuration from args, e.g., --restPort 8081
     ParameterTool parameterTool = ParameterTool.fromArgs(args);
+    String bucket = parameterTool.get("app.s3.bucket", defaultBucket);
+    String path = parameterTool.get("app.s3.path", SinkToS3WithParquet.JOB_NAME);
+    long checkpointInterval =
+        parameterTool.getLong("app.checkpoint.interval", defaultCheckpointInterval);
     StreamExecutionEnvironment env =
         StreamExecutionEnvironment.getExecutionEnvironment(parameterTool.getConfiguration());
+    env.getCheckpointConfig().setCheckpointInterval(checkpointInterval);
     GeneratorFunction<Long, Tuple2<String, Integer>> generatorFunction =
-        index -> Tuple2.of(RandomStringUtils.randomAlphabetic(10), index.intValue());
+        index -> Tuple2.of(RandomStringUtils.randomAlphabetic(10), RANDOM.nextInt(100));
     Long generateCount = 10000L;
-    double recordsPerSecond = 100;
+    double recordsPerSecond = 1000;
     DataGeneratorSource<Tuple2<String, Integer>> source =
         new DataGeneratorSource<Tuple2<String, Integer>>(
             generatorFunction,
@@ -55,7 +74,7 @@ public class SinkToS3WithParquet {
         .map(tuple2 -> Person.builder().name(tuple2.f0).age(tuple2.f1).build())
         .sinkTo(
             FileSink.<Person>forBulkFormat(
-                    new Path(String.format("s3://%s/%s", BUCKET, JOB_NAME)),
+                    new Path(String.format("s3://%s/%s", bucket, path)),
                     AvroParquetWriters.forReflectRecord(Person.class))
                 .withRollingPolicy(OnCheckpointRollingPolicy.build())
                 .build());

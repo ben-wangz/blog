@@ -2,9 +2,9 @@
 apiVersion: flink.apache.org/v1beta1
 kind: FlinkDeployment
 metadata:
-  name: flink-connectors-jdbc-demo
+  name: flink-connectors-s3-with-parquet-demo
 spec:
-  image: docker.io/wangz2019/flink-connectors-jdbc-demo:latest
+  image: docker.io/wangz2019/flink-connectors-s3-with-parquet-demo:latest
   podTemplate:
     spec:
       containers:
@@ -43,6 +43,6 @@ spec:
   job:
     jarURI: local:///app/flink-application.jar
     parallelism: 2
-    entryClass: tech.geekcity.flink.connectors.jdbc.SinkToJdbc
+    entryClass: tech.geekcity.flink.connectors.s3-with-parquet.SinkToS3WithParquet
     args: []
   mode: native
