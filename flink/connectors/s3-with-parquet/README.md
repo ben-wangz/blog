@@ -15,7 +15,7 @@
           --entrypoint bash \
           -it docker.io/minio/mc:latest \
           -c "mc alias set minio http://host.containers.internal:9000 minioadmin minioadmin \
-              && mc ls minio/test/sink-to-s3-with-parquet/$(date "+%Y-%m-%d--%H")"
+              && mc ls minio/test/sink-to-s3-with-parquet/$(date '+%Y-%m-%d--%H')"
       ```
     * ```shell
       #PART_FILENAME=part-2a79ffe3-76e2-4e6f-9306-4a3ede731af1-0
@@ -23,7 +23,7 @@
           --entrypoint bash \
           -it docker.io/minio/mc:latest \
           -c "mc alias set minio http://host.containers.internal:9000 minioadmin minioadmin \
-              && mc head --lines 20 minio/test/sink-to-s3-with-parquet/$(date "+%Y-%m-%d--%H")/$PART_FILENAME"
+              && mc head --lines 20 minio/test/sink-to-s3-with-parquet/$(date '+%Y-%m-%d--%H')/$PART_FILENAME"
       ```
 
 ### with flink operator

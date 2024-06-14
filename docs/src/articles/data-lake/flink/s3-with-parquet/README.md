@@ -37,8 +37,8 @@
     * generate `flink-job.yaml`
         + ```shell
           IMAGE=docker.io/wangz2019/flink-connectors-s3-with-parquet-demo:latest
-          #ENTRY_CLASS=tech.geekcity.flink.connectors.s3/parquet.SourceFromS3WithParquet
-          ENTRY_CLASS=tech.geekcity.flink.connectors.s3/parquet.SinkToS3WithParquet
+          #ENTRY_CLASS=tech.geekcity.flink.connectors.s3.parquet.SourceFromS3WithParquet
+          ENTRY_CLASS=tech.geekcity.flink.connectors.s3.parquet.SinkToS3WithParquet
           cp flink-job.template.yaml flink-job.yaml \
               && yq eval ".spec.image = \"$IMAGE\"" -i flink-job.yaml \
               && yq eval ".spec.job.entryClass = \"$ENTRY_CLASS\"" -i flink-job.yaml
@@ -47,7 +47,27 @@
         + ```shell
           kubectl -n flink apply -f flink-job.yaml
           ```
-6. check data in clickhouse
+6. check with mc clietn
     * ```shell
-      curl -k "https://admin:${PASSWORD}@clickhouse.dev.geekcity.tech:32443/?database=sink_to_jdbc" --data 'select * from users limit 10'
+      # change K8S_MASTER_IP to your k8s master ip
+      K8S_MASTER_IP=$(kubectl get node -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
+      ACCESS_SECRET=$(kubectl -n storage get secret minio-secret -o jsonpath='{.data.rootPassword}' | base64 -d)
+      podman run --rm \
+          --entrypoint bash \
+          --add-host=minio-api.dev.geekcity.tech:${K8S_MASTER_IP} \
+          -it docker.io/minio/mc:latest \
+          -c "mc alias set minio http://minio-api.dev.geekcity.tech:32080 admin ${ACCESS_SECRET} \
+              && mc ls minio/test/sink-to-s3-with-parquet/$(date '+%Y-%m-%d--%H')"
+      ```
+    * ```shell
+      #PART_FILENAME=part-2a79ffe3-76e2-4e6f-9306-4a3ede731af1-0
+      # change K8S_MASTER_IP to your k8s master ip
+      K8S_MASTER_IP=$(kubectl get node -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
+      ACCESS_SECRET=$(kubectl -n storage get secret minio-secret -o jsonpath='{.data.rootPassword}' | base64 -d)
+      podman run --rm \
+          --entrypoint bash \
+          --add-host=minio-api.dev.geekcity.tech:${K8S_MASTER_IP} \
+          -it docker.io/minio/mc:latest \
+          -c "mc alias set minio http://minio-api.dev.geekcity.tech:32080 admin ${ACCESS_SECRET} \
+              && mc head --lines 20 minio/test/sink-to-s3-with-parquet/$(date '+%Y-%m-%d--%H')/$PART_FILENAME"
       ```

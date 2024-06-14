@@ -24,12 +24,12 @@ dependencies {
     implementation("org.apache.hadoop:hadoop-mapreduce-client-core:3.3.6")
     // dependency for parquet format source
     implementation("org.apache.flink:flink-avro:$flinkVersion")
+    implementation("org.apache.flink:flink-connector-datagen:$flinkVersion")
 
     shadow(lombokDependency)
     shadow("org.slf4j:slf4j-simple:$slf4jVersion")
     shadow("org.apache.flink:flink-streaming-java:$flinkVersion")
     shadow("org.apache.flink:flink-clients:$flinkVersion")
-    shadow("org.apache.flink:flink-connector-datagen:$flinkVersion")
     shadow("org.apache.flink:flink-connector-files:$flinkVersion")
     shadow("org.apache.flink:flink-runtime-web:$flinkVersion")
 
