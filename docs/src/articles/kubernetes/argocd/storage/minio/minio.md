@@ -42,7 +42,7 @@
     * ```shell
       # change K8S_MASTER_IP to your k8s master ip
       K8S_MASTER_IP=$(kubectl get node -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
-      ACCESS_SECRET=$(kubectl -n storage get secret minio-secret -o jsonpath='{.data.rootPassword}' | base64 -d)
+      ACCESS_SECRET=$(kubectl -n storage get secret minio-credentials -o jsonpath='{.data.rootPassword}' | base64 -d)
       podman run --rm \
           --entrypoint bash \
           --add-host=minio-api.dev.geekcity.tech:${K8S_MASTER_IP} \
