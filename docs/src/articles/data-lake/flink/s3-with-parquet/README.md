@@ -47,7 +47,7 @@
         + ```shell
           kubectl -n flink apply -f flink-job.yaml
           ```
-6. check with mc clietn
+6. check with mc client
     * ```shell
       # change K8S_MASTER_IP to your k8s master ip
       K8S_MASTER_IP=$(kubectl get node -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
