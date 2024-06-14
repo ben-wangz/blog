@@ -6,7 +6,7 @@
 
 ## source code
 
-* https://github.com/ben-wangz/blog/tree/main/flink/connectors/s3-with-parquet
+* https://github.com/ben-wangz/blog/tree/main/flink/connectors/s3/parquet
 
 ## how to run with flink-kubernetes-operator
 
@@ -37,8 +37,8 @@
     * generate `flink-job.yaml`
         + ```shell
           IMAGE=docker.io/wangz2019/flink-connectors-s3-with-parquet-demo:latest
-          #ENTRY_CLASS=tech.geekcity.flink.connectors.s3-with-parquet.SourceFromS3WithParquet
-          ENTRY_CLASS=tech.geekcity.flink.connectors.s3-with-parquet.SinkToS3WithParquet
+          #ENTRY_CLASS=tech.geekcity.flink.connectors.s3/parquet.SourceFromS3WithParquet
+          ENTRY_CLASS=tech.geekcity.flink.connectors.s3/parquet.SinkToS3WithParquet
           cp flink-job.template.yaml flink-job.yaml \
               && yq eval ".spec.image = \"$IMAGE\"" -i flink-job.yaml \
               && yq eval ".spec.job.entryClass = \"$ENTRY_CLASS\"" -i flink-job.yaml

@@ -1,4 +1,4 @@
-package tech.geekcity.flink.connectors.s3;
+package tech.geekcity.flink.connectors.s3.parquet;
 
 import java.util.Optional;
 import java.util.Random;
@@ -19,7 +19,7 @@ import org.apache.flink.core.plugin.PluginUtils;
 import org.apache.flink.formats.parquet.avro.AvroParquetWriters;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy;
-import tech.geekcity.flink.connectors.s3.pojo.Person;
+import tech.geekcity.flink.connectors.s3.parquet.pojo.Person;
 
 public class SinkToS3WithParquet {
   protected static final String JOB_NAME = "sink-to-s3-with-parquet";

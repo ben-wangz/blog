@@ -1,4 +1,4 @@
-package tech.geekcity.flink.connectors.s3;
+package tech.geekcity.flink.connectors.s3.parquet;
 
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +12,7 @@ import org.apache.flink.core.plugin.PluginUtils;
 import org.apache.flink.formats.parquet.avro.AvroParquetReaders;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.PrintSinkFunction;
-import tech.geekcity.flink.connectors.s3.pojo.Person;
+import  tech.geekcity.flink.connectors.s3.parquet.pojo.Person;
 
 public class SourceFromS3WithParquet {
   private static final String JOB_NAME = "source-from-s3-with-parquet";

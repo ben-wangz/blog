@@ -43,6 +43,6 @@ spec:
   job:
     jarURI: local:///app/flink-application.jar
     parallelism: 2
-    entryClass: tech.geekcity.flink.connectors.s3-with-parquet.SinkToS3WithParquet
+    entryClass: tech.geekcity.flink.connectors.s3.parquet.SinkToS3WithParquet
     args: []
   mode: native

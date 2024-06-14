@@ -7,8 +7,8 @@
     * default credentials: minioadmin:minioadmin
     * reference: https://blog.geekcity.tech/articles/docker/software/storage/minio.html
 2. local run with vscode
-    * [SinkToS3WithParquet](src/main/java/tech/geekcity/flink/connectors/s3/SinkToS3WithParquet.java)
-    * [SourceFromS3WithParquet](src/main/java/tech/geekcity/flink/connectors/s3/SourceFromS3WithParquet.java)
+    * [SinkToS3WithParquet](src/main/java/tech/geekcity/flink/connectors/s3/parquet/SinkToS3WithParquet.java)
+    * [SourceFromS3WithParquet](src/main/java/tech/geekcity/flink/connectors/s3/parquet/SourceFromS3WithParquet.java)
 3. check with mc client
     * ```shell
       podman run --rm \
