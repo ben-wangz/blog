@@ -6,7 +6,7 @@
 
 ## source code
 
-* https://github.com/ben-wangz/blog/tree/main/flink/connectors/s3/parquet
+* https://github.com/ben-wangz/blog/tree/main/flink/connectors/s3-with-parquet
 
 ## how to run with flink-kubernetes-operator
 

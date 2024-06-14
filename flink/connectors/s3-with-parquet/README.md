@@ -2,7 +2,7 @@
 
 ## how to run
 
-1. start s3 server
+1. setup s3 server
     * default endpoint: http://localhost:9000
     * default credentials: minioadmin:minioadmin
     * reference: https://blog.geekcity.tech/articles/docker/software/storage/minio.html
