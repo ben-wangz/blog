@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
@@ -19,21 +20,32 @@ public class SinkToJdbc {
   protected static final String JOB_NAME = "sink-to-jdbc";
   protected static final String DRIVER_NAME = "com.clickhouse.jdbc.ClickHouseDriver";
   protected static final String URL_TEMPLATE =
-      "jdbc:clickhouse://%s:%s@%s:18123/%s?createDatabaseIfNotExist=true";
+      "jdbc:clickhouse://%s:%s@%s:%s/%s?createDatabaseIfNotExist=true";
   private static final Random RANDOM = new Random();
   private static final String SQL = "insert into users(name, age) values(?, ?)";
 
   public static void main(String[] args) throws Exception {
-    String host =
-        StringUtils.equals("true", System.getenv("DEV_CONTAINER"))
-            ? "host.containers.internal"
-            : "localhost";
+    String defaultHost =
+        Optional.ofNullable(System.getenv("CLICK_HOUSE_HOST"))
+            .orElseGet(
+                () ->
+                    StringUtils.equals("true", System.getenv("DEV_CONTAINER"))
+                        ? "host.containers.internal"
+                        : "localhost");
+    int defaultPort =
+        Optional.ofNullable(System.getenv("CLICK_HOUSE_PORT")).map(Integer::parseInt).orElse(18123);
+    String defaultUsername =
+        Optional.ofNullable(System.getenv("CLICK_HOUSE_USERNAME")).orElse("ben");
+    String defaultPassword =
+        Optional.ofNullable(System.getenv("CLICK_HOUSE_PASSWORD")).orElse("123456");
     // specify flink configuration from args, e.g., --restPort 8081
     ParameterTool parameterTool = ParameterTool.fromArgs(args);
-    String username = parameterTool.get("username", "ben");
-    String password = parameterTool.get("password", "123456");
+    String host = parameterTool.get("host", defaultHost);
+    int port = parameterTool.getInt("port", defaultPort);
+    String username = parameterTool.get("username", defaultUsername);
+    String password = parameterTool.get("password", defaultPassword);
     String database = parameterTool.get("database", JOB_NAME.replaceAll("-", "_"));
-    String url = String.format(URL_TEMPLATE, username, password, host, database);
+    String url = String.format(URL_TEMPLATE, username, password, host, port, database);
     initializeTable(url);
     StreamExecutionEnvironment env =
         StreamExecutionEnvironment.getExecutionEnvironment(parameterTool.getConfiguration());

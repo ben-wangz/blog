@@ -1,0 +1,47 @@
+---
+apiVersion: flink.apache.org/v1beta1
+kind: FlinkDeployment
+metadata:
+  name: flink-connectors-jdbc-demo
+spec:
+  image: docker.io/wangz2019/flink-connectors-jdbc-demo:latest
+  podTemplate:
+    spec:
+      containers:
+      - name: flink-main-container
+        imagePullPolicy: Always
+        env:
+        - name: CLICK_HOUSE_HOST
+          value: clickhouse.database
+        - name: CLICK_HOUSE_PORT
+          value: "8123"
+        - name: CLICK_HOUSE_USERNAME
+          value: admin
+        - name: CLICK_HOUSE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: clickhouse-admin-credentials
+              key: password
+  flinkVersion: v1_17
+  ingress:
+    template: "flink.k8s.io/{{namespace}}/{{name}}(/|$)(.*)"
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: self-signed-ca-issuer
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+  flinkConfiguration:
+    taskmanager:numberOfTaskSlots: "2"
+  serviceAccount: flink
+  jobManager:
+    resource:
+      memory: 1024m
+      cpu: 0.5
+  taskManager:
+    resource:
+      memory: 1024m
+      cpu: 0.5
+  job:
+    jarURI: local:///app/flink-application.jar
+    parallelism: 2
+    entryClass: tech.geekcity.flink.connectors.jdbc.SinkToJdbc
+    args: []

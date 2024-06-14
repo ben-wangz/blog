@@ -64,7 +64,7 @@
     * clickhouse.dev.geekcity.tech should be resolved to nginx-ingress
         + for example, add `$K8S_MASTER_IP clickhouse.dev.geekcity.tech` to `/etc/hosts`
     * ```shell
-      echo 'SELECT version()' | curl -k "https://admin:${PASSWORD}@clickhouse.dev.geekcity.tech:32443/" --data-binary @-
+      curl -k "https://admin:${PASSWORD}@clickhouse.dev.geekcity.tech:32443/" --data 'SELECT version()'
       ```
 3. with postgresql client
     * ```shell

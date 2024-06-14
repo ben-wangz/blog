@@ -24,10 +24,10 @@ podman run --rm \
 
 * address: http://localhost:18123/
 * ```shell
-  echo 'SELECT version()' | curl 'http://ben:123456@localhost:18123/' --data-binary @-
+  curl 'http://ben:123456@localhost:18123/' --data 'SELECT version()'
   ```
 * ```shell
-  echo 'SELECT version()' | curl 'http://localhost:18123/?user=ben&password=123456' --data-binary @-
+  curl 'http://localhost:18123/?user=ben&password=123456' --data 'SELECT version()'
   ```
 
 ## native client
