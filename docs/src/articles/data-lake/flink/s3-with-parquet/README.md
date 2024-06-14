@@ -1,22 +1,22 @@
-# jdbc connector
+# s3-with-parquet connector
 
 ## introduction
 
-* this is a demo for reading and writing data from/to jdbc, e.g. ClickHouse
+* this is a demo for reading and writing data from/to s3 with parquet format
 
 ## source code
 
-* https://github.com/ben-wangz/blog/tree/main/flink/connectors/jdbc
+* https://github.com/ben-wangz/blog/tree/main/flink/connectors/s3-with-parquet
 
 ## how to run with flink-kubernetes-operator
 
-1. setup clickhouse server
-    * reference: [clickhouse](../../../kubernetes/argocd/database/clickhouse/README.md)
+1. setup minio server
+    * reference: [minio](../../../kubernetes/argocd/storage/minio/minio.md)
 2. setup flink kubernetes operator
     * reference: [flink-operator](../../../kubernetes/argocd/flink/README.md)
-3. copy secret `clickhouse-admin-credentials` from `database` namespace to `flink` namespace
+3. copy secret `minio-credentials` from `storage` namespace to `flink` namespace
     * ```shell
-      kubectl -n database get secret clickhouse-admin-credentials -o json \
+      kubectl -n storage get secret minio-credentials -o json \
           | jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","selfLink","uid"])' \
           | kubectl -n flink apply -f -
       ```
@@ -24,8 +24,8 @@
     * ```shell
       #REGISTRY_USERNAME=your-registry-username
       #REGISTRY_PASSWORD=your-registry-password
-      IMAGE=docker.io/wangz2019/flink-connectors-jdbc-demo:latest
-      bash flink/connectors/jdbc/container/build.sh $IMAGE \
+      IMAGE=docker.io/wangz2019/flink-connectors-s3-with-parquet-demo:latest
+      bash flink/connectors/s3-with-parquet/container/build.sh $IMAGE \
           && podman login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD ${REGISTRY:-docker.io} \
           && podman push $IMAGE
       ```
@@ -36,9 +36,9 @@
           ```
     * generate `flink-job.yaml`
         + ```shell
-          IMAGE=docker.io/wangz2019/flink-connectors-jdbc-demo:latest
-          #ENTRY_CLASS=tech.geekcity.flink.connectors.jdbc.SourceFromJdbc
-          ENTRY_CLASS=tech.geekcity.flink.connectors.jdbc.SinkToJdbc
+          IMAGE=docker.io/wangz2019/flink-connectors-s3-with-parquet-demo:latest
+          #ENTRY_CLASS=tech.geekcity.flink.connectors.s3-with-parquet.SourceFromJdbc
+          ENTRY_CLASS=tech.geekcity.flink.connectors.s3-with-parquet.SinkToJdbc
           cp flink-job.template.yaml flink-job.yaml \
               && yq eval ".spec.image = \"$IMAGE\"" -i flink-job.yaml \
               && yq eval ".spec.job.entryClass = \"$ENTRY_CLASS\"" -i flink-job.yaml

@@ -4,7 +4,7 @@
 
 ### with vscode
 
-1. start clickhouse server
+1. setup clickhouse server
     * default: jdbc:clickhouse://ben:123456@localhost:18123
     * reference: https://blog.geekcity.tech/articles/docker/software/database/clickhouse.html
 2. local run with vscode

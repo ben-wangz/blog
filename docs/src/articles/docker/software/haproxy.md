@@ -24,11 +24,11 @@
 
       backend nginx
           mode http
-          server nginxServer host.docker.internal:8081
+          server nginxServer host.containers.internal:8081
       backend nodes
           mode http
           balance roundrobin
-          server defaultNginx host.docker.internal:8082
+          server defaultNginx host.containers.internal:8082
       EOF
       ```
 * prepare pem files
@@ -38,7 +38,7 @@
       ```
 * ```shell
   podman run --rm -p 1443:443 -p 1080:80 \
-      --add-host=host.docker.internal:host-gateway \
+      --add-host=host.containers.internal:host-gateway \
       -v $(pwd)/pem/:/usr/local/etc/haproxy/certs/:ro \
       -v $(pwd)/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro \
       -d docker.io/library/haproxy:2.2.14

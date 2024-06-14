@@ -9,3 +9,7 @@
 2. local run with vscode
     * [SinkToS3WithParquet](src/main/java/tech/geekcity/flink/connectors/s3/SinkToS3WithParquet.java)
     * [SourceFromS3WithParquet](src/main/java/tech/geekcity/flink/connectors/s3/SourceFromS3WithParquet.java)
+
+### with flink operator
+
+* reference: [flink-connectors-jdbc](https://blog.geekcity.tech/articles/kubernetes/flink/s3-with-parquet/)

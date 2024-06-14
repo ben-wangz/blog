@@ -1,5 +1,5 @@
 include("docs")
-include("flink:connectors:s3")
+include("flink:connectors:s3-with-parquet")
 include("flink:connectors:jdbc")
 include("arrow:hello-world")
 include(":arrow:c-data-interface:bridge")

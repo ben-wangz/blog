@@ -25,7 +25,7 @@ podman run --rm \
   podman run --rm \
       --entrypoint bash \
       -it docker.io/minio/mc:latest \
-      -c "mc alias set minio http://host.docker.internal:9000 minioadmin minioadmin \
+      -c "mc alias set minio http://host.containers.internal:9000 minioadmin minioadmin \
           && mc ls minio \
           && mc mb --ignore-existing minio/test \
           && mc cp /etc/hosts minio/test/etc/hosts \

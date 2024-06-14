@@ -47,10 +47,18 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
-tasks.jar {
-    manifest.attributes["Main-Class"] = "tech.geekcity.flink.App"
-}
-
 tasks.shadowJar {
     relocate("com.google.common", "tech.geekcity.flink.shadow.com.google.common")
+}
+
+tasks.register("buildBinary") {
+    doLast {
+        val resultMessagePathPropertyName = "RESULT_MESSAGE_PATH"
+        if (!project.hasProperty(resultMessagePathPropertyName)) {
+            throw RuntimeException("$resultMessagePathPropertyName not found in project property")
+        }
+        val resultMessageFile = project.file(project.property(resultMessagePathPropertyName) as String)
+        resultMessageFile.writeText(tasks.shadowJar.get().archiveFile.get().asFile.absolutePath)
+    }
+    dependsOn(tasks.shadowJar)
 }

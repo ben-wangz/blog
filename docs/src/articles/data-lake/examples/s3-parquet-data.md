@@ -20,7 +20,7 @@
           -v $(pwd)/fhvhv_tripdata_2023-11.parquet:/data/fhvhv_tripdata_2023-11.parquet \
           --entrypoint bash \
           -it docker.io/minio/mc:latest \
-          -c "mc alias set minio http://host.docker.internal:9000 minioadmin minioadmin \
+          -c "mc alias set minio http://host.containers.internal:9000 minioadmin minioadmin \
               && mc mb --ignore-existing minio/tlc \
               && mc cp /data/fhvhv_tripdata_2023-11.parquet minio/tlc/data/fhvhv_tripdata_2023-11.parquet \
               && mc ls minio/tlc/data"
@@ -34,7 +34,7 @@
               --port 19000 \
               --user ben \
               --password 123456 \
-              --query "DESCRIBE s3('http://host.docker.internal:9000/tlc/data/fhvhv_tripdata_2023-11.parquet', 'minioadmin', 'minioadmin', 'Parquet')"
+              --query "DESCRIBE s3('http://host.containers.internal:9000/tlc/data/fhvhv_tripdata_2023-11.parquet', 'minioadmin', 'minioadmin', 'Parquet')"
       ```
 3. query data
     * ```shell
@@ -45,7 +45,7 @@
               --port 19000 \
               --user ben \
               --password 123456 \
-              --query "SELECT * FROM s3('http://host.docker.internal:9000/tlc/data/fhvhv_tripdata_2023-11.parquet', 'minioadmin', 'minioadmin', 'Parquet') LIMIT 10"
+              --query "SELECT * FROM s3('http://host.containers.internal:9000/tlc/data/fhvhv_tripdata_2023-11.parquet', 'minioadmin', 'minioadmin', 'Parquet') LIMIT 10"
       ```
 
 ### by s3 engine
@@ -83,7 +83,7 @@
                     \"access_a_ride_flag\" String COMMENT '',
                     \"wav_request_flag\" String COMMENT '',
                     \"wav_match_flag\" String COMMENT ''
-                ) ENGINE = S3('http://host.docker.internal:9000/tlc/data/fhvhv_tripdata_2023-11.parquet', 'minioadmin', 'minioadmin', 'Parquet')
+                ) ENGINE = S3('http://host.containers.internal:9000/tlc/data/fhvhv_tripdata_2023-11.parquet', 'minioadmin', 'minioadmin', 'Parquet')
                 ORDER BY \"pickup_datetime\"
                 COMMENT 'High Volume For-Hire Vehicle Trip Records'"
       ```
