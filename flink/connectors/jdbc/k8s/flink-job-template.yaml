@@ -45,3 +45,4 @@ spec:
     parallelism: 2
     entryClass: tech.geekcity.flink.connectors.jdbc.SinkToJdbc
     args: []
+  mode: native

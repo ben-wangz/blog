@@ -38,6 +38,10 @@ public class SinkToJdbc {
         Optional.ofNullable(System.getenv("CLICK_HOUSE_USERNAME")).orElse("ben");
     String defaultPassword =
         Optional.ofNullable(System.getenv("CLICK_HOUSE_PASSWORD")).orElse("123456");
+    boolean clickHouseClusterMode =
+        Optional.ofNullable(System.getenv("CLICK_HOUSE_CLUSTER_MODE"))
+            .map(Boolean::parseBoolean)
+            .orElse(false);
     // specify flink configuration from args, e.g., --restPort 8081
     ParameterTool parameterTool = ParameterTool.fromArgs(args);
     String host = parameterTool.get("host", defaultHost);
@@ -46,7 +50,7 @@ public class SinkToJdbc {
     String password = parameterTool.get("password", defaultPassword);
     String database = parameterTool.get("database", JOB_NAME.replaceAll("-", "_"));
     String url = String.format(URL_TEMPLATE, username, password, host, port, database);
-    initializeTable(url);
+    initializeTable(url, clickHouseClusterMode);
     StreamExecutionEnvironment env =
         StreamExecutionEnvironment.getExecutionEnvironment(parameterTool.getConfiguration());
     Tuple2<String, Integer>[] records =
@@ -71,10 +75,13 @@ public class SinkToJdbc {
     env.execute(JOB_NAME);
   }
 
-  private static void initializeTable(String url) throws ClassNotFoundException, SQLException {
-    String createTableSql =
-        "create table if not exists users(name String, age Int32) "
+  private static void initializeTable(String url, boolean clickHouseClusterMode)
+      throws ClassNotFoundException, SQLException {
+    String createTableSqlTemplate =
+        "create table if not exists users %s(name String, age Int32) "
             + "ENGINE = MergeTree() order by name";
+    String createTableSql =
+        String.format(createTableSqlTemplate, clickHouseClusterMode ? "on cluster " : "");
     Class.forName(DRIVER_NAME);
     try (Connection connection = DriverManager.getConnection(url)) {
       try (PreparedStatement preparedStatement = connection.prepareStatement(createTableSql)) {
