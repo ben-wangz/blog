@@ -11,9 +11,16 @@
 ## installation
 
 1. prepare `clickhouse.yaml`
-    * ```yaml
+    * ::: code-tabs#shell
+      @tab single node
+      ```yaml
+      <!-- @include: clickhouse-single-node.yaml -->
+      ```
+      @tab 2-shards-3-replicas
+      ```yaml
       <!-- @include: clickhouse.yaml -->
       ```
+      :::
 2. prepare admin credentials secret
     * ```shell
       kubectl get namespaces database > /dev/null 2>&1 || kubectl create namespace database
