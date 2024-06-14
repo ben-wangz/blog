@@ -17,4 +17,4 @@
 
 ### with flink operator
 
-* reference: [flink-connectors-jdbc](https://blog.geekcity.tech/articles/kubernetes/flink/jdbc.html)
+* reference: [flink-connectors-jdbc](https://blog.geekcity.tech/articles/kubernetes/flink/jdbc/)

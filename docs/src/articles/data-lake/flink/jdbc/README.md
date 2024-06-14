@@ -30,19 +30,22 @@
           && podman push $IMAGE
       ```
 5. deploy flink job
-    * prepare [/tmp/flink-job.template.yaml](k8s/flink-job-template.yaml)
-    * generate `/tmp/flink-job.yaml`
+    * prepare `flink-job.template.yaml`
+        + ```yaml
+          <!-- @include: flink-job-template.yaml -->
+          ```
+    * generate `flink-job.yaml`
         + ```shell
           IMAGE=docker.io/wangz2019/flink-connectors-jdbc-demo:latest
           #ENTRY_CLASS=tech.geekcity.flink.connectors.jdbc.SourceFromJdbc
           ENTRY_CLASS=tech.geekcity.flink.connectors.jdbc.SinkToJdbc
-          cp /tmp/flink-job.template.yaml /tmp/flink-job.yaml \
-              && yq eval ".spec.image = \"$IMAGE\"" -i /tmp/flink-job.yaml \
-              && yq eval ".spec.job.entryClass = \"$ENTRY_CLASS\"" -i /tmp/flink-job.yaml
+          cp flink-job.template.yaml flink-job.yaml \
+              && yq eval ".spec.image = \"$IMAGE\"" -i flink-job.yaml \
+              && yq eval ".spec.job.entryClass = \"$ENTRY_CLASS\"" -i flink-job.yaml
           ```
     * apply to k8s
         + ```shell
-          kubectl -n flink apply -f /tmp/flink-job.yaml
+          kubectl -n flink apply -f flink-job.yaml
           ```
 6. check data in clickhouse
     * ```shell
