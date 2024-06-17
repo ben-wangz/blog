@@ -29,7 +29,7 @@
           && podman login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD ${REGISTRY:-docker.io} \
           && podman push $IMAGE
       ```
-5. create bucket named ``
+5. create bucket named `flink-connectors-s3-with-parquet-demo`
     * ```shell
       # change K8S_MASTER_IP to your k8s master ip
       K8S_MASTER_IP=$(kubectl get node -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')

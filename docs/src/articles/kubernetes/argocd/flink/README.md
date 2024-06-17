@@ -22,6 +22,9 @@
     * ```shell
       argocd app sync argocd/flink-operator
       ```
+4. NOTE: flink operator 1.8.0 will be not synced
+    * CustomResourceDefinition named `flinkdeployments.flink.apache.org`: spec.versions[0].additionalPrinterColumns[0,1].priority = 0 will be generated automatically
+    * CustomResourceDefinition named `flinksessionjobs.flink.apache.org`: spec.versions[0].additionalPrinterColumns[0,1].priority = 0 will be generated automatically
 
 ## deploy flink application
 
