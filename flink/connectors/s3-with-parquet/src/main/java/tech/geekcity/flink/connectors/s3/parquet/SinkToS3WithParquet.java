@@ -1,7 +1,10 @@
 package tech.geekcity.flink.connectors.s3.parquet;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
@@ -9,6 +12,7 @@ import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.connector.source.util.ratelimit.RateLimiterStrategy;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.configuration.ConfigOptions;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.connector.datagen.source.DataGeneratorSource;
 import org.apache.flink.connector.datagen.source.GeneratorFunction;
@@ -48,7 +52,8 @@ public class SinkToS3WithParquet {
     pluginConfiguration.setString("s3.access-key", accessKey);
     pluginConfiguration.setString("s3.secret-key", accessSecret);
     pluginConfiguration.setString("s3.endpoint", endpoint);
-    pluginConfiguration.setBoolean("s3.path.style.access", Boolean.TRUE);
+    pluginConfiguration.set(
+        ConfigOptions.key("s3.path.style.access").booleanType().noDefaultValue(), Boolean.TRUE);
     FileSystem.initialize(
         pluginConfiguration, PluginUtils.createPluginManagerFromRootFolder(pluginConfiguration));
     // specify flink configuration from args, e.g., --restPort 8081
@@ -58,7 +63,13 @@ public class SinkToS3WithParquet {
     long checkpointInterval =
         parameterTool.getLong("app.checkpoint.interval", defaultCheckpointInterval);
     StreamExecutionEnvironment env =
-        StreamExecutionEnvironment.getExecutionEnvironment(parameterTool.getConfiguration());
+        StreamExecutionEnvironment.getExecutionEnvironment(
+            ParameterTool.fromMap(
+                    Stream.concat(
+                            pluginConfiguration.toMap().entrySet().stream(),
+                            parameterTool.toMap().entrySet().stream())
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                .getConfiguration());
     env.getCheckpointConfig().setCheckpointInterval(checkpointInterval);
     GeneratorFunction<Long, Tuple2<String, Integer>> generatorFunction =
         index -> Tuple2.of(RandomStringUtils.randomAlphabetic(10), RANDOM.nextInt(100));

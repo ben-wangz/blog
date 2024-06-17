@@ -30,7 +30,7 @@ spec:
       cert-manager.io/cluster-issuer: self-signed-ca-issuer
       nginx.ingress.kubernetes.io/rewrite-target: /$2
   flinkConfiguration:
-    taskmanager:numberOfTaskSlots: "2"
+    taskmanager.numberOfTaskSlots: "2"
   serviceAccount: flink
   jobManager:
     resource:

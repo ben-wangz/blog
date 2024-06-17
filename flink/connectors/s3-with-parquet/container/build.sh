@@ -14,7 +14,7 @@ else
     exit 1
 fi
 BUILD_IMAGE=${BUILD_IMAGE:-m.daocloud.io/docker.io/library/gradle:8.5.0-jdk11-jammy}
-BASE_IMAGE=${BASE_IMAGE:-m.daocloud.io/docker.io/library/flink:1.17}
+BASE_IMAGE=${BASE_IMAGE:-m.daocloud.io/docker.io/library/flink:1.19}
 $BUILD_TOOL build \
     --build-arg BUILD_IMAGE=$BUILD_IMAGE \
     --build-arg BASE_IMAGE=$BASE_IMAGE \

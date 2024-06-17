@@ -4,7 +4,7 @@ plugins {
 }
 
 val lombokDependency = "org.projectlombok:lombok:1.18.22"
-var flinkVersion = "1.17.1"
+var flinkVersion = "1.19.1"
 val jacksonVersion = "2.13.4"
 var slf4jVersion = "2.0.9"
 var logbackVersion = "1.4.14"
