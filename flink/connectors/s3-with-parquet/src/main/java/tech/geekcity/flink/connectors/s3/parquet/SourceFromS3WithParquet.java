@@ -4,6 +4,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.configuration.ConfigOptions;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.connector.file.src.FileSource;
 import org.apache.flink.core.fs.FileSystem;
@@ -36,7 +37,8 @@ public class SourceFromS3WithParquet {
     pluginConfiguration.setString("s3.access-key", accessKey);
     pluginConfiguration.setString("s3.secret-key", accessSecret);
     pluginConfiguration.setString("s3.endpoint", endpoint);
-    pluginConfiguration.setBoolean("s3.path.style.access", Boolean.TRUE);
+    pluginConfiguration.set(
+        ConfigOptions.key("s3.path.style.access").booleanType().noDefaultValue(), Boolean.TRUE);
     FileSystem.initialize(
         pluginConfiguration, PluginUtils.createPluginManagerFromRootFolder(pluginConfiguration));
     // specify flink configuration from args, e.g., --restPort 8081
