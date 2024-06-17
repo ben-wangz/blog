@@ -11,6 +11,8 @@ spec:
       - name: flink-main-container
         imagePullPolicy: Always
         env:
+        - name: TZ
+          value: Asia/Shanghai
         - name: S3_SCHEMA
           value: http
         - name: S3_HOST

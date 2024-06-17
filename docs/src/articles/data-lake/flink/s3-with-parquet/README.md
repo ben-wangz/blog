@@ -78,9 +78,10 @@
       podman run --rm \
           --entrypoint bash \
           --add-host=minio-api.dev.geekcity.tech:${K8S_MASTER_IP} \
+          --env TZ=Asia/Shanghai \
           -it docker.io/minio/mc:latest \
           -c "mc alias set minio http://minio-api.dev.geekcity.tech:32080 admin ${ACCESS_SECRET} \
-              && mc ls minio/test/sink-to-s3-with-parquet/$(date '+%Y-%m-%d--%H')"
+              && mc ls minio/flink-connectors-s3-with-parquet-demo/sink-to-s3-with-parquet/$(date '+%Y-%m-%d--%H')"
       ```
     * ```shell
       #PART_FILENAME=part-2a79ffe3-76e2-4e6f-9306-4a3ede731af1-0
@@ -90,9 +91,10 @@
       podman run --rm \
           --entrypoint bash \
           --add-host=minio-api.dev.geekcity.tech:${K8S_MASTER_IP} \
+          --env TZ=Asia/Shanghai \
           -it docker.io/minio/mc:latest \
           -c "mc alias set minio http://minio-api.dev.geekcity.tech:32080 admin ${ACCESS_SECRET} \
-              && mc head --lines 20 minio/test/sink-to-s3-with-parquet/$(date '+%Y-%m-%d--%H')/$PART_FILENAME"
+              && mc head --lines 20 minio/flink-connectors-s3-with-parquet-demo/sink-to-s3-with-parquet/$(date '+%Y-%m-%d--%H')/$PART_FILENAME"
       ```
 
 ## problems

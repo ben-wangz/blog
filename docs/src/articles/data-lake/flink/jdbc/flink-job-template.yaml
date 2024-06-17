@@ -11,6 +11,8 @@ spec:
       - name: flink-main-container
         imagePullPolicy: Always
         env:
+        - name: TZ
+          value: Asia/Shanghai
         - name: CLICK_HOUSE_HOST
           value: clickhouse.database
         - name: CLICK_HOUSE_PORT
