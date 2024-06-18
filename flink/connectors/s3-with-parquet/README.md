@@ -28,4 +28,4 @@
 
 ### with flink operator
 
-* reference: [flink-connectors-jdbc](https://blog.geekcity.tech/articles/data-lake/flink/s3-with-parquet/)
+* reference: [flink-connectors-jdbc](https://blog.geekcity.tech/articles/data-lake/flink/connectors/s3-with-parquet/)

@@ -12,13 +12,13 @@ index: false
 
 ## demos
 
-* [import gaia3 into s3 with parquet format](import-gaia3-into-s3-with-parquet-format.md)
+* [import gaia3 into s3 with parquet format](demos/import-gaia3-into-s3-with-parquet-format/RREADME.md)
 
 ## custom connectors
 
 * [jdbc](jdbc/README.md)
-* [s3 with parquet](s3-with-parquet/README.md)
-* [multiple s3 source/sink](multiple-s3-source-sink.md)
+* [s3 with parquet](connectors/s3-with-parquet/README.md)
+* [multiple s3 source/sink](connectors/multiple-s3-source-sink.md)
 
 ## custom functions
 
