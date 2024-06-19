@@ -12,7 +12,7 @@ index: false
 
 ## demos
 
-* [import gaia3 into s3 with parquet format](demos/import-gaia3-into-s3-with-parquet-format/RREADME.md)
+* [import gaia3 into s3 with parquet format](demos/gaia3/RREADME.md)
 
 ## custom connectors
 

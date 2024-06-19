@@ -1,6 +1,7 @@
 include("docs")
 include("flink:connectors:s3-with-parquet")
 include("flink:connectors:jdbc")
+include("flink:demos:gaia3")
 include("arrow:hello-world")
 include(":arrow:c-data-interface:bridge")
 include("arrow:c-data-interface:app")
