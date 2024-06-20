@@ -44,7 +44,8 @@ public class LoadIntoS3 {
     String accessKey = Optional.ofNullable(System.getenv("S3_ACCESS_KEY")).orElse("minioadmin");
     String accessSecret =
         Optional.ofNullable(System.getenv("S3_ACCESS_SECRET")).orElse("minioadmin");
-    String defaultBucket = Optional.ofNullable(System.getenv("S3_BUCKET")).orElse("flink-demos-gaia3");
+    String defaultBucket =
+        Optional.ofNullable(System.getenv("S3_BUCKET")).orElse("flink-demos-gaia3");
     long defaultCheckpointInterval =
         Optional.ofNullable(System.getenv("CHECKPOINT_INTERVAL"))
             .map(Long::parseLong)
