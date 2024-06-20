@@ -174,3 +174,15 @@ curl -sL 'https://www.ip.cn/api/index?ip&type=0' | jq -r '.ip'
 ```shell
 tr -dc A-Za-z0-9 </dev/urandom | head -c 16
 ```
+
+## parquet-tools
+
+* references: https://github.com/NathanHowell/parquet-tools
+* installation
+    + ```shell
+      python3 -m pip install parquet-tools
+      ```
+* operations
+    + ```shell
+      parquet-tools:master show /tmp/file.parquet
+      ```
