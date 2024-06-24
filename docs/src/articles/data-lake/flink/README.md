@@ -18,7 +18,7 @@ index: false
 
 * [jdbc](jdbc/README.md)
 * [s3 with parquet](connectors/s3-with-parquet/README.md)
-* [multiple s3 source/sink](connectors/multiple-s3-source-sink.md)
+* [multiple s3 source/sink](connectors/multiple-s3/README.md)
 
 ## custom functions
 
