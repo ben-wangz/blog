@@ -1,5 +1,6 @@
 package tech.geekcity.flink.connectors.s3.parquet;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -12,7 +13,6 @@ import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.connector.source.util.ratelimit.RateLimiterStrategy;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
-import org.apache.flink.configuration.ConfigOptions;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.connector.datagen.source.DataGeneratorSource;
 import org.apache.flink.connector.datagen.source.GeneratorFunction;
@@ -31,13 +31,7 @@ public class SinkToS3WithParquet {
 
   public static void main(String[] args) throws Exception {
     String schema = Optional.ofNullable(System.getenv("S3_SCHEMA")).orElse("http");
-    String host =
-        Optional.ofNullable(System.getenv("S3_HOST"))
-            .orElseGet(
-                () ->
-                    StringUtils.equals("true", System.getenv("DEV_CONTAINER"))
-                        ? "host.containers.internal"
-                        : "localhost");
+    String host = Optional.ofNullable(System.getenv("S3_HOST")).orElse("host.containers.internal");
     String port = Optional.ofNullable(System.getenv("S3_PORT")).orElse("9000");
     String endpoint = String.format("%s://%s:%s", schema, host, port);
     String accessKey = Optional.ofNullable(System.getenv("S3_ACCESS_KEY")).orElse("minioadmin");
@@ -48,28 +42,38 @@ public class SinkToS3WithParquet {
         Optional.ofNullable(System.getenv("CHECKPOINT_INTERVAL"))
             .map(Long::parseLong)
             .orElse(10000L);
-    Configuration pluginConfiguration = new Configuration();
-    pluginConfiguration.setString("s3.access-key", accessKey);
-    pluginConfiguration.setString("s3.secret-key", accessSecret);
-    pluginConfiguration.setString("s3.endpoint", endpoint);
-    pluginConfiguration.set(
-        ConfigOptions.key("s3.path.style.access").booleanType().noDefaultValue(), Boolean.TRUE);
-    FileSystem.initialize(
-        pluginConfiguration, PluginUtils.createPluginManagerFromRootFolder(pluginConfiguration));
     // specify flink configuration from args, e.g., --restPort 8081
     ParameterTool parameterTool = ParameterTool.fromArgs(args);
     String bucket = parameterTool.get("app.s3.bucket", defaultBucket);
     String path = parameterTool.get("app.s3.path", SinkToS3WithParquet.JOB_NAME);
     long checkpointInterval =
         parameterTool.getLong("app.checkpoint.interval", defaultCheckpointInterval);
-    StreamExecutionEnvironment env =
-        StreamExecutionEnvironment.getExecutionEnvironment(
-            ParameterTool.fromMap(
+    boolean devContainer =
+        Optional.ofNullable(System.getenv("DEV_CONTAINER"))
+            .map(envValue -> StringUtils.equals("true", envValue))
+            .orElse(false);
+    Configuration flinkConfiguration =
+        devContainer
+            ? ParameterTool.fromMap(
                     Stream.concat(
-                            pluginConfiguration.toMap().entrySet().stream(),
+                            ImmutableMap.<String, String>builder()
+                                .put("s3.access-key", accessKey)
+                                .put("s3.secret-key", accessSecret)
+                                .put("s3.endpoint", endpoint)
+                                .put("s3.path.style.access", "true")
+                                .build()
+                                .entrySet()
+                                .stream(),
                             parameterTool.toMap().entrySet().stream())
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
-                .getConfiguration());
+                .getConfiguration()
+            : parameterTool.getConfiguration();
+    if (devContainer) {
+      FileSystem.initialize(
+          flinkConfiguration, PluginUtils.createPluginManagerFromRootFolder(flinkConfiguration));
+    }
+    StreamExecutionEnvironment env =
+        StreamExecutionEnvironment.getExecutionEnvironment(flinkConfiguration);
     env.getCheckpointConfig().setCheckpointInterval(checkpointInterval);
     GeneratorFunction<Long, Tuple2<String, Integer>> generatorFunction =
         index -> Tuple2.of(RandomStringUtils.randomAlphabetic(10), RANDOM.nextInt(100));

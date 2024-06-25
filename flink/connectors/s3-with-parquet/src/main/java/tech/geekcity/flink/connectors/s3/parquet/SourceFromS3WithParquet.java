@@ -1,10 +1,13 @@
 package tech.geekcity.flink.connectors.s3.parquet;
 
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.java.utils.ParameterTool;
-import org.apache.flink.configuration.ConfigOptions;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.connector.file.src.FileSource;
 import org.apache.flink.core.fs.FileSystem;
@@ -20,31 +23,41 @@ public class SourceFromS3WithParquet {
 
   public static void main(String[] args) throws Exception {
     String schema = Optional.ofNullable(System.getenv("S3_SCHEMA")).orElse("http");
-    String host =
-        Optional.ofNullable(System.getenv("S3_HOST"))
-            .orElseGet(
-                () ->
-                    StringUtils.equals("true", System.getenv("DEV_CONTAINER"))
-                        ? "host.containers.internal"
-                        : "localhost");
+    String host = Optional.ofNullable(System.getenv("S3_HOST")).orElse("host.containers.internal");
     String port = Optional.ofNullable(System.getenv("S3_PORT")).orElse("9000");
     String endpoint = String.format("%s://%s:%s", schema, host, port);
     String accessKey = Optional.ofNullable(System.getenv("S3_ACCESS_KEY")).orElse("minioadmin");
     String accessSecret =
         Optional.ofNullable(System.getenv("S3_ACCESS_SECRET")).orElse("minioadmin");
     String defaultBucket = Optional.ofNullable(System.getenv("S3_BUCKET")).orElse("test");
-    Configuration pluginConfiguration = new Configuration();
-    pluginConfiguration.setString("s3.access-key", accessKey);
-    pluginConfiguration.setString("s3.secret-key", accessSecret);
-    pluginConfiguration.setString("s3.endpoint", endpoint);
-    pluginConfiguration.set(
-        ConfigOptions.key("s3.path.style.access").booleanType().noDefaultValue(), Boolean.TRUE);
-    FileSystem.initialize(
-        pluginConfiguration, PluginUtils.createPluginManagerFromRootFolder(pluginConfiguration));
     // specify flink configuration from args, e.g., --restPort 8081
     ParameterTool parameterTool = ParameterTool.fromArgs(args);
     String bucket = parameterTool.get("app.s3.bucket", defaultBucket);
     String path = parameterTool.get("app.s3.path", SinkToS3WithParquet.JOB_NAME);
+    boolean devContainer =
+        Optional.ofNullable(System.getenv("DEV_CONTAINER"))
+            .map(envValue -> StringUtils.equals("true", envValue))
+            .orElse(false);
+    Configuration flinkConfiguration =
+        devContainer
+            ? ParameterTool.fromMap(
+                    Stream.concat(
+                            ImmutableMap.<String, String>builder()
+                                .put("s3.access-key", accessKey)
+                                .put("s3.secret-key", accessSecret)
+                                .put("s3.endpoint", endpoint)
+                                .put("s3.path.style.access", "true")
+                                .build()
+                                .entrySet()
+                                .stream(),
+                            parameterTool.toMap().entrySet().stream())
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                .getConfiguration()
+            : parameterTool.getConfiguration();
+    if (devContainer) {
+      FileSystem.initialize(
+          flinkConfiguration, PluginUtils.createPluginManagerFromRootFolder(flinkConfiguration));
+    }
     StreamExecutionEnvironment env =
         StreamExecutionEnvironment.getExecutionEnvironment(parameterTool.getConfiguration());
     FileSource<Person> fileSource =
