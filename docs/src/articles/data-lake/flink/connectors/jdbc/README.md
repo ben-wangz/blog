@@ -32,7 +32,7 @@
 5. deploy flink job
     * prepare `flink-job.template.yaml`
         + ```yaml
-          <!-- @include: flink-job-template.yaml -->
+          <!-- @include: flink-job.template.yaml -->
           ```
     * generate `flink-job.yaml`
         + ```shell

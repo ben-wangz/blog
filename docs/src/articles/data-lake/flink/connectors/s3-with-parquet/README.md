@@ -40,12 +40,11 @@
           -it docker.io/minio/mc:latest \
           -c "mc alias set minio http://minio-api.dev.geekcity.tech:32080 admin ${ACCESS_SECRET} \
               && mc mb --ignore-existing minio/flink-connectors-s3-with-parquet-demo"
-       
       ```
 5. deploy flink job
     * prepare `flink-job.template.yaml`
         + ```yaml
-          <!-- @include: flink-job-template.yaml -->
+          <!-- @include: flink-job.template.yaml -->
           ```
     * generate `flink-job.yaml`
         + ```shell
