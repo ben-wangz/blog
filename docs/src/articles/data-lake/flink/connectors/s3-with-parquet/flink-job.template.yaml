@@ -13,26 +13,12 @@ spec:
         env:
         - name: TZ
           value: Asia/Shanghai
-        - name: S3_SCHEMA
-          value: http
-        - name: S3_HOST
-          value: minio.storage
-        - name: S3_PORT
-          value: "9000"
-        - name: S3_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: minio-credentials
-              key: rootUser
-        - name: S3_ACCESS_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: minio-credentials
-              key: rootPassword
         - name: S3_BUCKET
           value: flink-connectors-s3-with-parquet-demo
         - name: CHECKPOINT_INTERVAL
           value: "10000"
+        - name: ENABLE_BUILT_IN_PLUGINS
+          value: /opt/flink/opt/flink-s3-fs-hadoop-1.19.0.jar
   flinkVersion: v1_19
   ingress:
     template: "flink.k8s.io/{{namespace}}/{{name}}(/|$)(.*)"
@@ -43,9 +29,6 @@ spec:
   flinkConfiguration:
     taskmanager.numberOfTaskSlots: "2"
     s3.path.style.access: "true"
-    s3.endpoint: your-endpoint
-    s3.access-key: your-access-key
-    s3.secret-key: your-s3-secret-key
   serviceAccount: flink
   jobManager:
     resource:

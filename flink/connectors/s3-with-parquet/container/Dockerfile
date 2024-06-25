@@ -7,6 +7,4 @@ RUN gradle :flink:connectors:s3-with-parquet:buildBinary -P RESULT_MESSAGE_PATH=
     && mv $(cat /tmp/build-binary-result.txt) /tmp/flink-connectors-s3-with-parquet-demo.jar
 
 FROM $BASE_IMAGE
-RUN mkdir /opt/flink/plugins/s3-fs-hadoop \
-    && cp /opt/flink/opt/flink-s3-fs-hadoop-1.19.*.jar /opt/flink/plugins/s3-fs-hadoop/
 COPY --from=builder /tmp/flink-connectors-s3-with-parquet-demo.jar /app/flink-application.jar

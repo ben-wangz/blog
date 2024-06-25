@@ -16,7 +16,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
 
     implementation("org.apache.parquet:parquet-avro:1.12.2") {
-        exclude(group = "org.apache.hadoop", module = "hadoop-client")
+        // exclude(group = "org.apache.hadoop", module = "hadoop-client")
         exclude(group = "it.unimi.dsi", module = "fastutil")
     }
     // dependency for parquet format sink
