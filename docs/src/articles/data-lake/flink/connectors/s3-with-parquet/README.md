@@ -47,24 +47,45 @@
           <!-- @include: flink-job.template.yaml -->
           ```
     * generate `flink-job.yaml`
-        + ```shell
+        + ::: code-tabs#shell
+          @tab sink
+          ```shell
           IMAGE=docker.io/wangz2019/flink-connectors-s3-with-parquet-demo:latest
-          #ENTRY_CLASS=tech.geekcity.flink.connectors.s3.parquet.SourceFromS3WithParquet
           ENTRY_CLASS=tech.geekcity.flink.connectors.s3.parquet.SinkToS3WithParquet
           cp flink-job.template.yaml flink-job.yaml \
               && yq eval ".spec.image = \"$IMAGE\"" -i flink-job.yaml \
               && yq eval ".spec.job.entryClass = \"$ENTRY_CLASS\"" -i flink-job.yaml
           ```
+          @tab source
+          ```shell
+          IMAGE=docker.io/wangz2019/flink-connectors-s3-with-parquet-demo:latest
+          ENTRY_CLASS=tech.geekcity.flink.connectors.s3.parquet.SourceFromS3WithParquet
+          cp flink-job.template.yaml flink-job.yaml \
+              && yq eval ".spec.image = \"$IMAGE\"" -i flink-job.yaml \
+              && yq eval ".spec.job.entryClass = \"$ENTRY_CLASS\"" -i flink-job.yaml
+          ```
+          :::
         + add s3 configuration to flink conf
             * reference: [problem of s3 fs filesystem hadoop](#problems)
-            * ```shell
+            * ::: code-tabs#shell
+              @tab minio
+              ```shell
+              IMAGE=docker.io/wangz2019/flink-connectors-s3-with-parquet-demo:latest
+              ENTRY_CLASS=tech.geekcity.flink.connectors.s3.parquet.SourceFromS3WithParquet
+              cp flink-job.template.yaml flink-job.yaml \
+                  && yq eval ".spec.image = \"$IMAGE\"" -i flink-job.yaml \
+                  && yq eval ".spec.job.entryClass = \"$ENTRY_CLASS\"" -i flink-job.yaml
+              ```
+              @tab oss
+              ```shell
               S3_ENDPOINT=http://minio.storage:9000
               S3_ACCESS_KEY=$(kubectl -n storage get secret minio-credentials -o jsonpath='{.data.rootUser}' | base64 -d)
               S3_SECRET_KEY=$(kubectl -n storage get secret minio-credentials -o jsonpath='{.data.rootPassword}' | base64 -d)
-              yq eval ".spec.flinkConfiguration.\"s3.endpoint\" = \"$S3_ENDPOINT\"" -i flink-job.yaml \
-                  && yq eval ".spec.flinkConfiguration.\"s3.access-key\" = \"$S3_ACCESS_KEY\"" -i flink-job.yaml \
-                  && yq eval ".spec.flinkConfiguration.\"s3.secret-key\" = \"$S3_SECRET_KEY\"" -i flink-job.yaml
+              yq eval ".spec.flinkConfiguration.\"fs.oss.endpoint\" = \"$S3_ENDPOINT\"" -i flink-job.yaml \
+                  && yq eval ".spec.flinkConfiguration.\"fs.oss.accessKeyId\" = \"$S3_ACCESS_KEY\"" -i flink-job.yaml \
+                  && yq eval ".spec.flinkConfiguration.\"fs.oss.accessKeySecret\" = \"$S3_SECRET_KEY\"" -i flink-job.yaml
               ```
+              :::
     * apply to k8s
         + ```shell
           kubectl -n flink apply -f flink-job.yaml

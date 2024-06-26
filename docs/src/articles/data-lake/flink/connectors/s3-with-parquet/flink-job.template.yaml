@@ -18,7 +18,7 @@ spec:
         - name: CHECKPOINT_INTERVAL
           value: "10000"
         - name: ENABLE_BUILT_IN_PLUGINS
-          value: /opt/flink/opt/flink-s3-fs-hadoop-1.19.0.jar
+          value: flink-s3-fs-hadoop-1.19.0.jar
   flinkVersion: v1_19
   ingress:
     template: "flink.k8s.io/{{namespace}}/{{name}}(/|$)(.*)"
