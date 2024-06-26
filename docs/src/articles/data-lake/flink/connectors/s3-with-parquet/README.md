@@ -82,17 +82,18 @@
               @tab oss
               ```shell
               OSS_ENDPOINT=oss-cn-hangzhou.aliyuncs.com
-              OSS_ACCESS_KEY=your-oss-access-key
-              OSS_SECRET_KEY=your-oss-secret-key
-              OSS_BUCKET=your-oss-bucket
-              OSS_PATH=flink-connectors-s3-with-parquet-demo
+              #OSS_ACCESS_KEY=your-oss-access-key
+              #OSS_SECRET_KEY=your-oss-secret-key
+              OSS_BUCKET=geekcity
+              OSS_PATH=projects/blog/flink/connectors/s3-with-parquet
               ENABLE_BUILT_IN_PLUGINS=flink-oss-fs-hadoop-1.19.0.jar
               yq eval ".spec.podTemplate.spec.containers[0] |= select(.name == \"flink-main-container\").env[] |= select(.name == \"ENABLE_BUILT_IN_PLUGINS\").value = \"$ENABLE_BUILT_IN_PLUGINS\"" -i flink-job.yaml \
                   && yq eval ".spec.podTemplate.spec.containers[0] |= select(.name == \"flink-main-container\").env[] |= select(.name == \"S3_BUCKET\").value = \"$OSS_BUCKET\"" -i flink-job.yaml \
-                  && yq eval ".spec.podTemplate.spec.containers[0] |= select(.name == \"flink-main-container\").env[] |= select(.name == \"S3_BUCKET\").value = \"$OSS_BUCKET\"" -i flink-job.yaml \
-                  && yq eval ".spec.flinkConfiguration.\"fs.oss.endpoint\" = \"$S3_ENDPOINT\"" -i flink-job.yaml \
-                  && yq eval ".spec.flinkConfiguration.\"fs.oss.accessKeyId\" = \"$S3_ACCESS_KEY\"" -i flink-job.yaml \
-                  && yq eval ".spec.flinkConfiguration.\"fs.oss.accessKeySecret\" = \"$S3_SECRET_KEY\"" -i flink-job.yaml
+                  && yq eval ".spec.podTemplate.spec.containers[0] |= select(.name == \"flink-main-container\").env[] |= select(.name == \"S3_PATH\").value = \"$OSS_PATH\"" -i flink-job.yaml \
+                  && yq eval ".spec.podTemplate.spec.containers[0] |= select(.name == \"flink-main-container\").env[] |= select(.name == \"FILESYSTEM_SCHEMA\").value = \"oss\"" -i flink-job.yaml \
+                  && yq eval ".spec.flinkConfiguration.\"fs.oss.endpoint\" = \"$OSS_ENDPOINT\"" -i flink-job.yaml \
+                  && yq eval ".spec.flinkConfiguration.\"fs.oss.accessKeyId\" = \"$OSS_ACCESS_KEY\"" -i flink-job.yaml \
+                  && yq eval ".spec.flinkConfiguration.\"fs.oss.accessKeySecret\" = \"$OSS_SECRET_KEY\"" -i flink-job.yaml
               ```
               :::
     * apply to k8s

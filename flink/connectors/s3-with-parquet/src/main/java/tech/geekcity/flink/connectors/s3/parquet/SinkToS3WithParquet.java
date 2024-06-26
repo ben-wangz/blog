@@ -44,6 +44,7 @@ public class SinkToS3WithParquet {
         Optional.ofNullable(System.getenv("CHECKPOINT_INTERVAL"))
             .map(Long::parseLong)
             .orElse(10000L);
+    String filesystemSchema = Optional.ofNullable(System.getenv("FILESYSTEM_SCHEMA")).orElse("s3");
     // specify flink configuration from args, e.g., --restPort 8081
     ParameterTool parameterTool = ParameterTool.fromArgs(args);
     String bucket = parameterTool.get("app.s3.bucket", defaultBucket);
@@ -91,7 +92,7 @@ public class SinkToS3WithParquet {
         .map(tuple2 -> Person.builder().name(tuple2.f0).age(tuple2.f1).build())
         .sinkTo(
             FileSink.<Person>forBulkFormat(
-                    new Path(String.format("s3://%s/%s", bucket, path)),
+                    new Path(String.format("%s://%s/%s", filesystemSchema, bucket, path)),
                     AvroParquetWriters.forReflectRecord(Person.class))
                 .withRollingPolicy(OnCheckpointRollingPolicy.build())
                 .build());

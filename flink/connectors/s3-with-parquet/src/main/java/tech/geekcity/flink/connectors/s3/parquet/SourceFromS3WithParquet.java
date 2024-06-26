@@ -31,6 +31,7 @@ public class SourceFromS3WithParquet {
         Optional.ofNullable(System.getenv("S3_ACCESS_SECRET")).orElse("minioadmin");
     String defaultBucket = Optional.ofNullable(System.getenv("S3_BUCKET")).orElse("test");
     String defaultPath = Optional.ofNullable(System.getenv("S3_PATH")).orElse(SinkToS3WithParquet.JOB_NAME);
+    String filesystemSchema = Optional.ofNullable(System.getenv("FILESYSTEM_SCHEMA")).orElse("s3");
     // specify flink configuration from args, e.g., --restPort 8081
     ParameterTool parameterTool = ParameterTool.fromArgs(args);
     String bucket = parameterTool.get("app.s3.bucket", defaultBucket);
@@ -64,7 +65,7 @@ public class SourceFromS3WithParquet {
     FileSource<Person> fileSource =
         FileSource.forRecordStreamFormat(
                 AvroParquetReaders.forReflectRecord(Person.class),
-                new Path(String.format("s3://%s/%s", bucket, path)))
+                new Path(String.format("%s://%s/%s", filesystemSchema, bucket, path)))
             .build();
     env.fromSource(fileSource, WatermarkStrategy.noWatermarks(), "file-source")
         .addSink(new PrintSinkFunction<>("print-sink", false));
