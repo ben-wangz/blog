@@ -30,10 +30,11 @@ public class SourceFromS3WithParquet {
     String accessSecret =
         Optional.ofNullable(System.getenv("S3_ACCESS_SECRET")).orElse("minioadmin");
     String defaultBucket = Optional.ofNullable(System.getenv("S3_BUCKET")).orElse("test");
+    String defaultPath = Optional.ofNullable(System.getenv("S3_PATH")).orElse(SinkToS3WithParquet.JOB_NAME);
     // specify flink configuration from args, e.g., --restPort 8081
     ParameterTool parameterTool = ParameterTool.fromArgs(args);
     String bucket = parameterTool.get("app.s3.bucket", defaultBucket);
-    String path = parameterTool.get("app.s3.path", SinkToS3WithParquet.JOB_NAME);
+    String path = parameterTool.get("app.s3.path", defaultPath);
     boolean devContainer =
         Optional.ofNullable(System.getenv("DEV_CONTAINER"))
             .map(envValue -> StringUtils.equals("true", envValue))

@@ -29,7 +29,7 @@
           && podman login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD ${REGISTRY:-docker.io} \
           && podman push $IMAGE
       ```
-5. create bucket named `flink-connectors-s3-with-parquet-demo`
+5. (only for minio) create bucket named `flink-connectors-s3-with-parquet-demo`
     * ```shell
       # change K8S_MASTER_IP to your k8s master ip
       K8S_MASTER_IP=$(kubectl get node -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
@@ -41,7 +41,7 @@
           -c "mc alias set minio http://minio-api.dev.geekcity.tech:32080 admin ${ACCESS_SECRET} \
               && mc mb --ignore-existing minio/flink-connectors-s3-with-parquet-demo"
       ```
-5. deploy flink job
+6. deploy flink job
     * prepare `flink-job.template.yaml`
         + ```yaml
           <!-- @include: flink-job.template.yaml -->
@@ -70,18 +70,27 @@
             * ::: code-tabs#shell
               @tab minio
               ```shell
-              IMAGE=docker.io/wangz2019/flink-connectors-s3-with-parquet-demo:latest
-              ENTRY_CLASS=tech.geekcity.flink.connectors.s3.parquet.SourceFromS3WithParquet
-              cp flink-job.template.yaml flink-job.yaml \
-                  && yq eval ".spec.image = \"$IMAGE\"" -i flink-job.yaml \
-                  && yq eval ".spec.job.entryClass = \"$ENTRY_CLASS\"" -i flink-job.yaml
-              ```
-              @tab oss
-              ```shell
               S3_ENDPOINT=http://minio.storage:9000
               S3_ACCESS_KEY=$(kubectl -n storage get secret minio-credentials -o jsonpath='{.data.rootUser}' | base64 -d)
               S3_SECRET_KEY=$(kubectl -n storage get secret minio-credentials -o jsonpath='{.data.rootPassword}' | base64 -d)
-              yq eval ".spec.flinkConfiguration.\"fs.oss.endpoint\" = \"$S3_ENDPOINT\"" -i flink-job.yaml \
+              ENABLE_BUILT_IN_PLUGINS=flink-s3-fs-hadoop-1.19.0.jar
+              yq eval ".spec.podTemplate.spec.containers[0] |= select(.name == \"flink-main-container\").env[] |= select(.name == \"ENABLE_BUILT_IN_PLUGINS\").value = \"$ENABLE_BUILT_IN_PLUGINS\"" -i flink-job.yaml \
+                  && yq eval ".spec.flinkConfiguration.\"s3.endpoint\" = \"$S3_ENDPOINT\"" -i flink-job.yaml \
+                  && yq eval ".spec.flinkConfiguration.\"s3.access-key\" = \"$S3_ACCESS_KEY\"" -i flink-job.yaml \
+                  && yq eval ".spec.flinkConfiguration.\"s3.secret-key\" = \"$S3_SECRET_KEY\"" -i flink-job.yaml
+              ```
+              @tab oss
+              ```shell
+              OSS_ENDPOINT=oss-cn-hangzhou.aliyuncs.com
+              OSS_ACCESS_KEY=your-oss-access-key
+              OSS_SECRET_KEY=your-oss-secret-key
+              OSS_BUCKET=your-oss-bucket
+              OSS_PATH=flink-connectors-s3-with-parquet-demo
+              ENABLE_BUILT_IN_PLUGINS=flink-oss-fs-hadoop-1.19.0.jar
+              yq eval ".spec.podTemplate.spec.containers[0] |= select(.name == \"flink-main-container\").env[] |= select(.name == \"ENABLE_BUILT_IN_PLUGINS\").value = \"$ENABLE_BUILT_IN_PLUGINS\"" -i flink-job.yaml \
+                  && yq eval ".spec.podTemplate.spec.containers[0] |= select(.name == \"flink-main-container\").env[] |= select(.name == \"S3_BUCKET\").value = \"$OSS_BUCKET\"" -i flink-job.yaml \
+                  && yq eval ".spec.podTemplate.spec.containers[0] |= select(.name == \"flink-main-container\").env[] |= select(.name == \"S3_BUCKET\").value = \"$OSS_BUCKET\"" -i flink-job.yaml \
+                  && yq eval ".spec.flinkConfiguration.\"fs.oss.endpoint\" = \"$S3_ENDPOINT\"" -i flink-job.yaml \
                   && yq eval ".spec.flinkConfiguration.\"fs.oss.accessKeyId\" = \"$S3_ACCESS_KEY\"" -i flink-job.yaml \
                   && yq eval ".spec.flinkConfiguration.\"fs.oss.accessKeySecret\" = \"$S3_SECRET_KEY\"" -i flink-job.yaml
               ```
@@ -90,7 +99,7 @@
         + ```shell
           kubectl -n flink apply -f flink-job.yaml
           ```
-6. check with mc client
+7. (only for minio) check with mc client
     * ```shell
       # change K8S_MASTER_IP to your k8s master ip
       K8S_MASTER_IP=$(kubectl get node -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')

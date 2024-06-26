@@ -15,6 +15,8 @@ spec:
           value: Asia/Shanghai
         - name: S3_BUCKET
           value: flink-connectors-s3-with-parquet-demo
+        - name: S3_PATH
+          value: sink-to-s3-with-parquet
         - name: CHECKPOINT_INTERVAL
           value: "10000"
         - name: ENABLE_BUILT_IN_PLUGINS

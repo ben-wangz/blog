@@ -23,6 +23,7 @@ import org.apache.flink.core.plugin.PluginUtils;
 import org.apache.flink.formats.parquet.avro.AvroParquetWriters;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy;
+
 import tech.geekcity.flink.connectors.s3.parquet.pojo.Person;
 
 public class SinkToS3WithParquet {
@@ -38,6 +39,7 @@ public class SinkToS3WithParquet {
     String accessSecret =
         Optional.ofNullable(System.getenv("S3_ACCESS_SECRET")).orElse("minioadmin");
     String defaultBucket = Optional.ofNullable(System.getenv("S3_BUCKET")).orElse("test");
+    String defaultPath = Optional.ofNullable(System.getenv("S3_PATH")).orElse(JOB_NAME);
     long defaultCheckpointInterval =
         Optional.ofNullable(System.getenv("CHECKPOINT_INTERVAL"))
             .map(Long::parseLong)
@@ -45,7 +47,7 @@ public class SinkToS3WithParquet {
     // specify flink configuration from args, e.g., --restPort 8081
     ParameterTool parameterTool = ParameterTool.fromArgs(args);
     String bucket = parameterTool.get("app.s3.bucket", defaultBucket);
-    String path = parameterTool.get("app.s3.path", SinkToS3WithParquet.JOB_NAME);
+    String path = parameterTool.get("app.s3.path", defaultPath);
     long checkpointInterval =
         parameterTool.getLong("app.checkpoint.interval", defaultCheckpointInterval);
     boolean devContainer =
