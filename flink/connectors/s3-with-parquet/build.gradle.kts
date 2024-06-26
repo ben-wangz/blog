@@ -4,10 +4,11 @@ plugins {
 }
 
 val lombokDependency = "org.projectlombok:lombok:1.18.22"
-var flinkVersion = "1.19.1"
+val flinkVersion = "1.19.1"
 val jacksonVersion = "2.13.4"
-var slf4jVersion = "2.0.9"
-var logbackVersion = "1.4.14"
+val slf4jVersion = "2.0.9"
+val logbackVersion = "1.4.14"
+val hadoopVersion = "3.3.6"
 dependencies {
     annotationProcessor(lombokDependency)
     implementation("com.google.guava:guava:32.1.1-jre")
@@ -20,7 +21,8 @@ dependencies {
         exclude(group = "it.unimi.dsi", module = "fastutil")
     }
     // dependency for parquet format sink
-    implementation("org.apache.hadoop:hadoop-mapreduce-client-core:3.3.6")
+    implementation("org.apache.hadoop:hadoop-mapreduce-client-core:$hadoopVersion")
+    implementation("org.apache.hadoop:hadoop-client:$hadoopVersion")
     // dependency for parquet format source
     implementation("org.apache.flink:flink-avro:$flinkVersion")
     implementation("org.apache.flink:flink-connector-datagen:$flinkVersion")
