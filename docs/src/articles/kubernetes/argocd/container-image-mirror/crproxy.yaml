@@ -1,0 +1,33 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: crproxy
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: nginx
+    targetRevision: 15.10.4
+    helm:
+      releaseName: crproxy
+      values: |
+        image:
+          registry: ghcr.io
+          repository: daocloud/crproxy/crproxy
+          tag: v0.8.0
+          pullPolicy: IfNotPresent
+        containerPorts:
+          http: 8080
+        service:
+          type: ClusterIP
+          ports:
+            http: 8080
+        ingress:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: basic-components
