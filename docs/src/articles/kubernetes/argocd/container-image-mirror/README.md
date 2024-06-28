@@ -2,8 +2,9 @@
 
 ## prepare
 
-1. k8s is ready
-2. argocd is ready and logged in
+1. [k8s is ready](../../installation/README.md)
+    * in this article, the k8s cluster is created by [minikube](../../installation/minikube.md)
+2. [argocd is ready and logged in](../../helm/argocd/README.md)
 3. [minio is ready](../storage/minio/minio.md)
 
 ## logic
@@ -78,7 +79,12 @@
 
 ## tests
 
-1. pull image
+1. * `container-image-mirror.dev.geekcity.tech` and `minio-api.dev.geekcity.tech` can be resolved
+     + for example
+         * add `$K8S_MASTER_IP container-image-mirror.dev.geekcity.tech` to `/etc/hosts`
+         * add `$K8S_MASTER_IP minio-api.dev.geekcity.tech` to `/etc/hosts`
+     + with k8s with minikube, `$K8S_MASTER_IP` is the ip of the minikube vm, usually `192.168.49.2`
+2. pull image
     * ```shell
       podman pull --tls-verify=false container-image-mirror.dev.geekcity.tech:32443/docker.io/library/alpine:3.20.1
       ```
