@@ -1,4 +1,4 @@
-# ingress
+# container-image-mirror
 
 ## prepare
 
