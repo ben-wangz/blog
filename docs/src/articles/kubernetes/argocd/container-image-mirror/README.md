@@ -4,6 +4,7 @@
 
 1. k8s is ready
 2. argocd is ready and logged in
+3. [minio is ready](../storage/minio/minio.md)
 
 ## logic
 
@@ -61,7 +62,7 @@
     * ```shell
       argocd app sync argocd/registry
       ```
-7. if you can't control dns to point `` to `192.168.49.2`
+7. if you can't control dns to point `minio-api.dev.geekcity.tech` to `192.168.49.2`
     * patch the deployment by hostAliases
         + ```shell
           kubectl -n basic-components patch deployment registry-docker-registry --patch '
@@ -74,3 +75,20 @@
                   - minio-api.dev.geekcity.tech
           '
           ```
+
+## tests
+
+1. pull image
+    * ```shell
+      podman pull --tls-verify=false container-image-mirror.dev.geekcity.tech:32443/docker.io/library/alpine:3.20.1
+      ```
+
+## extensions
+
+1. storage
+    * replace minio with oss
+    * use pvc
+    * without persistent storage
+2. network of crproxy
+    * set http_proxy and https_proxy for crproxy
+3. apply ssl with let's encrypt
