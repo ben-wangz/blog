@@ -23,7 +23,6 @@ import org.apache.flink.core.plugin.PluginUtils;
 import org.apache.flink.formats.parquet.avro.AvroParquetWriters;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy;
-
 import tech.geekcity.flink.connectors.s3.parquet.pojo.Person;
 
 public class SinkToS3WithParquet {
