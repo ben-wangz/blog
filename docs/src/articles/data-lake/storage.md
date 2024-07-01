@@ -51,3 +51,7 @@ mindmap
     * graph databases
     * message queues
     * nfs
+
+## code examples to integrate with storage layer
+1. s3-integrate
+    * [python](https://github.com/ben-wangz/blog/tree/main/s3/integrate/python)

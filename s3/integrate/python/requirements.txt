@@ -1,0 +1,4 @@
+fsspec==2024.6.1
+s3fs==2024.6.1
+# for source from http requests
+requests==2.32.3
