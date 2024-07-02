@@ -13,5 +13,7 @@ with open(output_file_path, "w") as output_file:
             filename = os.path.basename(url_parsed.path)
             path = os.path.dirname(url_parsed.path)
             output_file.write(url + "\n")
-            output_file.write(" dir=" + os.path.join(download_path, netloc, path.strip("/")) + "\n")
+            output_file.write(
+                " dir=" + os.path.join(download_path, netloc, path.strip("/")) + "\n"
+            )
             output_file.write(" out=" + filename + "\n")

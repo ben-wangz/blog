@@ -29,6 +29,10 @@ configure<com.diffplug.gradle.spotless.SpotlessExtension> {
         jackson()
             .feature("ORDER_MAP_ENTRIES_BY_KEYS", true)
     }
+    python {
+        target("**/*.py")
+        black("24.4.2")
+    }
 }
 
 allprojects {
