@@ -19,7 +19,7 @@ spec:
           kibanaEnabled: false
         clusterName: elastic
         image:
-          registry: m.daocloud.io/docker.io
+          registry: docker.io
           pullPolicy: IfNotPresent
         security:
           enabled: false
@@ -56,16 +56,16 @@ spec:
         metrics:
           enabled: false
           image:
-            registry: m.daocloud.io/docker.io
+            registry: docker.io
             pullPolicy: IfNotPresent
         volumePermissions:
           enabled: false
           image:
-            registry: m.daocloud.io/docker.io
+            registry: docker.io
             pullPolicy: IfNotPresent
         sysctlImage:
           enabled: true
-          registry: m.daocloud.io/docker.io
+          registry: docker.io
           pullPolicy: IfNotPresent
         kibana:
           elasticsearch:

@@ -17,7 +17,7 @@
       ```
 1. install with helm
     * ```shell
-      MIRROR=m.daocloud.io/
+      MIRROR=
       helm install flannel flannel \
           --namespace kube-flannel \
           --repo https://flannel-io.github.io/flannel/ \

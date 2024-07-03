@@ -25,7 +25,7 @@ spec:
               value: "False"
         existingSecret: pgadmin4-credentials
         image:
-          registry: m.daocloud.io/docker.io
+          registry: docker.io
           pullPolicy: IfNotPresent
         ingress:
           enabled: true

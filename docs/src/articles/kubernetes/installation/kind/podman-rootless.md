@@ -23,7 +23,7 @@
       ```
 6. image of kind node
     * ```shell
-      MIRROR="m.daocloud.io/"
+      MIRROR=""
       IMAGE=docker.io/kindest/node:v1.29.0
       podman pull ${MIRROR}${IMAGE}
       podman tag ${MIRROR}${IMAGE} ${IMAGE}

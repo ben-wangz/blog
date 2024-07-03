@@ -16,7 +16,7 @@ spec:
       releaseName: blog
       values: |
         image:
-          registry: m.daocloud.io/ghcr.io
+          registry: ghcr.io
           repository: ben-wangz/blog
           tag: main
           pullPolicy: Always

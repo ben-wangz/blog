@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: redis-tool
-        image: m.daocloud.io/docker.io/bitnami/redis:7.2.4-debian-12-r8
+        image: docker.io/bitnami/redis:7.2.4-debian-12-r8
         imagePullPolicy: IfNotPresent
         env:
         - name: REDISCLI_AUTH

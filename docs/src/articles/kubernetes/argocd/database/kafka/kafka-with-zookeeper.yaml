@@ -16,7 +16,7 @@ spec:
       releaseName: kafka
       values: |
         image:
-          registry: m.daocloud.io/docker.io
+          registry: docker.io
         controller:
           replicaCount: 0
           persistence:
@@ -45,20 +45,20 @@ spec:
           autoDiscovery:
             enabled: false
             image:
-              registry: m.daocloud.io/docker.io
+              registry: docker.io
         volumePermissions:
           enabled: false
           image:
-            registry: m.daocloud.io/docker.io
+            registry: docker.io
         metrics:
           kafka:
             enabled: false
             image:
-              registry: m.daocloud.io/docker.io
+              registry: docker.io
           jmx:
             enabled: false
             image:
-              registry: m.daocloud.io/docker.io
+              registry: docker.io
         provisioning:
           enabled: false
         kraft:
@@ -66,7 +66,7 @@ spec:
         zookeeper:
           enabled: true
           image:
-            registry: m.daocloud.io/docker.io
+            registry: docker.io
           replicaCount: 1
           auth:
             client:
@@ -78,7 +78,7 @@ spec:
           volumePermissions:
             enabled: false
             image:
-              registry: m.daocloud.io/docker.io
+              registry: docker.io
             metrics:
               enabled: false
           tls:

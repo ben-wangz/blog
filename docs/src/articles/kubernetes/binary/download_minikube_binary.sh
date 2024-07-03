@@ -1,4 +1,4 @@
-MIRROR="files.m.daocloud.io/"
+MIRROR="files."
 curl -LO "https://${MIRROR}storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64"
 mv minikube-linux-amd64 minikube
 chmod u+x minikube

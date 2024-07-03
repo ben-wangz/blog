@@ -70,7 +70,7 @@ spec:
       configMap:
         name: "{{inputs.parameters.images-to-mirror-configmap-name}}"
     container:
-      image: m.daocloud.io/docker.io/library/alpine:3.19.1
+      image: docker.io/library/alpine:3.19.1
       volumeMounts:
       - name: images-to-mirror
         mountPath: /app/images-to-mirror.yaml
@@ -117,7 +117,7 @@ spec:
       - name: insecure-option
       - name: insecure-registry
     container:
-      image: m.daocloud.io/docker.io/library/docker:25.0.3-dind-alpine3.19
+      image: docker.io/library/docker:25.0.3-dind-alpine3.19
       env:
       - name: DOCKER_TLS_CERTDIR
         value: ""
@@ -132,7 +132,7 @@ spec:
       parameters:
       - name: dockerd-host
     container:
-      image: m.daocloud.io/ghcr.io/ben-wangz/blog-docker-cli-with-bash:main
+      image: ghcr.io/ben-wangz/blog-docker-cli-with-bash:main
       env:
       - name: DOCKER_HOST
         value: "{{inputs.parameters.dockerd-host}}"
@@ -198,7 +198,7 @@ spec:
       - name: registry-credentials-secret-name
       - name: dry-run-push
     container:
-      image: m.daocloud.io/ghcr.io/ben-wangz/blog-docker-cli-with-bash:main
+      image: ghcr.io/ben-wangz/blog-docker-cli-with-bash:main
       env:
       - name: DOCKER_HOST
         value: "{{inputs.parameters.dockerd-host}}"

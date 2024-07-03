@@ -16,7 +16,7 @@ spec:
       releaseName: nfs-provisioner
       values: |
         image:
-          repository: m.daocloud.io/registry.k8s.io/sig-storage/nfs-subdir-external-provisioner
+          repository: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner
           pullPolicy: IfNotPresent
         nfs:
           server: nfs.services.geekcity.tech

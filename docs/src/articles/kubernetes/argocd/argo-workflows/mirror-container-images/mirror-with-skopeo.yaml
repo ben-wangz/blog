@@ -86,7 +86,7 @@ spec:
       configMap:
         name: "{{inputs.parameters.images-to-mirror-configmap-name}}"
     container:
-      image: m.daocloud.io/ghcr.io/ben-wangz/blog-skopeo:main
+      image: ghcr.io/ben-wangz/blog-skopeo:main
       volumeMounts:
       - name: images-to-mirror
         mountPath: /app/images-to-mirror.yaml

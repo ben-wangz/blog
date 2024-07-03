@@ -16,7 +16,7 @@ spec:
       releaseName: flink-operator
       values: |
         image:
-          repository: m.daocloud.io/ghcr.io/apache/flink-kubernetes-operator
+          repository: ghcr.io/apache/flink-kubernetes-operator
       version: v3
   destination:
     server: https://kubernetes.default.svc

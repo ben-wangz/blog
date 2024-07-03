@@ -21,12 +21,12 @@ spec:
         singleNamespace: false
         controller:
           image:
-            registry: m.daocloud.io/quay.io
+            registry: quay.io
           workflowNamespaces:
             - business-workflows
         executor:
           image:
-            registry: m.daocloud.io/quay.io
+            registry: quay.io
         workflow:
           serviceAccount:
             create: true
@@ -35,7 +35,7 @@ spec:
         server:
           enabled: true
           image:
-            registry: m.daocloud.io/quay.io
+            registry: quay.io
           ingress:
             enabled: true
             ingressClassName: nginx

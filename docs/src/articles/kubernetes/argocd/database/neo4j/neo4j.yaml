@@ -84,7 +84,7 @@ spec:
             cleanup:
               enabled: true
               image:
-                registry: m.daocloud.io/docker.io
+                registry: docker.io
                 repository: bitnami/kubectl
                 imagePullPolicy: IfNotPresent
           admin:
@@ -97,7 +97,7 @@ spec:
           server.config.strict_validation.enabled: "false"
         image:
           imagePullPolicy: IfNotPresent
-          customImage: m.daocloud.io/docker.io/library/neo4j:5.18.0-community-bullseye
+          customImage: docker.io/library/neo4j:5.18.0-community-bullseye
         env:
           NEO4J_PLUGINS: '["apoc"]'
         analytics:

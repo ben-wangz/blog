@@ -29,7 +29,7 @@ spec:
             selfMonitor: true
           alertmanagerSpec:
             image:
-              registry: m.daocloud.io/quay.io
+              registry: quay.io
             storage:
               volumeClaimTemplate:
                 spec:
@@ -42,13 +42,13 @@ spec:
         grafana:
           enabled: true
           image:
-            registry: m.daocloud.io/docker.io
+            registry: docker.io
           testFramework:
             enabled: true
             image:
-              registry: m.daocloud.io/docker.io
+              registry: docker.io
           downloadDashboardsImage:
-            registry: m.daocloud.io/docker.io
+            registry: docker.io
           serviceMonitor:
             enabled: true
           ingress:
@@ -70,7 +70,7 @@ spec:
           initChownData:
             enabled: true
             image:
-              registry: m.daocloud.io/docker.io
+              registry: docker.io
           admin:
             existingSecret: kube-prometheus-stack-credentials
             userKey: grafana-username
@@ -80,7 +80,7 @@ spec:
           dashboards: {}
           sidecar:
             image:
-              registry: m.daocloud.io/quay.io
+              registry: quay.io
             dashboards:
               enabled: true
             datasources:
@@ -88,7 +88,7 @@ spec:
           imageRenderer:
             enabled: false
             image:
-              registry: m.daocloud.io/docker.io
+              registry: docker.io
         kubernetesServiceMonitors:
           enabled: true
           sidecar:
@@ -130,7 +130,7 @@ spec:
           enabled: true
         kube-state-metrics:
           image:
-            registry: m.daocloud.io/registry.k8s.io
+            registry: registry.k8s.io
           prometheus:
             monitor:
               enabled: true
@@ -140,7 +140,7 @@ spec:
           enabled: true
         prometheus-node-exporter:
           image:
-            registry: m.daocloud.io/quay.io
+            registry: quay.io
           prometheus:
             monitor:
               enabled: true
@@ -151,11 +151,11 @@ spec:
             deployment:
               enabled: false
               image:
-                registry: m.daocloud.io/quay.io
+                registry: quay.io
             patch:
               enabled: true
               image:
-                registry: m.daocloud.io/registry.k8s.io
+                registry: registry.k8s.io
             certManager:
               enabled: false
           serviceAccount:
@@ -200,7 +200,7 @@ spec:
             selfMonitor: true
           prometheusSpec:
             image:
-              registry: m.daocloud.io/quay.io
+              registry: quay.io
             storageSpec:
               volumeClaimTemplate:
                 spec:
@@ -218,7 +218,7 @@ spec:
             selfMonitor: true
           thanosRulerSpec:
             image:
-              registry: m.daocloud.io/quay.io
+              registry: quay.io
           storage:
             volumeClaimTemplate:
               spec:

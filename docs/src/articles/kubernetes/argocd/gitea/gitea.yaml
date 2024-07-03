@@ -16,7 +16,7 @@ spec:
       releaseName: gitea
       values: |
         image:
-          registry: m.daocloud.io/docker.io
+          registry: docker.io
         service:
           http:
             type: ClusterIP
@@ -52,7 +52,7 @@ spec:
           enabled: true
           architecture: standalone
           image:
-            registry: m.daocloud.io/docker.io
+            registry: docker.io
           primary:
             persistence:
               enabled: false
@@ -69,11 +69,11 @@ spec:
           volumePermissions:
             enabled: false
             image:
-              registry: m.daocloud.io/docker.io
+              registry: docker.io
           metrics:
             enabled: false
             image:
-              registry: m.daocloud.io/docker.io
+              registry: docker.io
         gitea:
           admin:
             existingSecret: gitea-admin-credentials

@@ -14,7 +14,7 @@ clusterName: kubernetes
 controllerManager:
   extraArgs:
     node-cidr-mask-size: "16"
-imageRepository: m.daocloud.io/registry.k8s.io
+imageRepository: registry.k8s.io
 kubernetesVersion: 1.28.0
 networking:
   dnsDomain: cluster.local

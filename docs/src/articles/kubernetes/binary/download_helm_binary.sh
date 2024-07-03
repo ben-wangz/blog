@@ -1,4 +1,4 @@
-MIRROR="files.m.daocloud.io/"
+MIRROR="files."
 VERSION=v3.13.3
 ARCH=$(uname -m)
 if [ "${ARCH}" = "x86_64" ]; then

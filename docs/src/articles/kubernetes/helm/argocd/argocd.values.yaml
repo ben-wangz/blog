@@ -5,32 +5,32 @@ crds:
 global:
   revisionHistoryLimit: 3
   image:
-    repository: m.daocloud.io/quay.io/argoproj/argocd
+    repository: quay.io/argoproj/argocd
     imagePullPolicy: IfNotPresent
 redis:
   enabled: true
   image:
-    repository: m.daocloud.io/docker.io/library/redis
+    repository: docker.io/library/redis
   exporter:
     enabled: false
     image:
-      repository: m.daocloud.io/bitnami/redis-exporter
+      repository: bitnami/redis-exporter
   metrics:
     enabled: false
 redis-ha:
   enabled: false
   image:
-    repository: m.daocloud.io/docker.io/library/redis
+    repository: docker.io/library/redis
   configmapTest:
-    repository: m.daocloud.io/docker.io/koalaman/shellcheck
+    repository: docker.io/koalaman/shellcheck
   haproxy:
     enabled: false
     image:
-      repository: m.daocloud.io/docker.io/library/haproxy
+      repository: docker.io/library/haproxy
   exporter:
     enabled: false
-    image: m.daocloud.io/docker.io/oliver006/redis_exporter
+    image: docker.io/oliver006/redis_exporter
 dex:
   enabled: true
   image:
-    repository: m.daocloud.io/ghcr.io/dexidp/dex
+    repository: ghcr.io/dexidp/dex

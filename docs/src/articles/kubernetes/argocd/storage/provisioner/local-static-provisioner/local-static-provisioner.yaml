@@ -21,7 +21,7 @@ spec:
           create: true
         setPVOwnerRef: true
         mountDevVolume: false
-        image: m.daocloud.io/registry.k8s.io/sig-storage/local-volume-provisioner:v2.6.0
+        image: registry.k8s.io/sig-storage/local-volume-provisioner:v2.6.0
         classes:
         - name: local-disks
           hostDir: /data/local-static-provisioner

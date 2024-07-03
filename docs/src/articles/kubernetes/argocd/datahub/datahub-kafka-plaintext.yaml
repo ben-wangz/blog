@@ -49,7 +49,7 @@ spec:
           enabled: true
           replicaCount: 1
           image:
-            repository: m.daocloud.io/docker.io/acryldata/datahub-gms
+            repository: docker.io/acryldata/datahub-gms
           service:
             type: ClusterIP
           ingress:
@@ -58,7 +58,7 @@ spec:
           enabled: true
           replicaCount: 1
           image:
-            repository: m.daocloud.io/docker.io/acryldata/datahub-frontend-react
+            repository: docker.io/acryldata/datahub-frontend-react
           defaultUserCredentials:
             randomAdminPassword: true
           service:
@@ -80,46 +80,46 @@ spec:
           enabled: true
           replicaCount: 1
           image:
-            repository: m.daocloud.io/docker.io/acryldata/datahub-actions
+            repository: docker.io/acryldata/datahub-actions
         datahub-mae-consumer:
           replicaCount: 1
           image:
-            repository: m.daocloud.io/docker.io/acryldata/datahub-mae-consumer
+            repository: docker.io/acryldata/datahub-mae-consumer
           ingress:
             enabled: false
         datahub-mce-consumer:
           replicaCount: 1
           image:
-            repository: m.daocloud.io/docker.io/acryldata/datahub-mce-consumer
+            repository: docker.io/acryldata/datahub-mce-consumer
           ingress:
             enabled: false
         datahub-ingestion-cron:
           enabled: false
           image:
-            repository: m.daocloud.io/docker.io/acryldata/datahub-ingestion
+            repository: docker.io/acryldata/datahub-ingestion
         elasticsearchSetupJob:
           enabled: true
           image:
-            repository: m.daocloud.io/docker.io/acryldata/datahub-elasticsearch-setup
+            repository: docker.io/acryldata/datahub-elasticsearch-setup
         kafkaSetupJob:
           enabled: true
           image:
-            repository: m.daocloud.io/docker.io/acryldata/datahub-kafka-setup
+            repository: docker.io/acryldata/datahub-kafka-setup
         mysqlSetupJob:
           enabled: true
           image:
-            repository: m.daocloud.io/docker.io/acryldata/datahub-mysql-setup
+            repository: docker.io/acryldata/datahub-mysql-setup
         postgresqlSetupJob:
           enabled: false
           image:
-            repository: m.daocloud.io/docker.io/acryldata/datahub-postgres-setup
+            repository: docker.io/acryldata/datahub-postgres-setup
         datahubUpgrade:
           enabled: true
           image:
-            repository: m.daocloud.io/docker.io/acryldata/datahub-upgrade
+            repository: docker.io/acryldata/datahub-upgrade
         datahubSystemUpdate:
           image:
-            repository: m.daocloud.io/docker.io/acryldata/datahub-upgrade
+            repository: docker.io/acryldata/datahub-upgrade
   destination:
     server: https://kubernetes.default.svc
     namespace: application

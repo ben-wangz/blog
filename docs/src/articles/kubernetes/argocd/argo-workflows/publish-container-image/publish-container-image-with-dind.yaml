@@ -41,7 +41,7 @@ spec:
   - name: dind
     daemon: true
     container:
-      image: m.daocloud.io/docker.io/library/docker:25.0.3-dind-alpine3.19
+      image: docker.io/library/docker:25.0.3-dind-alpine3.19
       env:
       - name: DOCKER_TLS_CERTDIR
         value: ""
@@ -57,7 +57,7 @@ spec:
       parameters:
       - name: dockerd-host
     container:
-      image: m.daocloud.io/docker.io/library/docker:25.0.3-cli-alpine3.19
+      image: docker.io/library/docker:25.0.3-cli-alpine3.19
       env:
       - name: DOCKER_HOST
         value: "{{inputs.parameters.dockerd-host}}"
@@ -82,9 +82,9 @@ spec:
       - name: image-to-publish
         value: wangz2019/blog-docs:argo-test
       - name: registry
-        value: m.daocloud.io/docker.io
+        value: docker.io
     container:
-      image: m.daocloud.io/docker.io/library/docker:25.0.3-cli-alpine3.19
+      image: docker.io/library/docker:25.0.3-cli-alpine3.19
       env:
       - name: DOCKER_HOST
         value: "{{inputs.parameters.dockerd-host}}"

@@ -26,9 +26,9 @@ spec:
       - name: image-to-publish
         value: wangz2019/blog-docs:argo-buildah-test
       - name: registry
-        value: m.daocloud.io/docker.io
+        value: docker.io
     container:
-      image: m.daocloud.io/quay.io/containers/buildah:v1.35.4
+      image: quay.io/containers/buildah:v1.35.4
       securityContext:
         privileged: true
       env:

@@ -16,7 +16,7 @@ spec:
       releaseName: phpmyadmin
       values: |
         image:
-          registry: m.daocloud.io/docker.io
+          registry: docker.io
           pullPolicy: IfNotPresent
         replicas: 1
         ingress:
@@ -31,7 +31,7 @@ spec:
         metrics:
           enabled: false
           image:
-            registry: m.daocloud.io/docker.io
+            registry: docker.io
             pullPolicy: IfNotPresent
   destination:
     server: https://kubernetes.default.svc

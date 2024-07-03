@@ -7,5 +7,5 @@ podman run --rm \
     -v /tmp/build/containers:/var/lib/containers \
     -v $SCRIPT_DIR/../../../..:/code \
     --privileged \
-    -it m.daocloud.io/quay.io/containers/buildah:v1.35.4 \
+    -it quay.io/containers/buildah:v1.35.4 \
     bash /code/flink/connectors/s3-with-parquet/container/build.sh

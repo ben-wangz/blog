@@ -17,7 +17,7 @@
           tigera-operator tigera-operator \
           --repo https://ben-wangz.github.io/helm-chart-mirror/charts \
           --version v3.27.0 \
-          --set tigeraOperator.registry=m.daocloud.io/ \
-          --set calicoctl.image=m.daocloud.io/docker.io/calico/ctl \
+          --set tigeraOperator.registry= \
+          --set calicoctl.image=docker.io/calico/ctl \
           --atomic
       ```

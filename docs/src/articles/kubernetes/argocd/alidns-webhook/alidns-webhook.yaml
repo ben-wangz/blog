@@ -20,7 +20,7 @@ spec:
           namespace: basic-components
           serviceAccountName: cert-manager
         image:
-          repository: m.daocloud.io/ghcr.io/devmachine-fr/cert-manager-alidns-webhook/cert-manager-alidns-webhook
+          repository: ghcr.io/devmachine-fr/cert-manager-alidns-webhook/cert-manager-alidns-webhook
   destination:
     server: https://kubernetes.default.svc
     namespace: basic-components

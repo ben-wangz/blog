@@ -41,7 +41,7 @@
       ```
       @tab m.daocloud.io
       ```shell
-      minikube start --driver=podman --container-runtime=cri-o --kubernetes-version=v1.27.10 --image-mirror-country=cn --image-repository=m.daocloud.io/gcr.io
+      minikube start --driver=podman --container-runtime=cri-o --kubernetes-version=v1.27.10 --image-mirror-country=cn --image-repository=gcr.io
       ```
       :::
 2. add alias of `kubectl`

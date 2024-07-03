@@ -16,7 +16,7 @@ spec:
       releaseName: neo4j-reverse-proxy
       values: |
         reverseProxy:
-          image: "m.daocloud.io/docker.io/neo4j/helm-charts-reverse-proxy:5.17.0"
+          image: "docker.io/neo4j/helm-charts-reverse-proxy:5.17.0"
           serviceName: "neo4j-lb-neo4j"
           domain: "cluster.local"
           ingress:

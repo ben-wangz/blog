@@ -73,7 +73,7 @@ spec:
               releaseName: hello-nginx
               values: |
                 image:
-                  registry: m.daocloud.io/docker.io
+                  registry: docker.io
                 service:
                   type: ClusterIP
                 ingress:
@@ -88,13 +88,13 @@ spec:
         path: /tmp/argocd
         mode: 755
         http:
-          url: https://files.m.daocloud.io/github.com/argoproj/argo-cd/releases/download/v2.9.3/argocd-linux-amd64
+          url: https://files.github.com/argoproj/argo-cd/releases/download/v2.9.3/argocd-linux-amd64
     outputs:
       artifacts:
       - name: argocd-binary
         path: "{{inputs.artifacts.argocd-binary.path}}"
     container:
-      image: m.daocloud.io/docker.io/library/fedora:39
+      image: docker.io/library/fedora:39
       command:
       - sh
       - -c
@@ -111,7 +111,7 @@ spec:
       - name: insecure-option
         value: ""
     container:
-      image: m.daocloud.io/docker.io/library/fedora:39
+      image: docker.io/library/fedora:39
       env:
       - name: ARGOCD_USERNAME
         valueFrom:
@@ -146,7 +146,7 @@ spec:
       - name: insecure-option
         value: ""
     container:
-      image: m.daocloud.io/docker.io/library/fedora:39
+      image: docker.io/library/fedora:39
       env:
       - name: ARGOCD_USERNAME
         valueFrom:

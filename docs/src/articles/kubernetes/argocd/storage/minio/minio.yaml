@@ -16,9 +16,9 @@ spec:
       releaseName: minio
       values: |
         image:
-          repository: m.daocloud.io/quay.io/minio/minio
+          repository: quay.io/minio/minio
         mcImage:
-          repository: m.daocloud.io/quay.io/minio/mc
+          repository: quay.io/minio/mc
         mode: standalone
         persistence:
           enabled: false

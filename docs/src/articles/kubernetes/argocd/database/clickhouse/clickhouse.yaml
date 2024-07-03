@@ -16,17 +16,17 @@ spec:
       releaseName: clickhouse
       values: |
         image:
-          registry: m.daocloud.io/docker.io
+          registry: docker.io
           pullPolicy: IfNotPresent
         volumePermissions:
           enabled: false
           image:
-            registry: m.daocloud.io/docker.io
+            registry: docker.io
             pullPolicy: IfNotPresent
         zookeeper:
           enabled: true
           image:
-            registry: m.daocloud.io/docker.io
+            registry: docker.io
             pullPolicy: IfNotPresent
           replicaCount: 3
           persistence:
@@ -34,7 +34,7 @@ spec:
           volumePermissions:
             enabled: false
             image:
-              registry: m.daocloud.io/docker.io
+              registry: docker.io
               pullPolicy: IfNotPresent
         shards: 2
         replicaCount: 3

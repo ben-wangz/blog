@@ -29,17 +29,17 @@ spec:
           persistence:
             enabled: false
         image:
-          registry: m.daocloud.io/docker.io
+          registry: docker.io
           pullPolicy: IfNotPresent
         volumePermissions:
           enabled: false
           image:
-            registry: m.daocloud.io/docker.io
+            registry: docker.io
             pullPolicy: IfNotPresent
         metrics:
           enabled: true
           image:
-            registry: m.daocloud.io/docker.io
+            registry: docker.io
             pullPolicy: IfNotPresent
           annotations:
             prometheus.io/scrape: "true"

@@ -9,7 +9,7 @@ spec:
   templates:
   - name: whalesay
     container:
-      image: m.daocloud.io/docker.io/docker/whalesay:latest
+      image: docker.io/docker/whalesay:latest
       command:
       - cowsay
       args:

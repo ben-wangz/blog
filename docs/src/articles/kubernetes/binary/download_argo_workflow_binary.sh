@@ -1,4 +1,4 @@
-MIRROR="files.m.daocloud.io/"
+MIRROR="files."
 VERSION=v3.5.4
 curl -sSLo argo-linux-amd64.gz "https://${MIRROR}github.com/argoproj/argo-workflows/releases/download/${VERSION}/argo-linux-amd64.gz"
 gunzip argo-linux-amd64.gz
