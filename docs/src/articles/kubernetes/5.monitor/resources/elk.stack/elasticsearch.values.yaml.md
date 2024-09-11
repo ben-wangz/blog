@@ -1,1 +1,0 @@
-[elasticsearch.values.yaml](elasticsearch.values.yaml ':include')

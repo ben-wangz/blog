@@ -1,1 +1,0 @@
-[k8s-logs-dashboard.ndjson](k8s-logs-dashboard.ndjson ':include')

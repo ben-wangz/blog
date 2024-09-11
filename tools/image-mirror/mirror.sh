@@ -13,7 +13,7 @@ KEEP_STRUCTURE=${KEEP_STRUCTURE:-true}
 STRING_TO_REPLACE_SLASH=${STRING_TO_REPLACE_SLASH:-_}
 PUSH_WITH_TLS_VERIFY=${PUSH_WITH_TLS_VERIFY:-true}
 podman login --tls-verify=${PUSH_WITH_TLS_VERIFY} -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} ${TARGET_REGISTRY}
-yq eval '.[] | ("registry=" + .registry + "; repository=" + .repository + "; tag=" + .tag)'  ${IMAGE_YAML_FILE} \
+yq eval '.[] | ("registry=" + .registry + "; repository=" + .repository + "; tag=" + .tag)' ${IMAGE_YAML_FILE} \
   | while read -r EXPRESION
     do
         eval $EXPRESION
