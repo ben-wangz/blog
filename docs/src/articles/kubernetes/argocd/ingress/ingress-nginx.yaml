@@ -17,10 +17,7 @@ spec:
       values: |
         controller:
           image:
-            registry: m.daocloud.io
-            image: registry.k8s.io/ingress-nginx/controller
-            tag: "v1.9.5"
-            pullPolicy: IfNotPresent
+            registry: registry.k8s.io
           service:
             enabled: true
             type: NodePort
@@ -34,10 +31,7 @@ spec:
             patch:
               enabled: true
               image:
-                registry: m.daocloud.io
-                image: registry.k8s.io/ingress-nginx/kube-webhook-certgen
-                tag: v20231011-8b53cabe0
-                pullPolicy: IfNotPresent
+                registry: registry.k8s.io
         defaultBackend:
           enabled: false
   destination:

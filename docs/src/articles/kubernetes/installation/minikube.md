@@ -39,7 +39,7 @@
       ```shell
       minikube start --driver=podman --container-runtime=cri-o --kubernetes-version=v1.27.10 --image-mirror-country=cn --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers
       ```
-      @tab m.daocloud.io
+      @tab gcr.io
       ```shell
       minikube start --driver=podman --container-runtime=cri-o --kubernetes-version=v1.27.10 --image-mirror-country=cn --image-repository=gcr.io
       ```
