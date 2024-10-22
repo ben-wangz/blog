@@ -1,0 +1,61 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chart-museum
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://chartmuseum.github.io/charts
+    chart: chartmuseum
+    targetRevision: 3.10.3
+    helm:
+      releaseName: chart-museum
+      values: |
+        replicaCount: 1
+        image:
+          repository: m.zjvis.net/ghcr.io/helm/chartmuseum
+        env:
+          open:
+            DISABLE_API: false
+            STORAGE: local
+          existingSecret: "chart-museum-credentials"
+          existingSecretMappings:
+            BASIC_AUTH_USER: "username"
+            BASIC_AUTH_PASS: "password"
+        serviceMonitor:
+          enabled: false
+          # namespace: prometheus
+          labels: {}
+          metricsPath: "/metrics"
+          # timeout: 60
+          # interval: 60
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 80m
+            memory: 64Mi
+        persistence:
+          enabled: false
+          storageClass: ""
+        volumePermissions:
+          image:
+            registry: m.zjvis.net/docker.io
+        ingress:
+          enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: self-signed-ca-issuer
+            nginx.ingress.kubernetes.io/rewrite-target: /$1
+          ingressClassName: nginx
+          hosts:
+            - name: chart-museum.dev.geekcity.tech
+              path: /?(.*)
+              tls: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: basic-components
