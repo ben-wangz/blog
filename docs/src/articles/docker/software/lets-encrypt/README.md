@@ -50,7 +50,7 @@
         -v "$(pwd)/output":/acme.sh \
         -e Ali_Key=$Ali_Key \
         -e Ali_Secret=$Ali_Secret \
-        docker.io/neilpang/acme.sh --issue --dns dns_ali -d test.letsencrypt.geekcity.tech --server letsencrypt
+        docker.io/neilpang/acme.sh:3.1.0 --issue --dns dns_ali -d test.letsencrypt.geekcity.tech --server letsencrypt
       ```
     + the outputs will be in the `output` directory
 
@@ -59,9 +59,9 @@
 1. install the certificate into haproxy
     * ```shell
       mkdir -p haproxy/pem
-      cat $(pwd)/output/test.letsencrypt.geekcity.tech_ecc/test.letsencrypt.geekcity.tech.cer \
-        $(pwd)/output/test.letsencrypt.geekcity.tech_ecc/test.letsencrypt.geekcity.tech.key \
-        > $(pwd)/haproxy/pem/test.letsencrypt.geekcity.tech.pem
+      CERTIFICATE_PATH=$(pwd)/output/test.letsencrypt.geekcity.tech_ecc
+      HA_PROXY_CERTIFICATE_PATH=$(pwd)/haproxy/pem
+      cat $CERTIFICATE_PATH/fullchain.cer $CERTIFICATE_PATH/test.letsencrypt.geekcity.tech.key > $HA_PROXY_CERTIFICATE_PATH/test.letsencrypt.geekcity.tech.pem
       ```
 2. run the haproxy
     * ```shell
