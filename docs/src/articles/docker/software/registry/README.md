@@ -1,4 +1,4 @@
-# basic container registry
+# registry
 
 1. [without-persistence](without-persistence.md)
 2. [filesystem.md](filesystem.md)
