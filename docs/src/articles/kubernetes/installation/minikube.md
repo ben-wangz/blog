@@ -37,11 +37,11 @@
     * ::: code-tabs#shell
       @tab aliyuncs
       ```shell
-      minikube start --driver=podman --container-runtime=cri-o --kubernetes-version=v1.27.10 --image-mirror-country=cn --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers
+      minikube start --driver=podman --container-runtime=cri-o --kubernetes-version=v1.27.10 --image-mirror-country=cn --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers  --cpus 3 --memory 12G
       ```
       @tab gcr.io
       ```shell
-      minikube start --driver=podman --container-runtime=cri-o --kubernetes-version=v1.27.10 --image-mirror-country=cn --image-repository=gcr.io
+      minikube start --driver=podman --container-runtime=cri-o --kubernetes-version=v1.27.10 --image-mirror-country=cn --image-repository=gcr.io  --cpus 3 --memory 12G
       ```
       :::
 2. add alias of `kubectl`
@@ -54,7 +54,8 @@
           ```
 3. may change memory(requires a restart)
     * ```shell
-      minikube config set memory 6144
+      minikube config set memory 16384
+      minikube config set cpus 6
       ```
 4. restart minikube
     * ```shell
