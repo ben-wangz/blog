@@ -12,7 +12,13 @@
 ## installation
 
 1. prepare credentials secret
-    * ```shell
+    * ::: code-tabs#shell
+      @tab pvc backend
+      ```shell
+      kubectl get namespaces basic-components > /dev/null 2>&1 || kubectl create namespace basic-components
+      ```
+      @tab minio backend
+      ```shell
       kubectl get namespaces basic-components > /dev/null 2>&1 || kubectl create namespace basic-components
       kubectl -n basic-components create secret generic chart-museum-credentials \
           --from-literal=username=admin \
@@ -20,6 +26,7 @@
           --from-literal=aws_access_key_id=$(kubectl -n storage get secret minio-credentials -o jsonpath='{.data.rootUser}' | base64 -d) \
           --from-literal=aws_secret_access_key=$(kubectl -n storage get secret minio-credentials -o jsonpath='{.data.rootPassword}' | base64 -d)
       ```
+      :::
 2. prepare `chart-museum.yaml`
     * ::: code-tabs#shell
       @tab pvc backend
