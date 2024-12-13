@@ -84,7 +84,7 @@
       podman run --rm \
           -v $(pwd):/code \
           --workdir /code \
-          -it m.zjvis.net/docker.io/alpine/k8s:1.29.4 \
+          -it docker.io/alpine/k8s:1.29.4 \
           helm create demo-chart
       ```
 1. publish a chart
@@ -94,7 +94,7 @@
           -v $(pwd):/code \
           --env HELM_REPO_USERNAME=admin \
           --env HELM_REPO_PASSWORD=$(kubectl -n basic-components get secret chart-museum-credentials -o jsonpath='{.data.password}' | base64 -d) \
-          -it m.zjvis.net/docker.io/alpine/k8s:1.29.4 \
+          -it docker.io/alpine/k8s:1.29.4 \
           helm cm-push --insecure \
               /code/demo-chart https://chart-museum.dev.geekcity.tech:32443 \
               --context-path /

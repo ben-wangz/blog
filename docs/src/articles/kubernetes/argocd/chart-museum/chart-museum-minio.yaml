@@ -17,7 +17,7 @@ spec:
       values: |
         replicaCount: 1
         image:
-          repository: m.zjvis.net/ghcr.io/helm/chartmuseum
+          repository: ghcr.io/helm/chartmuseum
         env:
           open:
             DISABLE_API: false
@@ -51,7 +51,7 @@ spec:
           storageClass: ""
         volumePermissions:
           image:
-            registry: m.zjvis.net/docker.io
+            registry: docker.io
         ingress:
           enabled: true
           annotations:
