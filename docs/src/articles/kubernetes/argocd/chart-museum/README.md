@@ -16,6 +16,9 @@
       @tab pvc backend
       ```shell
       kubectl get namespaces basic-components > /dev/null 2>&1 || kubectl create namespace basic-components
+      kubectl -n basic-components create secret generic chart-museum-credentials \
+          --from-literal=username=admin \
+          --from-literal=password=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
       ```
       @tab minio backend
       ```shell
