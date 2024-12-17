@@ -1,0 +1,47 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: container-image-mirror-registry
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://helm.twun.io
+    chart: docker-registry
+    targetRevision: 2.2.3
+    helm:
+      releaseName: container-image-mirror-registry
+      values: |
+        image:
+          repository: docker.io/library/registry
+        storage: s3
+        secrets:
+          s3:
+            secretRef: s3-credentials-for-container-image-mirror
+        s3:
+          region: us-east-1
+          regionEndpoint: http://minio-api.dev.geekcity.tech:32080
+          bucket: mirrors
+          rootdirectory: /registry/pull-through-cache
+          encrypt: false
+          secure: true
+        proxy:
+          enabled: true
+          remoteurl: http://crproxy-nginx.basic-components:8080
+        ingress:
+          enabled: true
+          className: nginx
+          annotations:
+            cert-manager.io/cluster-issuer: self-signed-ca-issuer
+          hosts:
+            - container-image-mirror.dev.geekcity.tech
+          tls:
+            - secretName: container-image-mirror.dev.geekcity.tech-tls
+              hosts:
+                - container-image-mirror.dev.geekcity.tech
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: basic-components
