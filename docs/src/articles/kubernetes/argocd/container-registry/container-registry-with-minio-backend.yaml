@@ -1,0 +1,46 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: container-registry
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://helm.twun.io
+    chart: docker-registry
+    targetRevision: 2.2.3
+    helm:
+      releaseName: container-registry
+      values: |
+        image:
+          repository: docker.io/library/registry
+        storage: s3
+        secrets:
+          #htpasswd: "admin:$2y$05$t3KKc9mSR7Mwq3QZpAGFnu1ePMXbcMk3nwsp2DRse9Pqk4Gr3MEnO"
+          s3:
+            secretRef: s3-credentials-for-container-registry
+        s3:
+          region: us-east-1
+          regionEndpoint: http://minio-api.dev.geekcity.tech:32080
+          bucket: container-registry
+          rootdirectory: /registry/image
+          encrypt: false
+          secure: true
+        ingress:
+          enabled: true
+          className: nginx
+          annotations:
+            cert-manager.io/cluster-issuer: self-signed-ca-issuer
+            nginx.ingress.kubernetes.io/proxy-body-size: "1024m"
+          hosts:
+            - container-registry.dev.geekcity.tech
+          tls:
+            - secretName: container-registry.dev.geekcity.tech-tls
+              hosts:
+                - container-registry.dev.geekcity.tech
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: basic-components
