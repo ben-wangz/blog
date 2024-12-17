@@ -18,13 +18,13 @@
 
 ## initialization
 
-1. prepare secret named `s3-credentials-for-registry` to store the minio credentials
+1. prepare secret named `s3-credentials-for-container-image-mirror` to store the minio credentials
     * ```shell
-      kubectl -n basic-components create secret generic s3-credentials-for-registry \
+      kubectl -n basic-components create secret generic s3-credentials-for-container-image-mirror \
         --from-literal=s3AccessKey=$(kubectl -n storage get secret minio-credentials -o jsonpath='{.data.rootUser}' | base64 -d) \
         --from-literal=s3SecretKey=$(kubectl -n storage get secret minio-credentials -o jsonpath='{.data.rootPassword}' | base64 -d)
       ```
-2. create bucket named `registry` in minio
+2. create bucket named `mirrors` in minio
     * ```shell
       # change K8S_MASTER_IP to your k8s master ip
       K8S_MASTER_IP=$(kubectl get node -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
@@ -51,30 +51,31 @@
     * ```shell
       argocd app sync argocd/crproxy
       ```
-4. prepare `registry.yaml`
+4. prepare `container-image-mirror-registry.yaml`
     * ```yaml
-      <!-- @include: registry.yaml -->
+      <!-- @include: container-image-mirror-registry.yaml -->
       ```
 5. apply to k8s
     * ```shell
-      kubectl -n argocd apply -f registry.yaml
+      kubectl -n argocd apply -f container-image-mirror-registry.yaml
       ```
 6. sync by argocd
     * ```shell
-      argocd app sync argocd/registry
+      argocd app sync argocd/container-image-mirror-registry
       ```
-7. if you can't control dns to point `minio-api.dev.geekcity.tech` to `192.168.49.2`
+7. if you can't control dns to point `minio-api.dev.geekcity.tech` to `${K8S_MASTER_IP}`
     * patch the deployment by hostAliases
         + ```shell
-          kubectl -n basic-components patch deployment registry-docker-registry --patch '
+          K8S_MASTER_IP=$(kubectl get node -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
+          kubectl -n basic-components patch deployment registry-docker-registry --patch "
           spec:
             template:
               spec:
                 hostAliases:
-                - ip: 192.168.49.2
+                - ip: ${K8S_MASTER_IP}
                   hostnames:
                   - minio-api.dev.geekcity.tech
-          '
+          "
           ```
 
 ## tests
