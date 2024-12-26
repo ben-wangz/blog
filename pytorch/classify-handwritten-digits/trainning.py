@@ -8,9 +8,13 @@ from model import ImageTransformer
 
 # Load and normalize the data
 transform = ImageTransformer()
-train_dataset = datasets.MNIST(root='./.data', train=True, download=True, transform=transform)
+train_dataset = datasets.MNIST(
+    root="./.data", train=True, download=True, transform=transform
+)
 train_loader = DataLoader(dataset=train_dataset, batch_size=64, shuffle=True)
-test_dataset = datasets.MNIST(root='./.data', train=False, download=True, transform=transform)
+test_dataset = datasets.MNIST(
+    root="./.data", train=False, download=True, transform=transform
+)
 test_loader = DataLoader(dataset=test_dataset, batch_size=64, shuffle=False)
 
 # Initialize the network, loss function, and optimizer
@@ -25,10 +29,10 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()  # Clear gradients for this training step
         outputs = model(images)
         loss = criterion(outputs, labels)
-        loss.backward()        # Backpropagation, compute gradient of loss with respect to model parameters
-        optimizer.step()       # Apply gradients
+        loss.backward()  # Backpropagation, compute gradient of loss with respect to model parameters
+        optimizer.step()  # Apply gradients
 
-    print(f'Epoch {epoch+1}, Loss: {loss.item()}')
+    print(f"Epoch {epoch+1}, Loss: {loss.item()}")
 
 # Test the network
 model.eval()  # Set the model to evaluation mode
@@ -41,7 +45,7 @@ with torch.no_grad():  # Disable gradient calculation
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
 
-    print(f'Accuracy of the network on the test images: {100 * correct / total}%')
+    print(f"Accuracy of the network on the test images: {100 * correct / total}%")
 
 # Save the model
-torch.save(model.state_dict(), '.model/mnist.pth')
+torch.save(model.state_dict(), ".model/mnist.pth")

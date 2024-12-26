@@ -4,6 +4,7 @@
 
 1. local
 2. container
+    * [pytorch with gpu in container](container/pytorch-with-gpu/README.md)
 3. k8s
 
 ## examples
