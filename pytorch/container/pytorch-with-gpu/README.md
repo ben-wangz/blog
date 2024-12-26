@@ -47,7 +47,7 @@
               --device nvidia.com/gpu=all \
               --security-opt=label=disable \
               -v $(pwd)/pytorch-test.py:/app/pytorch-test.py \
-              -it docker.io/pytorch/pytorch:2.5.1-cuda12.4-cudnn9-devel \
+              -it docker.io/pytorch/pytorch:2.5.1-cuda11.8-cudnn9-devel \
                   python3 /app/pytorch-test.py
           ```
 
