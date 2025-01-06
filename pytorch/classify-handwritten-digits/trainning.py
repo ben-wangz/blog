@@ -26,7 +26,7 @@ test_dataset = datasets.MNIST(
 test_loader = DataLoader(dataset=test_dataset, batch_size=64, shuffle=False)
 
 # Initialize the network, loss function, and optimizer
-model = Net().to(device)
+model = Net().to(device)  # Move the model to the correct device
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
 
