@@ -15,12 +15,12 @@ test_loader = DataLoader(dataset=test_dataset, batch_size=64, shuffle=False)
 
 # Load the model
 model = Net()
-model.load_state_dict(torch.load(".model/mnist.pth"))
+model.load_state_dict(torch.load(".model/mnist.pth", weights_only=True))
 model.eval()  # Set the model to evaluation mode
 
 # Make a prediction
 dataiter = iter(test_loader)
-images, labels = dataiter.next()
+images, labels = next(dataiter)
 
 img = images[0]  # Select one image
 img = img.unsqueeze(0)  # Add batch dimension

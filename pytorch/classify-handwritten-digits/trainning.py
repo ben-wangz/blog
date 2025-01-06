@@ -6,6 +6,14 @@ from torch.utils.data import DataLoader
 from model import Net
 from model import ImageTransformer
 
+# Set the device according to the availability of CUDA
+if torch.cuda.is_available():
+    device = torch.device('cuda')
+    print("using device: cuda")
+else:
+    device = torch.device('cpu')
+    print("using device: cpu")
+
 # Load and normalize the data
 transform = ImageTransformer()
 train_dataset = datasets.MNIST(
@@ -18,7 +26,7 @@ test_dataset = datasets.MNIST(
 test_loader = DataLoader(dataset=test_dataset, batch_size=64, shuffle=False)
 
 # Initialize the network, loss function, and optimizer
-model = Net()
+model = Net().to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
 
@@ -26,6 +34,7 @@ optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
 num_epochs = 5  # You can increase this for better performance
 for epoch in range(num_epochs):
     for images, labels in train_loader:
+        images, labels = images.to(device), labels.to(device)
         optimizer.zero_grad()  # Clear gradients for this training step
         outputs = model(images)
         loss = criterion(outputs, labels)
