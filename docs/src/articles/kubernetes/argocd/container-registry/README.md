@@ -45,9 +45,16 @@
 ## installation
 
 1. prepare `container-registry.yaml`
-    * ```yaml
-      <!-- @include: container-registry.yaml -->
+    * ::: code-tabs#shell
+      @tab pvc backend
+      ```yaml
+      <!-- @include: container-registry-with-pvc-backend.yaml -->
       ```
+      @tab minio backend
+      ```yaml
+      <!-- @include: container-registry-with-pvc-backend.yaml -->
+      ```
+      :::
     * optional to add password to the container registry
         + generate htpasswd
             * ```shell
