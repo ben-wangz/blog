@@ -22,6 +22,7 @@ spec:
           open:
             DISABLE_API: false
             STORAGE: local
+            AUTH_ANONYMOUS_GET: true
           existingSecret: "chart-museum-credentials"
           existingSecretMappings:
             BASIC_AUTH_USER: "username"

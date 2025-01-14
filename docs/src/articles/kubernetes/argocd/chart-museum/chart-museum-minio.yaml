@@ -26,6 +26,7 @@ spec:
             STORAGE_AMAZON_BUCKET: chart-museum
             STORAGE_AMAZON_PREFIX: charts
             STORAGE_AMAZON_REGION: us-east-1
+            AUTH_ANONYMOUS_GET: true
           existingSecret: "chart-museum-credentials"
           existingSecretMappings:
             BASIC_AUTH_USER: "username"
