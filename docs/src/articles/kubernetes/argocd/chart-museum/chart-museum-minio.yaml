@@ -63,6 +63,7 @@ spec:
             - name: chart-museum.dev.geekcity.tech
               path: /?(.*)
               tls: true
+              tlsSecret: chart-museum.dev.geekcity.tech-tls
   destination:
     server: https://kubernetes.default.svc
     namespace: basic-components
