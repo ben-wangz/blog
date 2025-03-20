@@ -25,7 +25,7 @@
     * ::: code-tabs#shell
       @tab fedora
       ```shell
-      kubectl exec -it deployment/busybox -- sh
+      kubectl exec -it deployment/fedora -- bash
       ```
       @tab busybox
       ```shell
