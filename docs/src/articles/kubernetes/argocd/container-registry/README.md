@@ -76,7 +76,12 @@
       ```
 4. if you can't control dns to point `minio-api.dev.geekcity.tech` to `${K8S_MASTER_IP}`
     * patch the deployment by hostAliases
-        + ```shell
+        * ::: code-tabs#shell
+          @tab pvc backend
+          ```shell
+          ```
+          @tab minio backend
+          ```shell
           K8S_MASTER_IP=$(kubectl get node -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
           kubectl -n basic-components patch deployment container-registry-docker-registry --patch "
           spec:
@@ -88,6 +93,7 @@
                   - minio-api.dev.geekcity.tech
           "
           ```
+          :::
 
 ## tests
 
