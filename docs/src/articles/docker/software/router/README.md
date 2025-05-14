@@ -4,6 +4,9 @@
 
 1. OS: Ubuntu 24.04.2 LTS
 2. podman installed
+3. 2 network interfaces
+    + ens18: wan
+    + ens19: lan
 
 ## port 53 may be used by systemd-resolved
 
@@ -28,6 +31,21 @@
       nameserver 223.6.6.6
       EOF
       ```
+## configure interfaces
+
+* example of `/etc/netplan/50-cloud-init.yaml`
+* ```yaml
+    network:
+      version: 2
+      ethernets:
+        ens18:
+          dhcp4: true
+        ens19:
+          dhcp4: false
+          addresses: [192.168.10.1/24]
+  ```
+
+## start router container
 
 ```shell
 export IMAGE=localhost/router:latest
