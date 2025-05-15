@@ -12,6 +12,10 @@
 
 * check
     + ```shell
+      if ! command -v lsof &> /dev/null; then
+        echo "lsof could not be found, installing..."
+        apt update && apt -y install lsof
+      fi
       PID=$(lsof -i :53 | awk 'NR==2 {print $2}')
       if [ -z "$PID" ]; then
         echo "Port 53 is not in use by any process."

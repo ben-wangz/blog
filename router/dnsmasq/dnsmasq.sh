@@ -16,6 +16,7 @@ DHCP_STATIC_LEASES=${DHCP_STATIC_LEASES:-""}
 podman run \
   --name dnsmasq \
   --restart=always \
+  --cap-add=NET_ADMIN \
   -p 53:53/udp \
   -p 67:67/udp \
   -v /lib/modules:/lib/modules:ro \
