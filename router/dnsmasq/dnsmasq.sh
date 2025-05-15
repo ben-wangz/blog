@@ -22,6 +22,7 @@ podman run \
   --name dnsmasq \
   --restart=always \
   --cap-add=NET_ADMIN \
+  --cap-add=NET_RAW \
   -p 53:53/udp \
   -p 67:67/udp \
   -v /lib/modules:/lib/modules:ro \
