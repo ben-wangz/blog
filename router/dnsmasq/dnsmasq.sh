@@ -13,6 +13,11 @@ DHCP_DNS=${DHCP_DNS:-192.168.10.1}
 DHCP_GATEWAY=${DHCP_GATEWAY:-192.168.10.1}
 DHCP_STATIC_LEASES=${DHCP_STATIC_LEASES:-""}
 
+if podman container exists dnsmasq; then
+    podman stop dnsmasq
+    podman rm dnsmasq
+fi
+
 podman run \
   --name dnsmasq \
   --restart=always \
