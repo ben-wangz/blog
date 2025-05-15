@@ -48,6 +48,10 @@
           dhcp4: false
           addresses: [192.168.10.1/24]
   ```
+* ```shell
+  netplan generate
+  netplan apply
+  ```
 
 ## start router container
 
