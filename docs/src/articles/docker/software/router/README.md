@@ -49,6 +49,6 @@
 
 ```shell
 export IMAGE=localhost/router:latest
-bash container/build.sh
+bash dnsmasq/container/build.sh
 bash start.sh
 ```

@@ -44,12 +44,6 @@ printf "no-resolv\n" >> /etc/dnsmasq.conf
 printf "log-queries\n" >> /etc/dnsmasq.conf
 printf "log-dhcp\n" >> /etc/dnsmasq.conf
 
-ip link set $WAN_INTERFACE up
-ip link set $LAN_INTERFACE up
-iptables -t nat -A POSTROUTING -o $WAN_INTERFACE -j MASQUERADE
-iptables -A FORWARD -i $WAN_INTERFACE -o $LAN_INTERFACE -m state --state RELATED,ESTABLISHED -j ACCEPT
-iptables -A FORWARD -i $LAN_INTERFACE -o $WAN_INTERFACE -j ACCEPT
-
 mkdir -p /var/log/dnsmasq
 echo "start dnsmasq with config:"
 echo "--------------------------"
