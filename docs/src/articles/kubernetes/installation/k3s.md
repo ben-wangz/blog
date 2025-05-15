@@ -45,6 +45,12 @@ K3s is a lightweight, fully compliant Kubernetes distribution that is easy to in
     * ```shell
       curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn K3S_URL=https://k3s1:6443 K3S_TOKEN=<join-token> sh -
       ```
+## Copy configuration
+
+* ```shell
+  mkdir -p $HOME/.kube
+  cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/config
+  ```
 
 ## Uninstalling K3s Cluster
 1. remove worker(k3s-agent) from cluster
