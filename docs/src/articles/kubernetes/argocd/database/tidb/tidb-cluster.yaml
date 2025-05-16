@@ -19,6 +19,11 @@ spec:
     # storageClassName: local-storage
     requests:
       storage: "1Gi"
+      cpu: "200m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
     config: {}
   tikv:
     baseImage: m.daocloud.io/docker.io/pingcap/tikv
@@ -32,10 +37,15 @@ spec:
     # storageClassName: local-storage
     requests:
       storage: "1Gi"
+      cpu: "2000m"
+      memory: "4Gi"
+    limits:
+      cpu: "3000m"
+      memory: "6Gi"
     config:
       storage:
         # In basic examples, we set this to avoid using too much storage.
-        reserve-space: "0MB"
+        reserve-space: "512MB"
       rocksdb:
         # In basic examples, we set this to avoid the following error in some Kubernetes clusters:
         # "the maximum number of open file descriptors is too small, got 1024, expect greater or equal to 82920"
@@ -48,4 +58,10 @@ spec:
     replicas: 1
     service:
       type: ClusterIP
+    requests:
+      cpu: "200m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
     config: {}
