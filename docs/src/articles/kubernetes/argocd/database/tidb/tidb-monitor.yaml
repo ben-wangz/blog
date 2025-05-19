@@ -11,10 +11,10 @@ spec:
   grafana:
     baseImage: m.daocloud.io/docker.io/grafana/grafana
     version: 7.5.11
-    UserSecret:
+    usernameSecret:
       name: basic-grafana-credentials
       key: username
-    PasswordSecret:
+    passwordSecret:
       name: basic-grafana-credentials
       key: password
   initializer:
