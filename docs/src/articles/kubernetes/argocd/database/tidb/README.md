@@ -14,6 +14,9 @@
           <!-- @include: tidb-operator-crd.yaml -->
           ```
     * `tidb-operator.yaml`
+        + if `spec.tidb.initializer.createPassword` is not set, the password of root will be empty
+        + if `spec.tidb.initializer.createPassword` is set to `true`, the password will be set after tidb cluster bootstrap
+        + inaddition, if the secret named `${CLUSTER_NAME}-init` already exists and key value pair of `root: ${ROOT_PASSWORD}` exists, the password of root will be set to `${ROOT_PASSWORD}`
         + ```yaml
           <!-- @include: tidb-operator.yaml -->
           ```
@@ -21,40 +24,57 @@
         + ```yaml
           <!-- @include: tidb-cluster.yaml -->
           ```
-    * `tidb-dashboard.yaml`
-        + ```yaml
-          <!-- @include: tidb-dashboard.yaml -->
-          ```
     * `tidb-monitor.yaml`
         + ```yaml
           <!-- @include: tidb-monitor.yaml -->
+          ```
+    * `tidb-dashboard.yaml`
+        + ```yaml
+          <!-- @include: tidb-dashboard.yaml -->
           ```
 2. Create a namespace
     ```shell
     kubectl get namespace tidb-cluster > /dev/null 2>&1 \
       || kubectl create namespace tidb-cluster
     ```
-
 3. Apply TiDB Operator CRD and sync
     ```shell
     kubectl -n argocd apply -f tidb-operator-crd.yaml
     argocd app sync argocd/tidb-operator-crd
     argocd app wait argocd/tidb-operator-crd
     ```
-
 4. Apply TiDB Operator and sync
     ```shell
     kubectl -n argocd apply -f tidb-operator.yaml
     argocd app sync argocd/tidb-operator
     argocd app wait argocd/tidb-operator
     ```
-
-5. Apply TiDB cluster, Dashboard and monitoring components
-    ```shell
-    kubectl -n tidb-cluster apply -f tidb-cluster.yaml
-    kubectl -n tidb-cluster apply -f tidb-dashboard.yaml
-    kubectl -n tidb-cluster apply -f tidb-monitor.yaml
-    ```
+5. Apply TiDB cluster and initializer components
+    * prepare secret named `basic-tidb-credentials` to store the credential of tidb root user
+        + ```shell
+          kubectl -n tidb-cluster create secret generic basic-tidb-credentials --from-literal=root=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16 | base64)
+          ```
+    * apply resources
+        + ```shell
+          kubectl -n tidb-cluster apply -f tidb-cluster.yaml
+          kubectl -n tidb-cluster apply -f tidb-initializer.yaml
+          ```
+6. Apply TiDB monitoring components
+    * prepare secret named `basic-grafana-credentials` to store the credential of grafana admin user
+        + ```shell
+          kubectl -n tidb-cluster create secret generic basic-grafana-credentials \
+            --from-literal=username=admin \
+            --from-literal=password=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
+          ```
+    * apply resources
+        + ```shell
+          kubectl -n tidb-cluster apply -f tidb-monitor.yaml
+          ```
+7. Apply TiDB Dashboard components
+    * apply resources
+        + ```shell
+          kubectl -n tidb-cluster apply -f tidb-dashboard.yaml
+          ```
 
 ## main operations
 

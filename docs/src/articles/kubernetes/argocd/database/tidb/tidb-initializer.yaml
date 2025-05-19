@@ -1,0 +1,19 @@
+apiVersion: pingcap.com/v1alpha1
+kind: TidbInitializer
+metadata:
+  name: initialize-basic-tidb
+spec:
+  image: m.daocloud.io/docker.io/tnir/mysqlclient
+  imagePullPolicy: IfNotPresent
+  cluster:
+    name: initialize-demo
+  initSqlConfigMap: tidb-init-sql
+  passwordSecret: "basic-tidb-credentials"
+  timezone: "Asia/Shanghai"
+  resources:
+    limits:
+      cpu: 300m
+      memory: 500Mi
+    requests:
+      cpu: 100m
+      memory: 50Mi

@@ -9,8 +9,14 @@ spec:
     baseImage: m.daocloud.io/docker.io/prom/prometheus
     version: v2.27.1
   grafana:
-    baseImage: grafana/grafana
+    baseImage: m.daocloud.io/docker.io/grafana/grafana
     version: 7.5.11
+    UserSecret:
+      name: basic-grafana-credentials
+      key: username
+    PasswordSecret:
+      name: basic-grafana-credentials
+      key: password
   initializer:
     baseImage: m.daocloud.io/docker.io/pingcap/tidb-monitor-initializer
     version: v8.5.0
