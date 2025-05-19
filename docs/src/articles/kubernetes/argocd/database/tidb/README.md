@@ -56,6 +56,7 @@
           ```
     * apply resources
         + ```shell
+          kubectl -n tidb-cluster apply -f tidb-init-sql.configmap.yaml
           kubectl -n tidb-cluster apply -f tidb-cluster.yaml
           kubectl -n tidb-cluster apply -f tidb-initializer.yaml
           ```
