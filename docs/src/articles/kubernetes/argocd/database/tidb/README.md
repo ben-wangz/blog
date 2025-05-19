@@ -121,10 +121,8 @@
 2. uninstall TiDB operator
     * ```shell
       kubectl -n argocd delete -f tidb-operator.yaml
-      argocd app delete argocd/tidb-operator
       ```
 3. uninstall TiDB operator CRDs
     * ```shell
       kubectl -n argocd delete -f tidb-operator-crd.yaml
-      argocd app delete argocd/tidb-operator-crd
       ```
