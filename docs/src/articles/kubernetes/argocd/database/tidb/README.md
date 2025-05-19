@@ -14,9 +14,6 @@
           <!-- @include: tidb-operator-crd.yaml -->
           ```
     * `tidb-operator.yaml`
-        + if `spec.tidb.initializer.createPassword` is not set, the password of root will be empty
-        + if `spec.tidb.initializer.createPassword` is set to `true`, the password will be set after tidb cluster bootstrap
-        + inaddition, if the secret named `${CLUSTER_NAME}-init` already exists and key value pair of `root: ${ROOT_PASSWORD}` exists, the password of root will be set to `${ROOT_PASSWORD}`
         + ```yaml
           <!-- @include: tidb-operator.yaml -->
           ```
@@ -98,4 +95,36 @@
     ```shell
     kubectl -n tidb-cluster port-forward svc/basic-tidb-dashboard-exposed 12333:12333 --address 0.0.0.0
     ```
-    Then open `http://localhost:1234` in your browser. Please replace `<tidb-dashboard-service-name>` with the actual TiDB Dashboard service name.
+    Then open `http://localhost:12333` in your browser. Please replace `<tidb-dashboard-service-name>` with the actual TiDB Dashboard service name.
+
+## uninstallation
+
+1. uninstall TiDB cluster
+    * ```shell
+      kubectl -n tidb-cluster delete -f tidb-cluster.yaml
+      kubectl -n tidb-cluster delete -f tidb-initializer.yaml
+      kubectl -n tidb-cluster delete -f tidb-monitor.yaml
+      kubectl -n tidb-cluster delete -f tidb-dashboard.yaml
+      ```
+    * ```shell
+      kubectl -n tidb-cluster delete secret basic-tidb-credentials
+      kubectl -n tidb-cluster delete secret basic-grafana-credentials
+      ```
+    * ```shell
+      # check and delete PVCs created
+      kubectl -n tidb-cluster delete pvc -l app.kubernetes.io/managed-by=tidb-operator,app.kubernetes.io/instance=basic
+      #kubectl -n tidb-cluster delete pvc -l app.kubernetes.io/managed-by=tidb-operator
+      ```
+    * ```shell
+      kubectl delete namespace tidb-cluster
+      ```
+2. uninstall TiDB operator
+    * ```shell
+      kubectl -n argocd delete -f tidb-operator.yaml
+      argocd app delete argocd/tidb-operator
+      ```
+3. uninstall TiDB operator CRDs
+    * ```shell
+      kubectl -n argocd delete -f tidb-operator-crd.yaml
+      argocd app delete argocd/tidb-operator-crd
+      ```
