@@ -56,6 +56,16 @@
     kubectl -n tidb-cluster apply -f tidb-monitor.yaml
     ```
 
+## main operations
+
+1. [scale in/out](scale-in-and-out.md)
+2. [monitor and alerts](monitor-and-alerts.md)
+3. [benchmarks for performance evaluation](benchmarks.md)
+4. [backup and restore](backup-and-restore.md)
+5. [import and export](import-and-export.md)
+6. [cdc](cdc.md)
+7. [rbac for mysql interface](rabc-for-mysql.md)
+
 ## tests
 
 1. Check the status of the TiDB cluster
