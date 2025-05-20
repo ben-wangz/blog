@@ -17,17 +17,25 @@
         + ```yaml
           <!-- @include: tidb-operator.yaml -->
           ```
+    * `tidb-init-sql.configmap.yaml`
+        + ```yaml
+          <!-- @include: tidb-init-sql.configmap.yaml -->
+          ```
+    * `tidb-initializer.yaml`
+        + ```yaml
+          <!-- @include: tidb-initializer.yaml -->
+          ```
     * `tidb-cluster.yaml`
         + ```yaml
           <!-- @include: tidb-cluster.yaml -->
           ```
-    * `tidb-monitor.yaml`
-        + ```yaml
-          <!-- @include: tidb-monitor.yaml -->
-          ```
     * `tidb-dashboard.yaml`
         + ```yaml
           <!-- @include: tidb-dashboard.yaml -->
+          ```
+    * `query.job.yaml`
+        + ```yaml
+          <!-- @include: query.job.yaml -->
           ```
 2. Create a namespace
     ```shell
@@ -57,17 +65,6 @@
           kubectl -n tidb-cluster apply -f tidb-cluster.yaml
           kubectl -n tidb-cluster apply -f tidb-initializer.yaml
           ```
-6. Apply TiDB monitoring components
-    * prepare secret named `basic-grafana-credentials` to store the credential of grafana admin user
-        + ```shell
-          kubectl -n tidb-cluster create secret generic basic-grafana-credentials \
-            --from-literal=username=admin \
-            --from-literal=password=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
-          ```
-    * apply resources
-        + ```shell
-          kubectl -n tidb-cluster apply -f tidb-monitor.yaml
-          ```
 7. Apply TiDB Dashboard components
     * apply resources
         + ```shell
@@ -76,51 +73,26 @@
 
 ## simple checks
 
-1. running querys by tidb(mysql interface)
+1. check status of a tidb cluster
+    * ```shell
+      kubectl -n tidb-cluster get tidbcluster
+      ```
+2. running querys by tidb(mysql interface)
     * ```shell
       kubectl -n tidb-cluster apply -f query.job.yaml
       kubectl -n tidb-cluster wait --for=condition=complete job/mysql-query-job
       kubectl -n tidb-cluster logs -l job-name=mysql-query-job
       ```
-2. check status of a tidb cluster
-    * ```shell
-      kubectl -n tidb-cluster get tidbcluster
-      ```
-3. check metrics of tidb cluster with grafana
-    * reference: https://docs.pingcap.com/zh/tidb/stable/tidb-monitoring-framework
-    * port-forward grafana service
-        + ```shell
-          kubectl -n tidb-cluster port-forward svc/basic-grafana 3000:3000 --address 0.0.0.0
-          ```
-    * extract credentials
-        + ```shell
-          kubectl -n tidb-cluster get secret basic-grafana-credentials -o jsonpath="{.data.username}" | base64 -d && echo
-          kubectl -n tidb-cluster get secret basic-grafana-credentials -o jsonpath="{.data.password}" | base64 -d && echo
-          ```
-    * visit with web browser
 
 ## main operations
 
-1. [scale in/out](scale-in-and-out.md)
-2. [monitor and alerts](monitor-and-alerts.md)
+1. [scale in/out](advanced/scale-in-and-out.md)
+2. [monitor and alerts](advanced/monitor-and-alerts.md)
 3. [benchmarks for performance evaluation](benchmarks.md)
 4. [backup and restore](backup-and-restore.md)
 5. [import and export](import-and-export.md)
 6. [cdc](cdc.md)
 7. [rbac for mysql interface](rabc-for-mysql.md)
-
-## tests
-
-1. Check the status of the TiDB cluster
-    ```shell
-    kubectl -n tidb-cluster get pods
-    ```
-
-2. Access the TiDB Dashboard
-    ```shell
-    kubectl -n tidb-cluster port-forward svc/basic-tidb-dashboard-exposed 12333:12333 --address 0.0.0.0
-    ```
-    Then open `http://localhost:12333` in your browser. Please replace `<tidb-dashboard-service-name>` with the actual TiDB Dashboard service name.
 
 ## uninstallation
 
