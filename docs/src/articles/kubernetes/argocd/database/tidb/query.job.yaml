@@ -11,7 +11,8 @@ spec:
         command: ['sh', '-c']
         args:
           - |
-            mysql -h $MYSQL_SERVICE_IP -P $MYSQL_SERVICE_PORT -u root -p$MYSQL_ROOT_PASSWORD -e "
+            export MYSQL_PWD=$MYSQL_ROOT_PASSWORD
+            mysql -h $MYSQL_SERVICE_IP -P $MYSQL_SERVICE_PORT -u root -e "
             USE shopping;
             SELECT users.name, orders.product_name, orders.amount
             FROM users
