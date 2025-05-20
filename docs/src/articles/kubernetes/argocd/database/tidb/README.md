@@ -82,6 +82,22 @@
       kubectl -n tidb-cluster wait --for=condition=complete job/mysql-query-job
       kubectl -n tidb-cluster logs -l job-name=mysql-query-job
       ```
+2. check status of a tidb cluster
+    * ```shell
+      kubectl -n tidb-cluster get tidbcluster
+      ```
+3. check metrics of tidb cluster with grafana
+    * reference: https://docs.pingcap.com/zh/tidb/stable/tidb-monitoring-framework
+    * port-forward grafana service
+        + ```shell
+          kubectl -n tidb-cluster port-forward svc/basic-grafana 3000:3000 --address 0.0.0.0
+          ```
+    * extract credentials
+        + ```shell
+          kubectl -n tidb-cluster get secret basic-grafana-credentials -o jsonpath="{.data.username}" | base64 -d && echo
+          kubectl -n tidb-cluster get secret basic-grafana-credentials -o jsonpath="{.data.password}" | base64 -d && echo
+          ```
+    * visit with web browser
 
 ## main operations
 
