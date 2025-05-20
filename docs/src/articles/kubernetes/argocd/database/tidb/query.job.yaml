@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mysql-query-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: mysql-client
+        image: m.daocloud.io/docker.io/library/mysql:9.3.0
+        command: ['sh', '-c']
+        args:
+          - |
+            mysql -h $MYSQL_SERVICE_IP -P $MYSQL_SERVICE_PORT -u root -p$MYSQL_ROOT_PASSWORD -e "
+            USE shopping;
+            SELECT users.name, orders.product_name, orders.amount
+            FROM users
+            JOIN orders ON users.id = orders.user_id;
+            "
+        env:
+          - name: MYSQL_SERVICE_IP
+            value: basic-tidb.tidb-cluster.svc.cluster.local
+          - name: MYSQL_SERVICE_PORT
+            value: "4000"
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: basic-tidb-credentials
+                key: root
+                optional: false
+      restartPolicy: Never
+  backoffLimit: 4

@@ -74,6 +74,15 @@
           kubectl -n tidb-cluster apply -f tidb-dashboard.yaml
           ```
 
+## simple checks
+
+1. running querys by tidb(mysql interface)
+    * ```shell
+      kubectl -n tidb-cluster apply -f query.job.yaml
+      kubectl -n tidb-cluster wait --for=condition=complete job/mysql-query-job
+      kubectl -n tidb-cluster logs -l job-name=mysql-query-job
+      ```
+
 ## main operations
 
 1. [scale in/out](scale-in-and-out.md)
