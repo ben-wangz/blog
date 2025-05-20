@@ -49,7 +49,7 @@
 5. Apply TiDB cluster and initializer components
     * prepare secret named `basic-tidb-credentials` to store the credential of tidb root user
         + ```shell
-          kubectl -n tidb-cluster create secret generic basic-tidb-credentials --from-literal=root=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16 | base64)
+          kubectl -n tidb-cluster create secret generic basic-tidb-credentials --from-literal=root=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
           ```
     * apply resources
         + ```shell
