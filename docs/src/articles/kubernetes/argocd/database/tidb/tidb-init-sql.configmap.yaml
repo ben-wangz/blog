@@ -3,43 +3,14 @@ kind: ConfigMap
 metadata:
   name: tidb-init-sql
 data:
-  init-sql: |
+  init-sql: |-
     -- create database
-    CREATE DATABASE IF NOT EXISTS shopping; 
-    USE shopping; 
-    
+    CREATE DATABASE IF NOT EXISTS shopping;
     -- create users
-    CREATE TABLE IF NOT EXISTS users ( 
-        id INT PRIMARY KEY AUTO_INCREMENT, 
-        name VARCHAR(50) NOT NULL, 
-        age INT, 
-        email VARCHAR(100) UNIQUE, 
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
-    );
-
+    CREATE TABLE IF NOT EXISTS shopping.users (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(50) NOT NULL, age INT, email VARCHAR(100) UNIQUE, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
     -- batch insert multiple users records
-    INSERT INTO users (name, age, email) 
-    VALUES 
-    ('Bob', 25, 'bob@example.com'), 
-    ('Charlie', 35, 'charlie@example.com'),
-    ('David', 28, 'david@example.com'),
-    ('Eve', 32, 'eve@example.com'),
-    ('Frank', 40, 'frank@example.com');
-
+    INSERT INTO shopping.users (name, age, email) VALUES ('Bob', 25, 'bob@example.com'), ('Charlie', 35, 'charlie@example.com'), ('David', 28, 'david@example.com'), ('Eve', 32, 'eve@example.com'), ('Frank', 40, 'frank@example.com');
     -- create orders table
-    CREATE TABLE IF NOT EXISTS orders ( 
-        order_id INT PRIMARY KEY AUTO_INCREMENT, 
-        user_id INT, 
-        product_name VARCHAR(50), 
-        amount DECIMAL(10,2), 
-        FOREIGN KEY (user_id) REFERENCES users(id) 
-    );
-
+    CREATE TABLE IF NOT EXISTS shopping.orders (order_id INT PRIMARY KEY AUTO_INCREMENT, user_id INT, product_name VARCHAR(50), amount DECIMAL(10,2), FOREIGN KEY (user_id) REFERENCES shopping.users(id));
     -- batch insert orders records
-    INSERT INTO orders (user_id, product_name, amount)
-    VALUES
-    ((SELECT id FROM users WHERE name = 'Bob'), 'Laptop', 1200.00),
-    ((SELECT id FROM users WHERE name = 'Charlie'), 'Smartphone', 800.00),
-    ((SELECT id FROM users WHERE name = 'David'), 'Headphones', 150.00),
-    ((SELECT id FROM users WHERE name = 'Eve'), 'Tablet', 500.00),
-    ((SELECT id FROM users WHERE name = 'Frank'), 'Camera', 900.00);
+    INSERT INTO shopping.orders (user_id, product_name, amount) VALUES ((SELECT id FROM shopping.users WHERE name = 'Bob'), 'Laptop', 1200.00), ((SELECT id FROM shopping.users WHERE name = 'Charlie'), 'Smartphone', 800.00), ((SELECT id FROM shopping.users WHERE name = 'David'), 'Headphones', 150.00), ((SELECT id FROM shopping.users WHERE name = 'Eve'), 'Tablet', 500.00), ((SELECT id FROM shopping.users WHERE name = 'Frank'), 'Camera', 900.00);

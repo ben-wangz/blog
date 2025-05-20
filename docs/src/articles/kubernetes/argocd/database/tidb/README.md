@@ -118,6 +118,7 @@
     * ```shell
       kubectl -n tidb-cluster delete secret basic-tidb-credentials
       kubectl -n tidb-cluster delete secret basic-grafana-credentials
+      kubectl -n tidb-cluster delete configmap tidb-init-sql
       ```
     * ```shell
       kubectl -n tidb-cluster delete pvc -l app.kubernetes.io/managed-by=tidb-operator,app.kubernetes.io/instance=basic
