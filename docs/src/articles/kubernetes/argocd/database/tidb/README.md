@@ -120,7 +120,6 @@
       kubectl -n tidb-cluster delete secret basic-grafana-credentials
       ```
     * ```shell
-      # check and delete PVCs created
       kubectl -n tidb-cluster delete pvc -l app.kubernetes.io/managed-by=tidb-operator,app.kubernetes.io/instance=basic
       #kubectl -n tidb-cluster delete pvc -l app.kubernetes.io/managed-by=tidb-operator
       ```
