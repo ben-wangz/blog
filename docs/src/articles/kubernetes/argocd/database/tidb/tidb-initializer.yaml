@@ -6,7 +6,7 @@ spec:
   image: m.daocloud.io/docker.io/tnir/mysqlclient
   imagePullPolicy: IfNotPresent
   cluster:
-    name: initialize-demo
+    name: basic
   initSqlConfigMap: tidb-init-sql
   passwordSecret: "basic-tidb-credentials"
   timezone: "Asia/Shanghai"
