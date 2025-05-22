@@ -100,7 +100,6 @@
     * ```shell
       kubectl -n tidb-cluster delete -f tidb-cluster.yaml
       kubectl -n tidb-cluster delete -f tidb-initializer.yaml
-      # 移除原有的删除 tidb-monitor.yaml 命令
       kubectl -n tidb-cluster delete -f tidb-dashboard.yaml
       ```
     * ```shell
