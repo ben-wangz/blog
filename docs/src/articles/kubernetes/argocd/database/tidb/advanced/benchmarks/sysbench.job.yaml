@@ -1,0 +1,77 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sysbench-for-mysql-oltp
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+      - name: sysbench
+        image: docker.io/zyclonite/sysbench:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          set -e
+          apk add --no-cache mariadb-client
+          until mysql -h $MYSQL_HOST -P $MYSQL_PORT -u$MYSQL_USER -p$MYSQL_PASSWORD -e "SELECT 1" > /dev/null 2>&1; do
+            sleep 5
+          done
+          mysql -h $MYSQL_HOST -P $MYSQL_PORT -u$MYSQL_USER -p$MYSQL_PASSWORD -e "DROP DATABASE IF EXISTS $MYSQL_DB;"
+          mysql -h $MYSQL_HOST -P $MYSQL_PORT -u$MYSQL_USER -p$MYSQL_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DB;"
+          sysbench oltp_read_write \
+            --db-driver=mysql \
+            --mysql-host=$MYSQL_HOST \
+            --mysql-port=$MYSQL_PORT \
+            --mysql-user=$MYSQL_USER \
+            --mysql-password=$MYSQL_PASSWORD \
+            --mysql-db=$MYSQL_DB \
+            --table-size=$SYSBENCH_TABLE_SIZE \
+            --tables=$SYSBENCH_TABLES \
+            prepare
+          sysbench oltp_read_write \
+            --db-driver=mysql \
+            --mysql-host=$MYSQL_HOST \
+            --mysql-port=$MYSQL_PORT \
+            --mysql-user=$MYSQL_USER \
+            --mysql-password=$MYSQL_PASSWORD \
+            --mysql-db=$MYSQL_DB \
+            --threads=32 \
+            --time=300 \
+            --report-interval=10 \
+            run > $SYSBENCH_OUTPUT_PATH
+          sysbench oltp_read_write \
+            --db-driver=mysql \
+            --mysql-host=$MYSQL_HOST \
+            --mysql-port=$MYSQL_PORT \
+            --mysql-user=$MYSQL_USER \
+            --mysql-password=$MYSQL_PASSWORD \
+            --mysql-db=$MYSQL_DB \
+            cleanup
+        env:
+          - name: MYSQL_HOST
+            value: "basic-tidb.tidb-cluster.svc.cluster.local"
+          - name: MYSQL_PORT
+            value: "4000"
+          - name: MYSQL_USER
+            value: "root"
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: basic-tidb-credentials
+                key: root
+          - name: MYSQL_DB
+            value: "sysbench_test"
+          - name: SYSBENCH_TABLE_SIZE
+            value: "100000"
+          - name: SYSBENCH_TABLES
+            value: "10"
+          - name: SYSBENCH_OUTPUT_PATH
+            value: "/results/sysbench_results.txt"
+        volumeMounts:
+          - name: results-volume
+            mountPath: /results
+      restartPolicy: Never
+      volumes:
+        - name: results-volume
+          emptyDir: {}
