@@ -14,11 +14,15 @@ spec:
         - |
           set -e
           apk add --no-cache mariadb-client
+          echo "Waiting for MySQL to be ready..."
           until mysql -h $MYSQL_HOST -P $MYSQL_PORT -u$MYSQL_USER -p$MYSQL_PASSWORD -e "SELECT 1" > /dev/null 2>&1; do
             sleep 5
           done
+          echo "MySQL is ready!"
+          echo "Dropping and creating database $MYSQL_DB..."
           mysql -h $MYSQL_HOST -P $MYSQL_PORT -u$MYSQL_USER -p$MYSQL_PASSWORD -e "DROP DATABASE IF EXISTS $MYSQL_DB;"
           mysql -h $MYSQL_HOST -P $MYSQL_PORT -u$MYSQL_USER -p$MYSQL_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DB;"
+          echo "preparing data for sysbench..."
           sysbench oltp_read_write \
             --db-driver=mysql \
             --mysql-host=$MYSQL_HOST \
@@ -29,6 +33,7 @@ spec:
             --table-size=$SYSBENCH_TABLE_SIZE \
             --tables=$SYSBENCH_TABLES \
             prepare
+          echo "running sysbench..."
           sysbench oltp_read_write \
             --db-driver=mysql \
             --mysql-host=$MYSQL_HOST \
@@ -40,6 +45,8 @@ spec:
             --time=300 \
             --report-interval=10 \
             run > $SYSBENCH_OUTPUT_PATH
+          echo "sysbench completed! please check the results at $SYSBENCH_OUTPUT_PATH"
+          echo "cleaning up..."
           sysbench oltp_read_write \
             --db-driver=mysql \
             --mysql-host=$MYSQL_HOST \

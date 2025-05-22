@@ -13,7 +13,7 @@
 
 ## benchmark with SysBench via k8s Job
 
-1. prepare SysBench Job yaml
+1. prepare `sysbench.job.yaml`
     * ```yaml
       <!-- @include: sysbench.job.yaml -->
       ```
