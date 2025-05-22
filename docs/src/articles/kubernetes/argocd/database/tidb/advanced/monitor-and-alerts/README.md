@@ -36,3 +36,9 @@
       kubectl -n tidb-cluster get secret basic-grafana-credentials -o jsonpath="{.data.password}" | base64 -d && echo
       ```
 * visit with web browser
+
+## uninstallation
+
+* ```shell
+  kubectl -n tidb-cluster delete -f tidb-monitor.yaml
+  ```
