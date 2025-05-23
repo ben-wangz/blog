@@ -89,7 +89,7 @@
 1. [scale in/out](advanced/scale-in-and-out.md)
 2. [monitor and alerts](advanced/monitor-and-alerts/README.md)
 3. [benchmarks for performance evaluation](advanced/benchmarks/README.md)
-4. [backup and restore](backup-and-restore.md)
+4. [backup and restore](advanced/backup-and-restore/README.md)
 5. [import and export](import-and-export.md)
 6. [cdc](cdc.md)
 7. [rbac for mysql interface](rabc-for-mysql.md)

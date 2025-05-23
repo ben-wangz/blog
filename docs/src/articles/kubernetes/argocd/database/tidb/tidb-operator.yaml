@@ -17,7 +17,7 @@ spec:
       valuesObject:
         timezone: Asia/Shanghai
         operatorImage: m.daocloud.io/docker.io/pingcap/tidb-operator:v1.6.1
-        tidbBackupManagerImage: m.daocloud.io/pingcap/tidb-backup-manager:v1.6.1
+        tidbBackupManagerImage: m.daocloud.io/docker.io/pingcap/tidb-backup-manager:v1.6.1
         scheduler:
           kubeSchedulerImageName: m.daocloud.io/registry.k8s.io/kube-scheduler
         advancedStatefulset:

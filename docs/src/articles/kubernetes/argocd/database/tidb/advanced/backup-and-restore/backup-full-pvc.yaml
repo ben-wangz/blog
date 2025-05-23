@@ -1,0 +1,49 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tidb-cluster-basic-backup-pvc
+  namespace: tidb-cluster
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: ""
+
+---
+apiVersion: pingcap.com/v1alpha1
+kind: Backup
+metadata:
+  name: basic-backup-tidb-cluster-20240801123456
+  namespace: tidb-cluster
+spec:
+  cleanPolicy: Retain
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+  backupMode: snapshot
+  backupType: full
+  toolImage: m.daocloud.io/docker.io/pingcap/br:v8.5.0
+  br:
+    cluster: basic
+    clusterNamespace: tidb-cluster
+    logLevel: info
+    concurrency: 4
+    # rateLimit: 0
+    # options:
+    # - --lastbackupts=420134118382108673
+  local:
+    prefix: tidb-cluster/basic/20240801123456
+    volume:
+      name: tidb-cluster-basic-backup-pvc
+      persistentVolumeClaim:
+        claimName: tidb-cluster-basic-backup-pvc
+    volumeMount:
+      name: tidb-cluster-basic-backup-pvc
+      mountPath: /backup
