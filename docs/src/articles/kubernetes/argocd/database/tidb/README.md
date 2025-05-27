@@ -37,6 +37,10 @@
         + ```yaml
           <!-- @include: query.job.yaml -->
           ```
+    * `mysql-client.yaml`
+        + ```yaml
+          <!-- @include: mysql-client.yaml -->
+          ```
 2. Create a namespace
     ```shell
     kubectl get namespace tidb-cluster > /dev/null 2>&1 \
@@ -69,6 +73,16 @@
     * apply resources
         + ```shell
           kubectl -n tidb-cluster apply -f tidb-dashboard.yaml
+          ```
+8. Apply mysql-client
+    * apply resources
+        + ```shell
+          kubectl -n tidb-cluster apply -f mysql-client.yaml
+          ```
+    * exec
+        + ```shell
+          kubectl -n tidb-cluster exec -it deployment/mysql-client -- bash
+          # mysql -h $MYSQL_SERVICE_IP -P $MYSQL_SERVICE_PORT -u root -p$MYSQL_ROOT_PASSWORD
           ```
 
 ## simple checks

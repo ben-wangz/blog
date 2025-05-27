@@ -1,11 +1,10 @@
 ---
 apiVersion: pingcap.com/v1alpha1
-kind: Backup
+kind: Restore
 metadata:
-  name: backup-tidb-cluster-basic-full-1748228371
+  name: restore-tidb-cluster-basic-full-1748228371
   namespace: tidb-cluster
 spec:
-  cleanPolicy: Retain
   resources:
     requests:
       cpu: "500m"
@@ -13,7 +12,7 @@ spec:
     limits:
       cpu: "1000m"
       memory: "1Gi"
-  backupMode: snapshot
+  restoreMode: snapshot
   backupType: full
   toolImage: m.daocloud.io/docker.io/pingcap/br:v8.5.0
   br:

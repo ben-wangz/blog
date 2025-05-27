@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-client
+  template:
+    metadata:
+      labels:
+        app: mysql-client
+    spec:
+      containers:
+      - name: mysql-client
+        image: m.daocloud.io/docker.io/library/mysql:9.3.0
+        command: 
+          - /usr/bin/sleep
+        args:
+          - inf
+        env:
+          - name: MYSQL_SERVICE_IP
+            value: basic-tidb.tidb-cluster.svc.cluster.local
+          - name: MYSQL_SERVICE_PORT
+            value: "4000"
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: basic-tidb-credentials
+                key: root
+                optional: false

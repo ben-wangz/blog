@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mysql-delete-database-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: mysql-client
+        image: m.daocloud.io/docker.io/library/mysql:9.3.0
+        command: ['sh', '-c']
+        env:
+          - name: MYSQL_SERVICE_IP
+            value: basic-tidb.tidb-cluster.svc.cluster.local
+          - name: MYSQL_SERVICE_PORT
+            value: "4000"
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: basic-tidb-credentials
+                key: root
+                optional: false
+          - name: TARGET_DATABASE
+            value: "shopping"
+        args:
+          - |
+            export MYSQL_PWD=$MYSQL_ROOT_PASSWORD
+            mysql -h $MYSQL_SERVICE_IP -P $MYSQL_SERVICE_PORT -u root -e "DROP DATABASE IF EXISTS $TARGET_DATABASE;"
+      restartPolicy: Never
+  backoffLimit: 4
