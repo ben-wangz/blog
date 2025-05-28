@@ -1,0 +1,37 @@
+apiVersion: pingcap.com/v1alpha1
+kind: BackupSchedule
+metadata:
+  name: basic-backup-schedule-nfs
+  namespace: tidb-cluster
+spec:
+  maxBackups: 3
+  pause: false
+  schedule: "*/30 * * * *"
+  backupTemplate:
+    cleanPolicy: Retain
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+      limits:
+        cpu: "1000m"
+        memory: "1Gi"
+    backupMode: snapshot
+    backupType: full
+    toolImage: m.daocloud.io/docker.io/pingcap/br:v8.5.0
+    br:
+      cluster: basic
+      clusterNamespace: tidb-cluster
+      logLevel: info
+      concurrency: 4
+      # rateLimit: 0
+      # checksum: true
+    local:
+      prefix: tidb-cluster/basic/full/scheduled
+      volume:
+        name: backup
+        persistentVolumeClaim:
+          claimName: tidb-cluster-backup-pvc
+      volumeMount:
+        name: backup
+        mountPath: /backup

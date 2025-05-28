@@ -12,7 +12,7 @@
 
 0. optional: only for local storage
 1. requirements
-    * for backup by br, `local://` protocol requires a local path in tikv to store the backup files
+    * for backup/restore by br, `local://` protocol requires a local path in tikv to store the backup/restore files
     * therefore, we need to create a pvc to mount the local path in tikv
 2. prepare `backup.pvc.yaml`
     * ```yaml
@@ -33,7 +33,7 @@
 
 ## backup and restore full database via pvc
 
-1. apply the job
+1. apply backup
     * prepare `backup-full-pvc.yaml`
         + ```yaml
           <!-- @include: backup-full-pvc.yaml -->
@@ -68,3 +68,20 @@
 ## backup and restore specific table via pvc
 
 ## backup and restore specific table via s3
+
+## backup schedule and restore full database via pvc
+
+1. apply backup schedule
+    * prepare `backup-schedule-full-pvc.yaml`
+        + ```yaml
+          <!-- @include: backup-schedule-full-pvc.yaml -->
+          ```
+    * apply to the cluster
+        + ```shell
+          kubectl -n tidb-cluster apply -f backup-schedule-full-pvc.yaml
+          ```
+2. pause the backup schedule
+3. delete database
+4. restore the database
+
+## backup log and PITR (Point-in-time recovery) 
