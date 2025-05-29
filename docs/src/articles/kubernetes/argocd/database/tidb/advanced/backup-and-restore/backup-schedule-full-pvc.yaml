@@ -1,7 +1,7 @@
 apiVersion: pingcap.com/v1alpha1
 kind: BackupSchedule
 metadata:
-  name: basic-backup-schedule-nfs
+  name: basic-backup-schedule-full-pvc
   namespace: tidb-cluster
 spec:
   maxBackups: 3
