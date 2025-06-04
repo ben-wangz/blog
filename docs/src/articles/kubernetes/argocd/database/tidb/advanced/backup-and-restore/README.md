@@ -30,6 +30,10 @@
         + ```shell
           kubectl -n tidb-cluster get tidbcluster basic -w
           ```
+4. perpare default service account `tidb-backup-manager`
+    * ```yaml
+      <!-- @include: tidb-backup-manager.serviceaccount.yaml -->
+      ```
 
 ## backup and restore full database via pvc
 
