@@ -8,74 +8,71 @@
 
 ## installation
 
-1. prepare resources
-    * `tidb-operator-crd.yaml`
-        + ```yaml
-          <!-- @include: tidb-operator-crd.yaml -->
-          ```
-    * `tidb-operator.yaml`
-        + ```yaml
-          <!-- @include: tidb-operator.yaml -->
-          ```
-    * `tidb-init-sql.configmap.yaml`
-        + ```yaml
-          <!-- @include: tidb-init-sql.configmap.yaml -->
-          ```
-    * `tidb-initializer.yaml`
-        + ```yaml
-          <!-- @include: tidb-initializer.yaml -->
-          ```
-    * `tidb-cluster.yaml`
-        + ```yaml
-          <!-- @include: tidb-cluster.yaml -->
-          ```
-    * `tidb-dashboard.yaml`
-        + ```yaml
-          <!-- @include: tidb-dashboard.yaml -->
-          ```
-    * `query.job.yaml`
-        + ```yaml
-          <!-- @include: query.job.yaml -->
-          ```
-    * `mysql-client.yaml`
-        + ```yaml
-          <!-- @include: mysql-client.yaml -->
-          ```
-2. Create a namespace
+1. Create a namespace
     ```shell
     kubectl get namespace tidb-cluster > /dev/null 2>&1 \
       || kubectl create namespace tidb-cluster
     ```
-3. Apply TiDB Operator CRD and sync
-    ```shell
-    kubectl -n argocd apply -f tidb-operator-crd.yaml
-    argocd app sync argocd/tidb-operator-crd
-    argocd app wait argocd/tidb-operator-crd
-    ```
-4. Apply TiDB Operator and sync
-    ```shell
-    kubectl -n argocd apply -f tidb-operator.yaml
-    argocd app sync argocd/tidb-operator
-    argocd app wait argocd/tidb-operator
-    ```
-5. Apply TiDB cluster and initializer components
+2. install TiDB Operator CRD
+    * prepare `tidb-operator-crd.yaml`
+        + ```yaml
+          <!-- @include: tidb-operator-crd.yaml -->
+          ```
+    * apply to k8s
+        + ```shell
+          kubectl -n argocd apply -f tidb-operator-crd.yaml
+          argocd app sync argocd/tidb-operator-crd
+          argocd app wait argocd/tidb-operator-crd
+        ```
+3. install TiDB Operator
+    * prepare `tidb-operator.yaml`
+        + ```yaml
+          <!-- @include: tidb-operator.yaml -->
+          ```
+    * apply to k8s
+        + ```shell
+          kubectl -n argocd apply -f tidb-operator.yaml
+          argocd app sync argocd/tidb-operator
+          argocd app wait argocd/tidb-operator
+          ```
+4. create TiDB cluster and initialize
     * prepare secret named `basic-tidb-credentials` to store the credential of tidb root user
         + ```shell
           kubectl -n tidb-cluster create secret generic basic-tidb-credentials --from-literal=root=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
           ```
-    * apply resources
+    * prepare `tidb-init-sql.configmap.yaml`
+        + ```yaml
+          <!-- @include: tidb-init-sql.configmap.yaml -->
+          ```
+    * prepare `tidb-initializer.yaml`
+        + ```yaml
+          <!-- @include: tidb-initializer.yaml -->
+          ```
+    * prepare `tidb-cluster.yaml`
+        + ```yaml
+          <!-- @include: tidb-cluster.yaml -->
+          ```
+    * apply to k8s
         + ```shell
           kubectl -n tidb-cluster apply -f tidb-init-sql.configmap.yaml
           kubectl -n tidb-cluster apply -f tidb-cluster.yaml
           kubectl -n tidb-cluster apply -f tidb-initializer.yaml
           ```
-7. Apply TiDB Dashboard components
-    * apply resources
+5. (optional) install TiDB Dashboard components
+    * prepare `tidb-dashboard.yaml`
+        + ```yaml
+          <!-- @include: tidb-dashboard.yaml -->
+          ```
+    * apply to k8s
         + ```shell
           kubectl -n tidb-cluster apply -f tidb-dashboard.yaml
           ```
-8. Apply mysql-client
-    * apply resources
+6. install mysql-client
+    * prepare `mysql-client.yaml`
+        + ```yaml
+          <!-- @include: mysql-client.yaml -->
+          ```
+    * apply to k8s
         + ```shell
           kubectl -n tidb-cluster apply -f mysql-client.yaml
           ```
@@ -92,11 +89,16 @@
       kubectl -n tidb-cluster get tidbcluster
       ```
 2. running querys by tidb(mysql interface)
-    * ```shell
-      kubectl -n tidb-cluster apply -f query.job.yaml
-      kubectl -n tidb-cluster wait --for=condition=complete job/mysql-query-job
-      kubectl -n tidb-cluster logs -l job-name=mysql-query-job
-      ```
+    * prepare `query.job.yaml`
+        + ```yaml
+          <!-- @include: query.job.yaml -->
+          ```
+    * apply to k8s
+        + ```shell
+          kubectl -n tidb-cluster apply -f query.job.yaml
+          kubectl -n tidb-cluster wait --for=condition=complete job/mysql-query-job
+          kubectl -n tidb-cluster logs -l job-name=mysql-query-job
+          ```
 
 ## main operations
 
