@@ -9,10 +9,10 @@
 ## installation
 
 1. Create a namespace
-    ```shell
-    kubectl get namespace tidb-cluster > /dev/null 2>&1 \
-      || kubectl create namespace tidb-cluster
-    ```
+    * ```shell
+      kubectl get namespace tidb-cluster > /dev/null 2>&1 \
+        || kubectl create namespace tidb-cluster
+      ```
 2. install TiDB Operator CRD
     * prepare `tidb-operator-crd.yaml`
         + ```yaml
@@ -23,7 +23,7 @@
           kubectl -n argocd apply -f tidb-operator-crd.yaml
           argocd app sync argocd/tidb-operator-crd
           argocd app wait argocd/tidb-operator-crd
-        ```
+          ```
 3. install TiDB Operator
     * prepare `tidb-operator.yaml`
         + ```yaml
