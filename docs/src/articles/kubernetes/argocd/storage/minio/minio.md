@@ -16,9 +16,16 @@
           --from-literal=rootPassword=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
       ```
 2. prepare `minio.yaml`
-    * ```yaml
-      <!-- @include: minio.yaml -->
+    * ::: code-tabs#shell
+      @tab standalone
+      ```yaml
+       <!-- @include: minio-standalone.yaml -->
       ```
+      @tab distributed
+      ```yaml
+      <!-- @include: minio-distributed.yaml -->
+      ```
+      :::
 3. apply to k8s
     * ```shell
       kubectl -n argocd apply -f minio.yaml
