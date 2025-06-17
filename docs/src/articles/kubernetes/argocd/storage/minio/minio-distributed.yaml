@@ -1,0 +1,76 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: registry-1.docker.io/bitnamicharts
+    chart: minio
+    targetRevision: 17.0.5
+    helm:
+      releaseName: minio
+      valuesObject:
+        global:
+          security:
+            allowInsecureImages: true
+        image:
+          registry: m.daocloud.io/docker.io
+        clientImage:
+          registry: m.daocloud.io/docker.io
+        mode: distributed
+        statefulset:
+          podManagementPolicy: Parallel
+          replicaCount: 4
+          zones: 1
+          drivesPerNode: 1
+        auth:
+          existingSecret: minio-credentials
+          rootUserSecretKey: rootUser
+          rootPasswordSecretKey: rootPassword
+        persistence:
+          enabled: true
+          storageClass: null
+          size: 8Gi
+        ingress:
+          enabled: true
+          ingressClassName: nginx
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /$1
+          path: /?(.*)
+          hostname: minio-api.dev.geekcity.tech
+          tls: false
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1024Mi
+        console:
+          enabled: true
+          image:
+            registry: m.daocloud.io/docker.io
+          replicaCount: 1
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            annotations:
+              nginx.ingress.kubernetes.io/rewrite-target: /$1
+            path: /?(.*)
+            hostname: minio-console.dev.geekcity.tech
+            tls: false
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1024Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: storage

@@ -1,3 +1,0 @@
-# minio operator
-
-TODO
