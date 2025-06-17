@@ -9,44 +9,63 @@ spec:
     - CreateNamespace=true
   project: default
   source:
-    repoURL: https://ben-wangz.github.io/helm-chart-mirror/charts
+    repoURL: registry-1.docker.io/bitnamicharts
     chart: minio
-    targetRevision: 5.0.15
+    targetRevision: 17.0.5
     helm:
       releaseName: minio
-      values: |
+      valuesObject:
+        global:
+          security:
+            allowInsecureImages: true
         image:
-          repository: quay.io/minio/minio
-        mcImage:
-          repository: quay.io/minio/mc
+          registry: m.daocloud.io/docker.io
+        clientImage:
+          registry: m.daocloud.io/docker.io
         mode: standalone
+        auth:
+          existingSecret: minio-credentials
+          rootUserSecretKey: rootUser
+          rootPasswordSecretKey: rootPassword
         persistence:
-          enabled: false
+          enabled: true
+          storageClass: null
+          size: 8Gi
         ingress:
           enabled: true
           ingressClassName: nginx
           annotations:
             nginx.ingress.kubernetes.io/rewrite-target: /$1
           path: /?(.*)
-          hosts:
-            - minio-api.dev.geekcity.tech
-        consoleIngress:
-          enabled: true
-          ingressClassName: nginx
-          annotations:
-            nginx.ingress.kubernetes.io/rewrite-target: /$1
-          path: /?(.*)
-          hosts:
-            - minio-console.dev.geekcity.tech
-        replicas: 1
+          hostname: minio-api.dev.geekcity.tech
+          tls: false
         resources:
           requests:
-            memory: 512Mi
             cpu: 250m
+            memory: 512Mi
           limits:
-            memory: 512Mi
-            cpu: 250m
-        existingSecret: minio-credentials
+            cpu: 500m
+            memory: 1024Mi
+        console:
+          enabled: true
+          image:
+            registry: m.daocloud.io/docker.io
+          replicaCount: 1
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            annotations:
+              nginx.ingress.kubernetes.io/rewrite-target: /$1
+            path: /?(.*)
+            hostname: minio-console.dev.geekcity.tech
+            tls: false
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1024Mi
   destination:
     server: https://kubernetes.default.svc
     namespace: storage

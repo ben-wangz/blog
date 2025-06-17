@@ -5,8 +5,6 @@
 1. k8s is ready
 2. argocd is ready and logged in
 3. ingress is ready
-4. cert-manager is ready
-    * the clusterissuer named `self-signed-ca-issuer` is ready
 
 ## installation
 
@@ -36,7 +34,7 @@
     * access key: admin
     * access secret
         + ```shell
-          kubectl -n storage get secret minio-credentials -o jsonpath='{.data.rootPassword}' | base64 -d
+          kubectl -n storage get secret minio-credentials -o jsonpath='{.data.rootPassword}' | base64 -d && echo
           ```
 6. test with `mc`
     * ```shell
