@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: opt-local-path-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: opt-local-path
+
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: busybox-pvc-test-job
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 4
+  template:
+    metadata:
+      labels:
+        app: busybox-pvc-test
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: busybox-pvc-test
+        image: m.daocloud.io/docker.io/library/busybox:latest
+        command:
+          - sh
+          - -c
+          - |
+            echo "Writing to PVC..."
+            RANDOM_STR=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
+            echo "hello local path provisioner $RANDOM_STR" > /data/hello.txt
+            echo "Reading from PVC..."
+            READ_STR=$(cat /data/hello.txt)
+            echo "Written content: hello local path provisioner $RANDOM_STR"
+            echo "Read content: $READ_STR"
+            if [ "$READ_STR" = "hello local path provisioner $RANDOM_STR" ]; then
+              echo "PVC test completed successfully!"
+            else
+              echo "PVC test failed!"
+              exit 1
+            fi
+        volumeMounts:
+        - name: opt-local-path-vol
+          mountPath: /data
+      volumes:
+      - name: opt-local-path-vol
+        persistentVolumeClaim:
+          claimName: opt-local-path-pvc

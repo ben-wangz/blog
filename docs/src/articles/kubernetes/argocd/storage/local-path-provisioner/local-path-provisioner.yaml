@@ -1,0 +1,54 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opt-local-path
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://charts.containeroo.ch
+    chart: local-path-provisioner
+    targetRevision: 0.0.32
+    helm:
+      releaseName: opt-local-path
+      valuesObject:
+        replicaCount: 1
+        image:
+          repository: m.daocloud.io/docker.io/rancher/local-path-provisioner
+        helperImage:
+          repository: m.daocloud.io/docker.io/library/busybox
+          tag: latest
+        helperPod:
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+        nodePathMap:
+          - node: DEFAULT_PATH_FOR_NON_LISTED_NODES
+            paths:
+              - /opt/local-path/local-path-provisioner
+          #- node: k3s1
+            #paths:
+            #- /opt/disk-mount/local-path-provisioner
+        storageClass:
+          create: true
+          defaultClass: false
+          defaultVolumeType: local
+          name: opt-local-path
+          reclaimPolicy: Delete
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: storage
