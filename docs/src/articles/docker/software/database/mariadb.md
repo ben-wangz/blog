@@ -9,7 +9,7 @@
       -p 3306:3306 \
       -e MARIADB_ROOT_PASSWORD=mysql \
       -v $(pwd)/mariadb/data:/var/lib/mysql \
-      -d docker.io/library/mariadb:11.2.2-jammy
+      -d m.daocloud.io/docker.io/library/mariadb:11.2.2-jammy
   ```
 
 ## client
