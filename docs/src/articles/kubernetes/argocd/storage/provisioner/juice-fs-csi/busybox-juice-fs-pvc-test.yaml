@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: busybox-juice-fs-pv
+  labels:
+    juicefs-name: juice-fs-tidb-minio
+spec:
+  # any valid value will work, 
+  # but the capacity is not supported by JuiceFS CSI driver yet 
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  csi:
+    driver: csi.juicefs.com
+    # unique, recommend to be same as pv name
+    volumeHandle: busybox-juice-fs-pv
+    fsType: juicefs
+    nodePublishSecretRef:
+      name: juice-fs-tidb-minio-credential
+      namespace: storage
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: busybox-juice-fs-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  storageClassName: ""
+  # any value smaller than or equal to PV capacity will work
+  # but note that the capacity of JuiceFS CSI driver is not supported yet
+  resources:
+    requests:
+      storage: 10Gi
+  selector:
+    matchLabels:
+      juicefs-name: juice-fs-tidb-minio
+
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: busybox-juice-fs-pv-test-job
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 4
+  template:
+    metadata:
+      labels:
+        app: busybox-juice-fs-pv-test
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: busybox-juice-fs-pv-test
+        image: m.daocloud.io/docker.io/library/busybox:latest
+        command:
+          - sh
+          - -c
+          - |
+            echo "Writing to PVC..."
+            RANDOM_STR=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
+            echo "hello local path provisioner $RANDOM_STR" > /data/hello.txt
+            echo "Reading from PVC..."
+            READ_STR=$(cat /data/hello.txt)
+            echo "Written content: hello local path provisioner $RANDOM_STR"
+            echo "Read content: $READ_STR"
+            if [ "$READ_STR" = "hello local path provisioner $RANDOM_STR" ]; then
+              echo "PVC test completed successfully!"
+            else
+              echo "PVC test failed!"
+              exit 1
+            fi
+        volumeMounts:
+        - name: data-volume
+          mountPath: /data
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: busybox-juice-fs-pvc
