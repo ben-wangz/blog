@@ -109,23 +109,54 @@
       podman logs juicefs-mount-write
       ```
 
-## tidb and minio backend
+## mariadb and oss backend
 
-1. [tidb is ready](../../../kubernetes/argocd/database/tidb/README.md)
-    * port forward
-        + ```shell
-          kubectl -n tidb-cluster port-forward service/basic-pd 23790:2379 --address 0.0.0.0
-          ```
-2. [minio is ready](minio.md)
-3. format a filesystem
+1. [mariadb is ready](../database/mariadb.md)
+    + ```shell
+      podman run --rm \
+        -e MYSQL_PWD=mysql \
+        -it m.daocloud.io/docker.io/library/mariadb:11.2.2-jammy \
+        mariadb \
+        --host host.containers.internal \
+        --port 3306 \
+        --user root \
+        --execute 'create database myjfsoss'
+      ```
+2. format a filesystem
     * ```shell
+      #export OSS_ACCESS_KEY_ID=your-oss-access-key-id
+      #export OSS_ACCESS_KEY_SECRET=your-oss-access-key-secret
       podman run --rm \
         -it m.daocloud.io/docker.io/juicedata/mount:ce-v1.2.3 \
           juicefs format \
-            --storage=minio \
-            --bucket http://host.containers.internal:9000/myjfs \
-            --access-key minioadmin \
-            --secret-key minioadmin \
-            "tikv://basic-pd.tidb-cluster:2379/myjfs" \
-            myjfs 
+            --storage=oss \
+            --bucket http://data-and-computing-dev.oss-cn-hangzhou-zjy-d01-a.res.cloud.zhejianglab.com/ \
+            --access-key $OSS_ACCESS_KEY_ID \
+            --secret-key $OSS_ACCESS_KEY_SECRET \
+            "mysql://root:mysql@(host.containers.internal:3306)/myjfsoss" \
+            myjfs-oss 
+      ```
+4. mount the filesystem and write data
+    + ```shell
+      podman run --name juicefs-mount-write --rm \
+        --privileged \
+        -itd m.daocloud.io/docker.io/juicedata/mount:ce-v1.2.3 \
+          bash -c 'juicefs mount --background "mysql://root:mysql@(host.containers.internal:3306)/myjfsoss" /mnt \
+            && df -h \
+            && echo "random string: $(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)" > /mnt/test.txt \
+            && cat /mnt/test.txt \
+            && sleep 1m'
+      ```
+5. mount by another container and read data
+    * ```shell
+      podman run --name juicefs-mount-read --rm \
+        --privileged \
+        -it m.daocloud.io/docker.io/juicedata/mount:ce-v1.2.3 \
+          bash -c 'juicefs mount --background "mysql://root:mysql@(host.containers.internal:3306)/myjfsoss" /mnt \
+            && df -h \
+            && cat /mnt/test.txt'
+      ```
+6. check the logs of `juicefs-mount-write`
+    * ```shell
+      podman logs juicefs-mount-write
       ```
