@@ -97,3 +97,4 @@
 1. [monitor with prometheus and grafana](advanced/monitor-with-prometheus-and-grafana/README.md)
 2. [configure mount options](advanced/configure-mount-options/README.md)
 3. [benchmark](advanced/benchmark/README.md)
+4. [sync](advanced/sync/README.md)
