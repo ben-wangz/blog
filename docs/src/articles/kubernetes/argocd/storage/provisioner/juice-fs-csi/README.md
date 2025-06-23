@@ -25,7 +25,7 @@
       argocd app sync argocd/juicefs-csi
       ```
 
-## create pvc
+## pvc
 
 1. create a secret to store juice fs credentials
     * ```shell
@@ -50,22 +50,23 @@
           kubectl -n default apply -f busybox-juice-fs-pvc-test.yaml
           ```
 
-## tests
+## storage class
 
-1. prepare `busybox-pvc-test.yaml`
-    * ```yaml
-      <!-- @include: busybox-pvc-test.yaml -->
-      ```
-2. apply to k8s
-    * ```shell
-      kubectl -n default apply -f busybox-pvc-test.yaml
-      ```
-3. check log of the test job
-    * ```shell
-      kubectl -n default logs job/busybox-pvc-test-job
-      ```
-4. delete job and pvc
-    * ```shell
-      kubectl -n default delete job busybox-pvc-test-job
-      kubectl -n default delete pvc opt-local-path-pvc
-      ```
+1. create storage class
+    * prepare `juice-fs-tidb-minio-test.storageclass.yaml`
+        + ```yaml
+          <!-- @include: juice-fs-tidb-minio-test.storageclass.yaml -->
+          ```
+    * apply to k8s
+        + ```shell
+          kubectl -n default apply -f juice-fs-tidb-minio-test.storageclass.yaml
+          ```
+2. create pvc and test with a deployment
+    * prepare `busybox-storage-class-test.yaml`
+        + ```yaml
+          <!-- @include: busybox-storage-class-test.yaml -->
+          ```
+    * apply to k8s
+        + ```shell
+          kubectl -n default apply -f busybox-storage-class-test.yaml
+          ```

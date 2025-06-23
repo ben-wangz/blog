@@ -1,0 +1,11 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: juice-fs-tidb-minio
+provisioner: csi.juicefs.com
+parameters:
+  csi.storage.k8s.io/provisioner-secret-name: juice-fs-tidb-minio-credential
+  csi.storage.k8s.io/provisioner-secret-namespace: storage
+  csi.storage.k8s.io/node-publish-secret-name: juice-fs-tidb-minio-credential
+  csi.storage.k8s.io/node-publish-secret-namespace: storage
+reclaimPolicy: Retain
