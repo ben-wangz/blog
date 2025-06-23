@@ -8,4 +8,6 @@ parameters:
   csi.storage.k8s.io/provisioner-secret-namespace: storage
   csi.storage.k8s.io/node-publish-secret-name: juice-fs-tidb-minio-credential
   csi.storage.k8s.io/node-publish-secret-namespace: storage
+  pathPattern: "${.pvc.namespace}-${.pvc.name}"
 reclaimPolicy: Retain
+allowVolumeExpansion: true

@@ -91,3 +91,9 @@
         + ```shell
           kubectl -n default apply -f busybox-storage-class-test.yaml
           ```
+
+## advanced topics
+
+1. [monitor with prometheus and grafana](advanced/monitor-with-prometheus-and-grafana/README.md)
+2. [configure mount options](advanced/configure-mount-options/README.md)
+3. [benchmark](advanced/benchmark/README.md)

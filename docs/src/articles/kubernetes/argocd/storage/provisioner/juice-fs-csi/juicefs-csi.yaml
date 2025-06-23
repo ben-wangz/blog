@@ -54,6 +54,8 @@ spec:
             requests:
               cpu: 100m
               memory: 512Mi
+        validatingWebhook:
+          enabled: true
         dashboard:
           enabled: true
           enableManager: true
