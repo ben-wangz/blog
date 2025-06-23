@@ -12,18 +12,39 @@
 
 ## installation
 
-1. prepare `juicefs-csi.yaml`
+1. prepare namespace `storage`
+    * ```shell
+      kubectl get namespace storage > /dev/null 2>&1 || kubectl create namespace storage
+      ```
+2. prepare dashboard secret
+    * ```shell
+      kubectl -n storage create secret generic juicefs-dashboard-secret \
+        --from-literal=username=admin \
+        --from-literal=password=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)
+      ```
+3. prepare `juicefs-csi.yaml`
     * ```yaml
       <!-- @include: juicefs-csi.yaml -->
       ```
-2. apply to k8s
+4. apply to k8s
     * ```shell
       kubectl -n argocd apply -f juicefs-csi.yaml
       ```
-3. sync by argocd
+5. sync by argocd
     * ```shell
       argocd app sync argocd/juicefs-csi
       ```
+6. visit juice-fs-dashboard by broswer
+    * `https://juice-fs-dashboard.dev.geekcity.tech`
+    * credentials
+        + ```shell
+          # username
+          kubectl -n storage get secret juicefs-dashboard-secret -o jsonpath='{.data.username}' | base64 -d && echo
+          ```
+        + ```shell
+          # password
+          kubectl -n storage get secret juicefs-dashboard-secret -o jsonpath='{.data.password}' | base64 -d && echo
+          ```
 
 ## pvc
 
