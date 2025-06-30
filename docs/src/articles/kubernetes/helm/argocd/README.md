@@ -14,38 +14,33 @@
 
 ## install
 
-1. prepare `argocd.values.yaml`
+1. prepare `values.yaml`
     * ```yaml
-      <!-- @include: argocd.values.yaml -->
+      <!-- @include: values.yaml -->
       ```
 2. install argocd with helm
     * ```shell
       helm install argo-cd argo-cd \
           --namespace argocd \
           --create-namespace \
-          --version 5.46.7 \
-          --repo https://ben-wangz.github.io/helm-chart-mirror/charts \
-          --values argocd.values.yaml \
+          --version 8.1.2 \
+          --repo https://argoproj.github.io/argo-helm \
+          --values values.yaml \
           --atomic
       ```
-3. prepare `argocd-server-external.yaml`
-    * ```yaml
-      <!-- @include: argocd-server-external.yaml -->
-      ```
-4. apply `argocd-server-external.yaml` to k8s
+3. get argocd initial password
     * ```shell
-      kubectl -n argocd apply -f argocd-server-external.yaml
+      kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d && echo
       ```
-5. get argocd initial password
+4. login with argocd cli
+    * prepare `login.sh`
+        + ```bash
+          <!-- @include: @src/articles/kubernetes/helm/argocd/login.sh -->
+          ```
     * ```shell
-      kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+      bash login.sh
       ```
-6. login with argocd cli
-    * ```shell
-      FIRST_MASTER_IP=$(kubectl get nodes --selector=node-role.kubernetes.io/control-plane -o jsonpath='{$.items[0].status.addresses[?(@.type=="InternalIP")].address}')
-      argocd login --insecure --username admin $FIRST_MASTER_IP:30443
-      ```
-7. login with browser
+5. login with browser
     * open https://k8s-master:30443
     * username: admin
     * password: the password you get in step 5

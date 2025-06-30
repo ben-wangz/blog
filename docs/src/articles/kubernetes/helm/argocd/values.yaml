@@ -1,0 +1,29 @@
+---
+global:
+  revisionHistoryLimit: 3
+  image:
+    repository: m.daocloud.io/quay.io/argoproj/argocd
+crds:
+  install: true
+  keep: false
+dex:
+  enabled: true
+  image:
+    repository: m.daocloud.io/ghcr.io/dexidp/dex
+server:
+  service:
+    type: NodePort
+    nodePortHttp: 30080
+    nodePortHttps: 30443
+  extensions:
+    enabled: false
+redis:
+  enabled: true
+  image:
+    repository: m.daocloud.io/docker.io/library/redis
+  exporter:
+    enabled: false
+  metrics:
+    enabled: false
+redis-ha:
+  enabled: false
