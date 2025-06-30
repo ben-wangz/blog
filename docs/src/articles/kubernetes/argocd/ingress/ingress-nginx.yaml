@@ -9,15 +9,15 @@ spec:
     - CreateNamespace=true
   project: default
   source:
-    repoURL: https://ben-wangz.github.io/helm-chart-mirror/charts
+    repoURL: https://kubernetes.github.io/ingress-nginx
     chart: ingress-nginx
-    targetRevision: 4.9.0
+    targetRevision: 4.12.3
     helm:
       releaseName: ingress-nginx
       values: |
         controller:
           image:
-            registry: registry.k8s.io
+            registry: m.daocloud.io/registry.k8s.io
           service:
             enabled: true
             type: NodePort
@@ -26,14 +26,22 @@ spec:
               https: 32443
               tcp:
                 8080: 32808
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
           admissionWebhooks:
             enabled: true
             patch:
               enabled: true
               image:
-                registry: registry.k8s.io
+                registry: m.daocloud.io/registry.k8s.io
+        metrics:
+          enabled: false
         defaultBackend:
           enabled: false
+          image:
+            registry: m.daocloud.io/registry.k8s.io
   destination:
     server: https://kubernetes.default.svc
     namespace: basic-components
