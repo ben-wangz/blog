@@ -41,5 +41,4 @@ projects:
     desc: "about me"
     link: /intro/me.md
 
-footer: '<a href="https://beian.miit.gov.cn/" rel="noopener noreferrer" target="_blank">浙ICP备2021024222号<a/>'
 ---
