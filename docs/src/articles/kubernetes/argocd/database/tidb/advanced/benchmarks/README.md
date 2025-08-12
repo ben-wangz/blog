@@ -17,6 +17,7 @@
     * ```yaml
       <!-- @include: sysbench.job.yaml -->
       ```
+    * change the env `SYSBENCH_THREADS` to control the number of threads
 2. apply the job
     * ```shell
       kubectl -n tidb-cluster apply -f sysbench.job.yaml

@@ -41,8 +41,8 @@ spec:
             --mysql-user=$MYSQL_USER \
             --mysql-password=$MYSQL_PASSWORD \
             --mysql-db=$MYSQL_DB \
-            --threads=32 \
-            --time=300 \
+            --threads=$SYSBENCH_THREADS \
+            --time=$SYSBENCH_TIME \
             --report-interval=10 \
             run > $SYSBENCH_OUTPUT_PATH
           echo "sysbench completed! please check the results at $SYSBENCH_OUTPUT_PATH"
@@ -70,11 +70,15 @@ spec:
           - name: MYSQL_DB
             value: "sysbench_test"
           - name: SYSBENCH_TABLE_SIZE
-            value: "100000"
+            value: "5000000"
           - name: SYSBENCH_TABLES
-            value: "10"
+            value: "16"
           - name: SYSBENCH_OUTPUT_PATH
             value: "/results/sysbench_results.txt"
+          - name: SYSBENCH_THREADS
+            value: "16"
+          - name: SYSBENCH_TIME
+            value: "600"
         volumeMounts:
           - name: results-volume
             mountPath: /results
