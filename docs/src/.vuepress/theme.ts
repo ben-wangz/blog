@@ -11,7 +11,7 @@ export default hopeTheme({
     url: "/intro/me.md",
   },
   iconAssets: "fontawesome-with-brands",
-  logo: "/assets/icon/coding-immortal.png",
+  logo: "/assets/icon/coding-immortal-compressed.png",
   repo: "ben-wangz/blog",
   docsDir: "src",
   navbar,
