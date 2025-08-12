@@ -11,7 +11,7 @@ export default hopeTheme({
     url: "/intro/me.md",
   },
   iconAssets: "fontawesome-with-brands",
-  logo: "https://theme-hope-assets.vuejs.press/logo.svg",
+  logo: "/assets/icon/coding-immortal.png",
   repo: "ben-wangz/blog",
   docsDir: "src",
   navbar,
