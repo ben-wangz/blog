@@ -26,16 +26,13 @@
 
 ## check the metrics of the TiDB cluster
 
-* port-forward the Grafana service
-    + ```shell
-      kubectl -n tidb-cluster port-forward svc/basic-grafana 3000:3000 --address 0.0.0.0
-      ```
 * extract credentials
     + ```shell
       kubectl -n tidb-cluster get secret basic-grafana-credentials -o jsonpath="{.data.username}" | base64 -d && echo
       kubectl -n tidb-cluster get secret basic-grafana-credentials -o jsonpath="{.data.password}" | base64 -d && echo
       ```
 * visit with web browser
+    + url: https://tidb-monitor.dev.geekcity.tech
 
 ## uninstallation
 
