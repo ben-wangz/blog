@@ -22,3 +22,37 @@
     * ```shell
       kubectl -n tidb-cluster apply -f sysbench.job.yaml
       ```
+3. check logs
+    * ```shell
+      kubectl -n tidb-cluster logs -l job-name=sysbench-for-mysql-oltp
+      ```
+    * key logs example
+        + ```text
+          sysbench results:
+          ...
+          SQL statistics:
+              queries performed:
+                  read:                            958258
+                  write:                           273670
+                  other:                           136841
+                  total:                           1368769
+              transactions:                        68394  (113.96 per sec.)
+              queries:                             1368769 (2280.72 per sec.)
+              ignored errors:                      53     (0.09 per sec.)
+              reconnects:                          0      (0.00 per sec.)
+          
+          General statistics:
+              total time:                          600.1459s
+              total number of events:              68394
+          
+          Latency (ms):
+                   min:                                   26.18
+                   avg:                                  140.38
+                   max:                                 7127.99
+                   95th percentile:                      211.60
+                   sum:                              9601310.58
+          
+          Threads fairness:
+              events (avg/stddev):           4274.6250/11.18
+              execution time (avg/stddev):   600.0819/0.03
+          ```

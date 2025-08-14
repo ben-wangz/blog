@@ -8,12 +8,12 @@ spec:
     spec:
       containers:
       - name: sysbench
-        image: docker.io/zyclonite/sysbench:latest
+        image: m.daocloud.io/docker.io/openeuler/sysbench:latest
         command: ["/bin/sh", "-c"]
         args:
         - |
           set -e
-          apk add --no-cache mariadb-client
+          dnf install -y mariadb
           echo "Waiting for MySQL to be ready..."
           until mysql -h $MYSQL_HOST -P $MYSQL_PORT -u$MYSQL_USER -p$MYSQL_PASSWORD -e "SELECT 1" > /dev/null 2>&1; do
             sleep 5
@@ -55,6 +55,9 @@ spec:
             --mysql-password=$MYSQL_PASSWORD \
             --mysql-db=$MYSQL_DB \
             cleanup
+          echo "sysbench cleanup completed!"
+          echo "sysbench results:"
+          cat $SYSBENCH_OUTPUT_PATH
         env:
           - name: MYSQL_HOST
             value: "basic-tidb.tidb-cluster.svc.cluster.local"
@@ -70,7 +73,7 @@ spec:
           - name: MYSQL_DB
             value: "sysbench_test"
           - name: SYSBENCH_TABLE_SIZE
-            value: "5000000"
+            value: "500000"
           - name: SYSBENCH_TABLES
             value: "16"
           - name: SYSBENCH_OUTPUT_PATH
