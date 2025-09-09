@@ -8,6 +8,13 @@
 
 ## introduction
 
+* two types of backup
+    * full backup: backup full data of a cluster at a specific point in time
+    * log backup(log refers to KV changes in TiKV): backup data changes in TiDB
+* restore
+    * restore the full backup
+    * restore the target cluster to any specific point in time of the source backup cluster by integrating full backup with log backup, a capability formally referred to as Point-in-Time Recovery (PITR)
+
 ## prepare
 
 0. optional: only for local storage
@@ -67,9 +74,7 @@
           kubectl -n tidb-cluster apply -f restore-full-pvc.yaml
           ```
 
-## backup and resstore specific db via pvc
-
-## backup and restore specific table via pvc
+## backup and resstore specific database/table via pvc
 
 ## backup and restore specific table via s3
 
@@ -88,4 +93,4 @@
 3. delete database
 4. restore the database
 
-## backup log and PITR (Point-in-time recovery) 
+## backup log and PITR (Point-in-time recovery)
