@@ -18,6 +18,11 @@ When replica counts drop below predefined safety thresholds, the system automati
 
 By co-locating storage and compute resources within the same Kubernetes cluster, this implementation effectively supports mission-critical workloads requiring high storage stability and low-latency I/O performance, including real-time data processing and core database storage scenarios.
 
+* what we have done in production:
+    + 2PB in summary of 30+ data nodes
+    + available more than 2 years
+* [how to play](../../articles/kubernetes/argocd/storage/ceph/README.md)
+
 #### JuiceFS as Low-cost Elastic Expansion Storage Supplement
 
 Ceph storage capacity is constrained by the internal storage of cluster physical nodes, making it ideal for mission-critical workloads with high priority but relatively modest capacity requirements. By integrating the JuiceFS file system and connecting to external object storage (S3/OSS), this architecture transcends local storage limitations. A single JuiceFS file system can theoretically scale to exabyte-level capacity while leveraging local SSD disks for caching to maintain high concurrent read/write performance.
