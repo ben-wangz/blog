@@ -1,0 +1,67 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://traefik.github.io/charts
+    chart: traefik
+    targetRevision: 37.1.1
+    helm:
+      releaseName: traefik
+      valuesObject:
+        image:
+          registry: m.daocloud.io/docker.io
+        ingressClass:
+          enabled: true
+          isDefaultClass: true
+          name: "traefik"
+        ingressRoute:
+          enabled: false
+        providers:  # @schema additionalProperties: false
+          kubernetesCRD:
+            enabled: true
+            allowCrossNamespace: false
+            allowExternalNameServices: false
+            allowEmptyServices: true
+          kubernetesIngress:
+            enabled: true
+            allowExternalNameServices: false
+            allowEmptyServices: true
+        ports:
+          web:
+            port: 8000
+            targetPort: web
+            protocol: TCP
+            nodePort: 32080
+          websecure:
+            port: 8443
+            targetPort: websecure
+            protocol: TCP
+            nodePort: 32443
+        service:
+          enabled: true
+          type: NodePort
+        persistence:
+          enabled: false
+        env:
+          - name: ALICLOUD_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: aliyun-dns-secret
+                key: access-key
+          - name: ALICLOUD_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: aliyun-dns-secret
+                key: secret-key
+          - name: ALICLOUD_REGION_ID
+            value: "cn-hangzhou"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: storage
