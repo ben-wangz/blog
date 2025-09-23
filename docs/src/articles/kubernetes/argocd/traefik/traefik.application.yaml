@@ -23,7 +23,7 @@ spec:
           name: "traefik"
         ingressRoute:
           enabled: false
-        providers:  # @schema additionalProperties: false
+        providers:
           kubernetesCRD:
             enabled: true
             allowCrossNamespace: false
@@ -48,20 +48,46 @@ spec:
           enabled: true
           type: NodePort
         persistence:
-          enabled: false
+          enabled: true
+          storageClass: "local-path"
+          size: 1Gi
         env:
           - name: ALICLOUD_ACCESS_KEY
             valueFrom:
               secretKeyRef:
-                name: aliyun-dns-secret
+                name: traefik-aliyun-dns-credentials
                 key: access-key
           - name: ALICLOUD_SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: aliyun-dns-secret
+                name: traefik-aliyun-dns-credentials
                 key: secret-key
           - name: ALICLOUD_REGION_ID
             value: "cn-hangzhou"
+        certificatesResolvers:
+          letsencrypt:
+            acme:
+              email: ben.wangz@foxmail.com
+              storage: /data/acme.json
+              dnsChallenge:
+                provider: alidns
+                delayBeforeCheck: 30
+                resolvers:
+                  - "223.5.5.5:53"
+                  - "223.6.6.6:53"
+        ingressRoute:
+          dashboard:
+            enabled: true
+            matchRule: Host(`dashboard.traefik.dev.geekcity.tech`)
+            services:
+              - name: api@internal
+                kind: TraefikService
+            entryPoints:
+              - websecure
+            tls:
+              certResolver: letsencrypt
+              domains:
+                - main: dashboard.traefik.dev.geekcity.tech
   destination:
     server: https://kubernetes.default.svc
-    namespace: storage
+    namespace: traefik
