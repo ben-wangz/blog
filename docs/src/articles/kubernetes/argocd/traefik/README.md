@@ -50,13 +50,17 @@ Traefik is a modern HTTP reverse proxy and load balancer designed specifically t
         + ```shell
           kubectl delete -f /var/lib/rancher/k3s/server/manifests/traefik.yaml
           ```
-    * prepare `traefik.application.yaml`
+    * prepare `traefik.app.yaml`
         + ```yaml
-          <!-- @include: traefik.application.yaml -->
+          <!-- @include: traefik.app.yaml -->
           ```
+        + NOTES
+            * service.type=LoadBalancer, make sure the cluster has a load balancer controller
+            * if service.type=NodePort, make sure the nodes of the cluster has `ExternalIP`, because The ExternalIP addresses of the nodes in the cluster will be propagated to the ingress status.
+            * reference: [traefik-docs-ingress-endpoint-publishd-service](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#ingressendpointpublishedservice)
     * apply to k8s
         + ```shell
-          kubectl -n argocd apply -f traefik.application.yaml
+          kubectl -n argocd apply -f traefik.app.yaml
           ```
     * sync the application
         + ```shell

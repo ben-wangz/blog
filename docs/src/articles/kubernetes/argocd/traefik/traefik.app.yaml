@@ -1,4 +1,3 @@
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -20,7 +19,7 @@ spec:
         ingressClass:
           enabled: true
           isDefaultClass: true
-          name: "traefik"
+          name: traefik
         ingressRoute:
           enabled: false
         providers:
@@ -33,6 +32,8 @@ spec:
             enabled: true
             allowExternalNameServices: false
             allowEmptyServices: true
+            publishedService:
+              enabled: true
         ports:
           web:
             port: 8000
@@ -46,7 +47,7 @@ spec:
             nodePort: 32443
         service:
           enabled: true
-          type: NodePort
+          type: LoadBalancer
         persistence:
           enabled: true
           storageClass: "local-path"
