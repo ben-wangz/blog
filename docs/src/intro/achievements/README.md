@@ -29,6 +29,12 @@ Ceph storage capacity is constrained by the internal storage of cluster physical
 
 Throughput is dependent on the network bandwidth between the cluster and the S3/OSS backend, creating a complementary storage solution that addresses Ceph's capacity constraints. This makes JuiceFS particularly well-suited for large-scale, cost-effective cold data storage scenarios, such as historical scientific research data archiving.
 
+* what we have done in production:
+    + use TiDB as the database engine to store the metadata of the JuiceFS file system
+    + 1PB+ of data stored in JuiceFS file system (the storage limitations is relative to the capacity of S3/OSS backend)
+    + available more than 6 months
+* [how to play](../../articles/kubernetes/argocd/storage/provisioner/juice-fs-csi/README.md)
+
 #### Standardized Storage Access
 
 Built on the Kubernetes Container Storage Interface (CSI), this architecture integrates the JuiceFS and Ceph distributed storage systems, enabling both to deliver highly available, scalable storage services to virtually all workloads within the Kubernetes cluster through standard interfaces like Persistent Volume Claims (PVCs). This standardized approach facilitates flexible storage allocation and efficient resource utilization across the platform.
