@@ -1,1 +1,0 @@
-[ceph.storage.class.yaml](ceph.storage.class.yaml ':include')

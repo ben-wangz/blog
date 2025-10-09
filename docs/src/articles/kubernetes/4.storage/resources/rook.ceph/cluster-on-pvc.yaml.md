@@ -1,1 +1,0 @@
-[cluster-on-pvc.yaml](cluster-on-pvc.yaml ':include')
