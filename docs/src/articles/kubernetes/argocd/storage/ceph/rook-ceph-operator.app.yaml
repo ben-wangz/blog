@@ -1,0 +1,37 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rook-ceph-operator
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://charts.rook.io/release
+    chart: rook-ceph
+    targetRevision: v1.17.4
+    helm:
+      releaseName: rook-ceph-operator
+      valuesObject:
+        image:
+          repository: m.daocloud.io/docker.io/rook/ceph
+          pullPolicy: IfNotPresent
+        csi:
+          imagePullPolicy: IfNotPresent
+          cephcsi:
+            repository: m.daocloud.io/quay.io/cephcsi/cephcsi
+          registrar:
+            repository: m.daocloud.io/registry.k8s.io/sig-storage/csi-node-driver-registrar
+          provisioner:
+            repository: m.daocloud.io/registry.k8s.io/sig-storage/csi-provisioner
+          snapshotter:
+            repository: m.daocloud.io/registry.k8s.io/sig-storage/csi-snapshotter
+          attacher:
+            repository: m.daocloud.io/registry.k8s.io/sig-storage/csi-attacher
+          resizer:
+            repository: m.daocloud.io/registry.k8s.io/sig-storage/csi-resizer
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rook-ceph

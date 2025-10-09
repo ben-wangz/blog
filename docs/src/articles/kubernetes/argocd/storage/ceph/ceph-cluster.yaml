@@ -1,0 +1,98 @@
+---
+apiVersion: ceph.rook.io/v1
+kind: CephCluster
+metadata:
+  name: rook-ceph
+  namespace: rook-ceph
+spec:
+  cephVersion:
+    image: m.daocloud.io/quay.io/ceph/ceph:v19.2.2
+    allowUnsupported: false
+    imagePullPolicy: IfNotPresent
+  dataDirHostPath: /var/lib/rook
+  skipUpgradeChecks: false
+  continueUpgradeAfterChecksEvenIfNotHealthy: false
+  waitTimeoutForHealthyOSDInMinutes: 10
+  upgradeOSDRequiresHealthyPGs: false
+  mon:
+    count: 3
+    allowMultiplePerNode: false
+    volumeClaimTemplate:
+      spec:
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 10Gi
+  mgr:
+    count: 2
+    allowMultiplePerNode: false
+    modules:
+      - name: rook
+        enabled: true
+      - name: pg_autoscaler
+        enabled: true
+  dashboard:
+    enabled: true
+    ssl: false
+  monitoring:
+    enabled: false
+  crashCollector:
+    disable: false
+  logCollector:
+    enabled: true
+    periodicity: daily
+    maxLogSize: 1G
+  storage:
+    useAllNodes: false
+    useAllDevices: false
+    allowDeviceClassUpdate: false
+    allowOsdCrushWeightUpdate: true
+    nodes:
+      - name: k3s2
+        devices:
+          - name: /dev/ubuntu-vg/ceph-cluster
+      - name: k3s3
+        devices:
+          - name: /dev/ubuntu-vg/ceph-cluster
+      - name: k3s4
+        devices:
+          - name: /dev/ubuntu-vg/ceph-cluster
+  resources:
+    mgr:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+      limits:
+        cpu: "1000m"
+        memory: "2Gi"
+    mon:
+      requests:
+        cpu: "500m"
+        memory: "1Gi"
+      limits:
+        cpu: "1000m"
+        memory: "2Gi"
+    osd:
+      requests:
+        cpu: "500m"
+        memory: "1Gi"
+      limits:
+        cpu: "1000m"
+        memory: "2Gi"
+  placement:
+    all:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node-type/rook-ceph
+                  operator: Exists
+      tolerations:
+        - effect: NoSchedule
+          key: node-type/rook-ceph
+          operator: Exists
+  disruptionManagement:
+    managePodBudgets: true
+    osdMaintenanceTimeout: 30
+    pgHealthCheckTimeout: 0
+    manageMachineDisruptionBudgets: false
