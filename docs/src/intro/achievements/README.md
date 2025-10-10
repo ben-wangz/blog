@@ -18,7 +18,7 @@ When replica counts drop below predefined safety thresholds, the system automati
 
 By co-locating storage and compute resources within the same Kubernetes cluster, this implementation effectively supports mission-critical workloads requiring high storage stability and low-latency I/O performance, including real-time data processing and core database storage scenarios.
 
-* what we have done in production:
+* what we have done in production
     + 2PB in summary of 30+ data nodes
     + available more than 2 years
 * [how to play](../../articles/kubernetes/argocd/storage/ceph/README.md)
@@ -29,7 +29,7 @@ Ceph storage capacity is constrained by the internal storage of cluster physical
 
 Throughput is dependent on the network bandwidth between the cluster and the S3/OSS backend, creating a complementary storage solution that addresses Ceph's capacity constraints. This makes JuiceFS particularly well-suited for large-scale, cost-effective cold data storage scenarios, such as historical scientific research data archiving.
 
-* what we have done in production:
+* what we have done in production
     + use TiDB as the database engine to store the metadata of the JuiceFS file system
     + 1PB+ of data stored in JuiceFS file system (the storage limitations is relative to the capacity of S3/OSS backend)
     + available more than 6 months
@@ -64,6 +64,10 @@ Leveraging a declarative API, users manage metadata collection behavior by defin
 The metadata retrieval engine is powered by ElasticSearch, delivering millisecond-latency query performance. For metadata collection and persistence, we employ a hybrid streaming-batch architecture built on Kafka and Flink, featuring elastic horizontal scaling capabilities that linearly enhance data processing throughput. This architecture ensures both real-time responsiveness and high availability throughout the metadata lifecycle.
 
 Beyond standard capabilities, metadata collection tasks support highly extensible custom extraction logic. Users can embed proprietary code to perform deep content analysis and precise metadata extraction from diverse file formats. This customization framework delivers significant advantages for specialized data types: for FITS astronomical data, it enables efficient parsing of header metadata describing file characteristics; for columnar storage formats like Parquet, it facilitates accurate schema extraction—substantially improving the system's adaptability and flexibility across varied data processing scenarios.
+
+* what we have done in production
+    + open source version: ... (TODO)
+    + has collected nearly all metadata from CSST, FAST, LHAASO, and other astronomical projects
 
 #### Distributed Database Middleware
 
@@ -129,7 +133,7 @@ The operator also supports advanced features such as Podman-in-Container functio
 - **Enhanced Collaboration**: Facilitates concurrent development on shared codebases with isolated environments
 - **Resource Optimization**: Enables resource oversubscription, particularly through GPU sharing capabilities, resulting in substantial resource savings
 
-* what we have done in production:
+* what we have done in production
     + the codespace operator has been successfully deployed to our production cluster, enabling on-demand creation of development environments based on any code repository.
     + the base image and simplified helm chart can be found at [ben.wangz@github](https://github.com/ben-wangz/k8s-at-home/blob/main/application/podman-in-container/README.md)
     + based on shared GPU scheduler, we have successfully enabled GPU sharing among multiple development environments, significantly improving resource utilization and reducing cost.

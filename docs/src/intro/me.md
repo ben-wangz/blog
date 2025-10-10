@@ -28,7 +28,7 @@ cover: /assets/images/black-hole-hero-f872641.jpg
 * leading a team of 6 people
 * designing and developing a data platform
     + related techniques: check [achievements](../intro/achievements/README.md) in my blog for details
-* cooperated with multiple teams to design/implement data processing platforms or to deliver on-demand systems
+* cooperated with multiple teams to design/implement data processing platforms or to deliver on-demand systems: refer to [projects](../intro/projects/README.md)
     + collaborating with scientists on the FAST project at the National Astronomical Observatories of China, Chinese Academy of Sciences
     + collaborating with scientists on the CSST project at the National Astronomical Observatories of China, Chinese Academy of Sciences
     + collaborating with scientists on the LHAASO project
