@@ -11,25 +11,30 @@ cover: /assets/images/black-hole-hero-f872641.jpg
 
 ## Summary
 
-* experienced Java developer with 8+ years of expertise in designing and implementing scalable data processing platforms. 
+* experienced Java developer with 10+ years of expertise in designing and implementing scalable data processing platforms. 
 * proficient in Apache Flink, Kubernetes, and handling large volumes of data. 
 * proven ability to lead teams and deliver high-performance systems.
 * achieved developing data processing platforms for various companies, including Alibaba Group, ZhejiangLab and tianrang-inc.
 
 ## Technical Skills
 
-* Java is my primary language for coding.
-* familiar with Kubernetes, especially for storages, ci/cd workflows, flink on k8s and so on. please check my blog for details.
+* Java is my primary programming language, but I'm comfortable working with other languages like Python and C/C++, and reading code in Go, Scala, and so on.
+* familiar with Kubernetes, especially for storages, ci/cd workflows, flink on k8s and so on.
 * familiar with stream processing, especially for Apache Flink.
 
 ## Experience
 
 ### astronomy center of ZhejiangLab, Senior Engineer(2023 - now)
-* leading a team of 5 people
+* leading a team of 6 people
 * designing and developing a data platform
-    + to support CSST(China Space Station Telescope)
-    + to support Cosmic Antenna
-    + related techniques: check [data-lake](https://blog.geekcity.tech/articles/data-lake/) in my blog for details
+    + related techniques: check [achievements](../intro/achievements/README.md) in my blog for details
+* cooperated with multiple teams to design/implement data processing platforms or to deliver on-demand systems
+    + collaborating with scientists on the FAST project at the National Astronomical Observatories of China, Chinese Academy of Sciences
+    + collaborating with scientists on the CSST project at the National Astronomical Observatories of China, Chinese Academy of Sciences
+    + collaborating with scientists on the LHAASO project
+    + collaborating with scientists on the cnSRC@SRCNet initiative of the SKA (Square Kilometre Array) project, where I was responsible for designing and building the k8s environment while investigating and implementing all recommended services from the SKAO (Square Kilometre Array Observatory)
+        * https://www.shao.ac.cn/2020Ver/xwdt/kyjz/202504/t20250418_7604408.html
+        * https://mp.weixin.qq.com/s/jPgXYWWPxY85gAUchvVktg
 
 ### big data center of ZhejiangLab, Senior Engineer(2021 - 2023)
 * leading a team of 5-10 people

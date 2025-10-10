@@ -133,6 +133,7 @@ The operator also supports advanced features such as Podman-in-Container functio
     + the codespace operator has been successfully deployed to our production cluster, enabling on-demand creation of development environments based on any code repository.
     + the base image and simplified helm chart can be found at [ben.wangz@github](https://github.com/ben-wangz/k8s-at-home/blob/main/application/podman-in-container/README.md)
     + based on shared GPU scheduler, we have successfully enabled GPU sharing among multiple development environments, significantly improving resource utilization and reducing cost.
+    + podman in container
 
 ### GitOps and CI/CD Integration
 
