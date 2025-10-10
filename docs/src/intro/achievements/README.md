@@ -129,6 +129,11 @@ The operator also supports advanced features such as Podman-in-Container functio
 - **Enhanced Collaboration**: Facilitates concurrent development on shared codebases with isolated environments
 - **Resource Optimization**: Enables resource oversubscription, particularly through GPU sharing capabilities, resulting in substantial resource savings
 
+* what we have done in production:
+    + the codespace operator has been successfully deployed to our production cluster, enabling on-demand creation of development environments based on any code repository.
+    + the base image and simplified helm chart can be found at [ben.wangz@github](https://github.com/ben-wangz/k8s-at-home/blob/main/application/podman-in-container/README.md)
+    + based on shared GPU scheduler, we have successfully enabled GPU sharing among multiple development environments, significantly improving resource utilization and reducing cost.
+
 ### GitOps and CI/CD Integration
 
 Leveraging Gitea's extensibility, we have implemented GitHub Actions-compatible workflows that provide comprehensive GitOps capabilities. This integration unifies our CI/CD toolchain, streamlining build, test, and deployment processes while significantly reducing management overhead. By automating these workflows through Git-based operations, we ensure greater consistency, traceability, and reliability in our software delivery pipeline.
