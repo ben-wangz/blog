@@ -57,7 +57,7 @@ yum install -y chrony \
 cat > $HOME/.screenrc <<EOF
 startup_message off
 caption always "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%H %Y/%m/%d "
-escape ^Jj #Instead of control-a
+escape ^Kk #Instead of control-a
 
 shell -$SHELL
 EOF
