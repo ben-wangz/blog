@@ -4,19 +4,24 @@ kind: Application
 metadata:
   name: gitea
 spec:
+  project: default
   syncPolicy:
     syncOptions:
-    - CreateNamespace=true
-  project: default
+      - CreateNamespace=true
   source:
-    repoURL: https://dl.gitea.com/charts/
+    repoURL: https://dl.gitea.io/charts/
     chart: gitea
-    targetRevision: 10.1.4
+    targetRevision: 12.1.0
     helm:
       releaseName: gitea
-      values: |
+      valuesObject:
+        global:
+          security:
+            allowInsecureImages: true
         image:
-          registry: docker.io
+          registry: m.daocloud.io/docker.io
+          repository: gitea/gitea
+          pullPolicy: IfNotPresent
         service:
           http:
             type: ClusterIP
@@ -26,79 +31,44 @@ spec:
             nodePort: 32022
         ingress:
           enabled: true
+          className: traefik
           annotations:
-            kubernetes.io/ingress.class: nginx
-            nginx.ingress.kubernetes.io/proxy-body-size: 1g
-            nginx.ingress.kubernetes.io/rewrite-target: /$1
-            cert-manager.io/issuer: self-signed-issuer
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+            traefik.ingress.kubernetes.io/router.tls: "true"
           hosts:
-          - host: gitea.dev.geekcity.tech
-            paths:
-            - path: /?(.*)
-              pathType: ImplementationSpecific
-          tls:
-          - secretName: gitea.dev.geekcity.tech-tls
-            hosts:
-            - gitea.dev.geekcity.tech
+            - host: gitea.dev.geekcity.tech
+              paths:
+                - path: /
+                  pathType: Prefix
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1
+            memory: 2Gi
         persistence:
-          enabled: true
           size: 8Gi
-          storageClass: standard
-        redis-cluster:
-          enabled: false
-        postgresql-ha:
-          enabled: false
-        postgresql:
-          enabled: true
-          architecture: standalone
-          image:
-            registry: docker.io
-          primary:
-            persistence:
-              enabled: false
-              storageClass: standard
-              size: 8Gi
-          readReplicas:
-            replicaCount: 1
-            persistence:
-              enabled: true
-              storageClass: standard
-              size: 8Gi
-          backup:
-            enabled: false
-          volumePermissions:
-            enabled: false
-            image:
-              registry: docker.io
-          metrics:
-            enabled: false
-            image:
-              registry: docker.io
+          storageClass: ""
         gitea:
           admin:
             existingSecret: gitea-admin-credentials
             email: ben.wangz@foxmail.com
           config:
-            database:
-              DB_TYPE: postgres
-            session:
-              PROVIDER: db
-            cache:
-              ADAPTER: memory
-            queue:
-              TYPE: level
-            indexer:
-              ISSUE_INDEXER_TYPE: bleve
-              REPO_INDEXER_ENABLED: true
             repository:
               MAX_CREATION_LIMIT: 10
-              DISABLED_REPO_UNITS: "repo.wiki,repo.ext_wiki,repo.projects"
-              DEFAULT_REPO_UNITS: "repo.code,repo.releases,repo.issues,repo.pulls"
+              DISABLED_REPO_UNITS: repo.wiki,repo.ext_wiki,repo.projects
+              DEFAULT_REPO_UNITS: repo.code,repo.releases,repo.issues,repo.pulls
+              DISABLE_STARS: true
+              DEFAULT_BRANCH: main
+            ui:
+              SHOW_USER_EMAIL: false
+              SEARCH_REPO_DESCRIPTION: false
             server:
               PROTOCOL: http
+              ROOT_URL: https://gitea.dev.geekcity.tech:32443/
               LANDING_PAGE: login
               DOMAIN: gitea.dev.geekcity.tech
-              ROOT_URL: https://gitea.dev.geekcity.tech:32443/
               SSH_DOMAIN: ssh.gitea.dev.geekcity.tech
               SSH_PORT: 32022
               SSH_AUTHORIZED_PRINCIPALS_ALLOW: email
@@ -112,15 +82,62 @@ spec:
               ENABLE_NOTIFY_MAIL: false
               DEFAULT_ALLOW_CREATE_ORGANIZATION: false
               SHOW_MILESTONES_DASHBOARD_PAGE: false
-            migrations:
-              ALLOW_LOCALNETWORKS: true
+            explore:
+              DISABLE_USERS_PAGE: true
             mailer:
               ENABLED: false
             i18n:
-              LANGS: "en-US,zh-CN"
-              NAMES: "English,简体中文"
+              LANGS: en-US,zh-CN
+              NAMES: English,简体中文
             oauth2:
-              ENABLE: false
+              ENABLED: false
+            other:
+              SHOW_FOOTER_VERSION: false
+            openid:
+              ENABLE_OPENID_SIGNIN: false
+              ENABLE_OPENID_SIGNUP: false
+            oauth2_client:
+              ENABLE_AUTO_REGISTRATION: false
+        valkey-cluster:
+          enabled: true
+          image:
+            registry: m.daocloud.io/docker.io
+            repository: bitnami/valkey-cluster
+            tag: 8.1.2-debian-12-r0
+          usePassword: false
+          usePasswordFiles: false
+          cluster:
+            nodes: 3
+            replicas: 0
+          service:
+            ports:
+              valkey: 6379
+          persistence:
+            enabled: true
+            storageClass: ""
+            size: 5Gi
+        postgresql-ha:
+          enabled: false
+        postgresql:
+          enabled: true
+          image:
+            registry: m.daocloud.io/docker.io
+            repository: bitnami/postgresql
+            tag: 17.5.0-debian-12-r11
+          global:
+            postgresql:
+              auth:
+                database: gitea
+                username: gitea
+                password: gitea
+              service:
+                ports:
+                  postgresql: 5432
+          primary:
+            persistence:
+              enabled: true
+              storageClass: ""
+              size: 10Gi
   destination:
     server: https://kubernetes.default.svc
     namespace: application
