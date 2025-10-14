@@ -8,9 +8,9 @@
 
 ## installation
 
-1. prepare `gitea.yaml`
+1. prepare `gitea.app.yaml`
     * ```yaml
-      <!-- @include: gitea.yaml -->
+      <!-- @include: gitea.app.yaml -->
       ```
 2. prepare admin credentials secret
     * ```shell
@@ -21,7 +21,7 @@
       ```
 3. apply to k8s
     * ```shell
-      kubectl -n argocd apply -f gitea.yaml
+      kubectl -n argocd apply -f gitea.app.yaml
       ```
 4. sync by argocd
     * ```shell
