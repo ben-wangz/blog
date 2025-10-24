@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitea-actions
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://dl.gitea.com/charts/
+    targetRevision: 0.2.13  # Helm Chart 版本，可按需修改
+    chart: actions
+    helm:
+      values: |
+        enabled: true
+        giteaRootURL: http://your-gitea.example.com  # 替换为你的 Gitea 地址
+        existingSecret: my-gitea-actions-secret       # Kubernetes Secret 名称，存储 runner-registration-token
+        existingSecretKey: runner-registration-token  # Secret 中的 key
+        statefulset:
+          replicas: 2
+          actRunner:
+            tag: 0.2.13
+          dind:
+            tag: 28.3.3-dind
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gitea  # 部署到的 namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
